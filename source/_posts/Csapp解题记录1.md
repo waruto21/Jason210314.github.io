@@ -5,8 +5,8 @@ categories:
  - 学习笔记
 tags: 
  - CS:APP
- - C语言
  - 汇编
+ - c 
 ---
 
 ### Csapp 2.60
