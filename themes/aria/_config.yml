@@ -114,27 +114,27 @@ social:
   enable: true
   links:
     - name: E-Mail
-      link: mailto:youremail@youremailhost
+      link: mailto:wmc314@outlook.com
       icon: <i class="fas fa-envelope"></i>
     - name: GitHub
-      link: https://github.com/
+      link: https://github.com/Jason210314
       icon: <i class="fab fa-github"></i>
-    - name: Weibo
-      link: https://weibo.com/
-      icon: <i class="fab fa-weibo"></i>
-
-blogroll:
-  enable: true
-  links:
-    - name: GitHub
-      link: https://github.com/
-      icon: <i class="fas fa-link"></i>
-    - name: MDN
-      link: https://developer.mozilla.org/
-      icon: <i class="fas fa-link"></i>
-    - name: Nunjucks
-      link: https://mozilla.github.io/nunjucks/
-      icon: <i class="fas fa-link"></i>
+    - name: CSDN
+      link: https://blog.csdn.net/deepmind210
+    #  icon: <i class="fab fa-weibo"></i>
+    #
+    #blogroll:
+    #enable: true
+    #links:
+    #- name: GitHub
+    #  link: https://github.com/
+    #  icon: <i class="fas fa-link"></i>
+    #- name: MDN
+    #  link: https://developer.mozilla.org/
+    #  icon: <i class="fas fa-link"></i>
+    #- name: Nunjucks
+    #  link: https://mozilla.github.io/nunjucks/
+    #  icon: <i class="fas fa-link"></i>
 
 # `comment.commentjs.type`: Choose between `github` and `oschina`.
 comment:
