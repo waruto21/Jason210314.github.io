@@ -20,9 +20,9 @@ favicon:
 
 # Must be an array.
 keywords:
-  - Life
-  - ARIA
-  - Hexo
+  - Program
+  - BUPT
+  - Blog
 
 # https://creativecommons.org/licenses/
 # by | by-sa | by-nd | by-nc | by-nc-sa | by-nc-nd
@@ -63,14 +63,14 @@ search: true
 sidebar: left
 
 # Animation in Home, Archive, Category and Tag.
-animate: false
+animate: true
 
 busuanzi: true
 
 # If you want ARIA generate excerpt, set it to the length you want. If you don't, leave it blank.
 # Recomend to place `<!--more-->` to where you want to stop excerpt in content instead of use this option.
 # Example: `auto_excerpt: 200`, use first 200 chars in post content as excerpt.
-auto_excerpt:
+auto_excerpt: 30
 
 # If you want to use MathJax, first fill a CDN link like `cdn: https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-MML-AM_CHTML`, then set `enable: true`.
 # And set front-matter `mathjax: true` to the page you want to use it.
