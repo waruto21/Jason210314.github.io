@@ -8,6 +8,7 @@ tags:
  - 广义表
 ---
 ### 代码
+<!--more-->
 ```cpp
 void GList_copy(GList L, GList &N)
 {

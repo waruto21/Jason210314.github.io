@@ -8,8 +8,9 @@ tags:
  - CS:APP
  - 汇编
 ---
-### phase_5
+[phase_1 - Phase_4](https://blog.csdn.net/deepmind210/article/details/83316486)
 <!--more-->
+### phase_5
 ```bash
     disas phase_5
 ```
