@@ -45,7 +45,7 @@ custom_font:
   main:
   code:
 
-avatar: ./head.jpeg
+avatar: images/head.jpeg
 
 #logo: images/logo.png
 
@@ -119,22 +119,28 @@ social:
     - name: GitHub
       link: https://github.com/Jason210314
       icon: <i class="fab fa-github"></i>
-      #    - name: Weibo
-      #link: https://weibo.com/
-      #icon: <i class="fab fa-weibo"></i>
+    - name: CSDN
+      link: https://blog.csdn.net/deepmind210
+      icon: <i class="fas fa-link"></i>
 
-#blogroll:
-#enable: true
-#  links:
-#    - name: GitHub
-#      link: https://github.com/
-#      icon: <i class="fas fa-link"></i>
-#    - name: MDN
-#      link: https://developer.mozilla.org/
-#      icon: <i class="fas fa-link"></i>
-#    - name: Nunjucks
-#      link: https://mozilla.github.io/nunjucks/
-#      icon: <i class="fas fa-link"></i>
+blogroll:
+  enable: true
+  links:
+    - name: 学分的博客
+      link: https://sprinter1999.github.io/
+      icon: <i class="fas fa-link"></i>
+    - name: 何萌妹的博客
+      link: http://rinchannow.club/
+      icon: <i class="fas fa-link"></i>
+    - name: gay直的博客
+      link: https://ipotato.me/
+      icon: <i class="fas fa-link"></i>
+    - name: Q哥的博客
+      link: https://qjx.app/
+      icon: <i class="fas fa-link"></i>
+    - name: 于大佬的博客
+      link: https://kuso-kodo.name1e5s.top/
+      icon: <i class="fas fa-link"></i>
 
 # `comment.commentjs.type`: Choose between `github` and `oschina`.
 comment:
