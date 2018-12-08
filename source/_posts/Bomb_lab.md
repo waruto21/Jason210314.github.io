@@ -1,12 +1,12 @@
-﻿---
+---
 title: Bomb_lab
 date: 2018-11-09 17:16:00
 categories:
- - 学习笔记
- - 实验
+ - CS:APP
 tags: 
  - CS:APP
  - 汇编
+ - 二进制炸弹
 ---
 [phase_1 - Phase_4](https://blog.csdn.net/deepmind210/article/details/83316486)
 <!--more-->

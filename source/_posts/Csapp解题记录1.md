@@ -1,15 +1,17 @@
-﻿---
+---
 title: CS:APP解题记录
 date: 2018-11-08 21:52:23
 categories:
- - 学习笔记
+ - CS:APP
 tags: 
  - CS:APP
  - 汇编
  - c 
 ---
 
-### Csapp 2.60
+
+### CS:APP 2.60
+
 <!--more-->
 
 ```c

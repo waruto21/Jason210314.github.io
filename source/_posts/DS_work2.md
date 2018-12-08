@@ -2,8 +2,7 @@
 title: DS_work2
 date: 2018-11-16 10:04:55
 categories:
- - Datastructure
- - cpp
+ - 数据结构
 tags:
  - 广义表
 ---
