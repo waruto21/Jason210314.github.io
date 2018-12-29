@@ -12,7 +12,8 @@ tags:
 
 <!-- more -->
 
-本次试验中，主要涉及keyboard.S，tty_io.c，console.c。其中：keyboard.S主要实现键盘中断处理过程，当按下键盘时，出发中断，由改程序进行处理；tty_io.c包含tty字符设备读函数tty_read()和tty_write()，为文件系统提供了上层访问接口，copy_to_cooked()将输入字符移至tty辅助队列secondary与写队列write_q中。
+本次试验中，主要涉及keyboard.S，tty_io.c，console.c。其中：keyboard.S主要实现键盘中断处理过程，当按下键盘时，出发中断，由对应函数进行处理，并将字符放入read_q写队列中；tty_io.c包含tty字符设备读函数tty_read()和tty_write()，为文件系统提供了上层访问接口，copy_to_cooked()将输入字符处理后添加到tty辅助队列secondary中，若开启了回显功能，则还会将其添加到write_q写队列中，由console.c中的con_write()函数中写入到终端。
+![](I-O-lab/lab4.png)
 
 ![](I-O-lab/struct.png)
 
