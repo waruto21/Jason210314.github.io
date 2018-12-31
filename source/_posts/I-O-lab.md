@@ -2,10 +2,10 @@
 title: I/O_lab
 date: 2018-12-28 17:16:28
 categories:
-    -CS:APP
+    - CS:APP
 tags:
-    -CS:APP
-    -linux内核
+    - CS:APP
+    - linux内核
 ---
 
 ### 实验步骤
