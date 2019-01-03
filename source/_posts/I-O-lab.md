@@ -19,7 +19,7 @@ tags:
 
 #### phase1
 
-此关要求将f12作为一个开关，用于启用/关闭*模式，我们需要加一个全局变量用以标示是否开启改模式。首先需要对keyboard.S进行改动，使按下f12时执行正确的中断调用。我们可以见得，functions按键由func函数进行处理，当检测到按下的为f12时，调用change_f12Flag()函数该表标志。
+此关要求将f12作为一个开关，用于启用/关闭*模式，我们需要加一个全局变量用以标示是否开启改模式。首先需要对keyboard.S进行改动，使按下f12时执行正确的中断调用。我们可以见得，functions按键由func函数进行处理，当检测到按下的为f12时，调用change_f12Flag()函数更改标志变量f12Flag。
 
 ![](I-O-lab/keyboard.png)
 
@@ -27,7 +27,7 @@ tags:
 
 ![](I-O-lab/tty.png)
 
-并且在console.c中引入外部变量f12Flag，对输出加以变化，当f12Flag非0时，将姓名拼音首位字母变为*。
+并且在console.c中引入外部变量f12Flag，对输出加以更改。当f12Flag非0时，将姓名拼音首位字母变为*。
 
 ![](I-O-lab/con_w.png)
 
@@ -39,13 +39,13 @@ tags:
 
 #### phase2
 
-此阶段，和phase1相似，只是将开启/关闭条件改为了学号/学号-。那么我们在tty_io.c中加入一个有限状态自动机即可，copy_to_cooked()会将输入字符加入到tty辅助队列和tty写入队列，我们状态机代码放在此处。
+此阶段，和phase1相似，只是将开启/关闭条件改为了学号/学号-。那么我们在tty_io.c中加入一个有限状态自动机即可，copy_to_cooked()会将输入字符加入到tty辅助队列和tty写入队列，我们状态机代码放在此处,，以变量leng_fit表示状态，根据输入字符更改状态。
 
 ![](I-O-lab/long_fit.png)
 
 ![](I-O-lab/machine.png)
 
-然后我们在console.c中引入外部变量leng_fit，当leng_fit为10时，改变输入。
+然后我们在console.c中引入外部变量leng_fit，当leng_fit为10时，改变输出。
 
 ![](I-O-lab/con2.png)
 
