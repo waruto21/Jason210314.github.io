@@ -97,3 +97,14 @@ model.evaluate(x_test, y_test)
 查看下，运行时gpu显存飙升，占用率升到50%，确实是启用了tensorflow-gpu.
 ![](Ubuntu18-04安装TensorFlow-gpu/run.png)
 
+#### jupyter支持conda虚拟环境内核
+```bash
+conda activate tensorflowenv
+pip install ipykernel
+python -m ipykernel install --user --name tensorflowenv --display-name "Python (tensorflowenv)"
+```
+#### 安装插件
+```bash
+conda install -c conda-forge jupyter_contrib_nbextensions
+jupyter contrib nbextension install --user
+```
