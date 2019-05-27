@@ -21,7 +21,10 @@ sudo apt install nvidia-driver-390
 ### 安装
 官网有安装所需软件要求
 ![](Ubuntu18-04安装TensorFlow-gpu/tensor.png)
-#### 安装cuda
+#### 安装cuda及其组件
+
+##### 注意，一定不要更新
+
 使用TensorFlow官方教程一把梭
 
 ```bash
@@ -55,15 +58,6 @@ nvcc: NVIDIA (R) Cuda compiler driver
 Copyright (c) 2005-2017 NVIDIA Corporation
 Built on Fri_Sep__1_21:08:03_CDT_2017
 Cuda compilation tools, release 9.0, V9.0.176
-```
-### 安装cuDNN
-查看[官方安装说明](https://docs.nvidia.com/deeplearning/sdk/cudnn-install/index.html#axzz4qYJp45J2)
-选择Tar包安装
-```bash
-tar -xzvf cudnn-9.0-linux-x64-v7.tgz
-sudo cp cuda/include/cudnn.h /usr/local/cuda/include
-sudo cp cuda/lib64/libcudnn* /usr/local/cuda/lib64
-sudo chmod a+r /usr/local/cuda/include/cudnn.h /usr/local/cuda/lib64/libcudnn*
 ```
 ### Anaconda
 Anaconda安装十分简单。
