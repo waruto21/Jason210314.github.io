@@ -1,6 +1,6 @@
 language: node_js
 
-node_js: lts  # 要安装的node版本为当前的稳定版
+node_js: 12  # 要安装的node版本为当前的稳定版
 
 cache:
   directories:
