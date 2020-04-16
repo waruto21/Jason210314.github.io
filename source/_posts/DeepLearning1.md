@@ -1,18 +1,18 @@
 ---
-title: DeepLearning1
+title: 深度学习:BP算法
 date: 2019-03-09 20:45:21
 categories:
  - DeepLearning
 tags:
- - Logistic
- - Basic NN
+ - Logistic Regression
+ - BP
 ---
 
 ### 神经网络正向及反向传播核心算法
 
 <!--more-->
 
-![](DeepLearning1/equations.png)
+![](equations.png)
 
 ### Logistics regression作业
 
