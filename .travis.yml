@@ -7,7 +7,7 @@ cache:
   - node_modules # 要缓存的文件夹
 
 install:
-  - npm install
+  - yarn install
 
 script:
   - hexo clean
