@@ -8,9 +8,8 @@ tags:
  - 汇编
  - 二进制炸弹
 ---
-## 实验步骤
-<!--more-->
-### 准备工作
+# 实验步骤
+## 准备工作
 使用tar -vxf将炸弹压缩包解压,cd进入,可以从bomb.c中看出实验的用意以及程序的大致
 逻辑,bomb为可执行程序,使用gdb调试该程序.
 ```bash
@@ -21,7 +20,7 @@ Breakpoint 2 at 0x4014e4
 ```
 给read_line函数打上断点,以便每次输入运行一关.给explode_bomb打上断点,以便在炸弹爆炸
 前可以处理.
-### phase_1
+## phase_1
 获得phase_1汇编代码
 ```bash
 (gdb) disas phase_1
@@ -42,7 +41,7 @@ End of assembler dump.
 0x4024a0 <__dso_handle+344>:	 "We have to stand with our North Korean allies."
 ```
 那么答案是We have to stand with our North Korean allies.
-### phase_2
+## phase_2
 ```bash
 (gdb) disas phase_2
 Dump of assembler code for function phase_2:
@@ -91,7 +90,7 @@ for(int *b = &r[1]; b != &r[6]; b++)
 ```
 故答案应该为1 2 4 8 16 32.
 
-### phase_3
+## phase_3
 ```bash
    0x0000000000400ef1 <+14>:	mov    $0x4027cd,%esi
    0x0000000000400ef6 <+19>:	mov    $0x0,%eax
@@ -146,7 +145,7 @@ $1 = 0x400f47
 ```
 那么第一个数为0时,跳转到0x400f23处,那么第二个数应该为此处的0x0,
 故一组答案为4 0;
-### phase_4
+## phase_4
 
 ```bash
 (gdb) disas phase_4
@@ -217,7 +216,7 @@ int func4(int a, int b)
 ```
 穷举2-4的值即可得到答案,取答案为176 2
 
-### phase_5
+## phase_5
 ```bash
 (gdb) disas phase_5
 Dump of assembler code for function phase_5:
@@ -258,7 +257,7 @@ $2 = {0x2, 0xa, 0x6, 0x1, 0xc, 0x10, 0x9, 0x3, 0x4, 0x7, 0xe, 0x5, 0xb, 0x8,
 题目要求sum = 0x27,故从array中选出6个和为0x27的数,通过这6个数的下标找出对应字符.
 答案应为01347L;
 
-### phase_6
+## phase_6
 因为课程未对后续两关作要求,故不做特别详细的解答.
 ```bash
 (gdb) disas phase_6
@@ -371,7 +370,7 @@ $13 = 0x0
 ```
 故答案应为6 5 3 1 2 4;  
 
-### secret_phase
+## secret_phase
 正常通过前6关是无法触发secret_phase的,查看汇编发现,在phase_4答案之后输入DrEvil即可进入secret_phase.
 ```bash
 (gdb) disas secret_phase 

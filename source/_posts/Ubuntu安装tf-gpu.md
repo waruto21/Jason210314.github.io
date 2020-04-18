@@ -10,17 +10,17 @@ tags:
 ---
 
 
-### 显卡驱动
-<!-- more -->
+# 显卡驱动
+
 最新的18.04.3已经可以安装430驱动
 ```bash
 sudo apt install nvidia-driver-430
 ```
 ![NVIDIA驱动](driver1.png)
-### 安装
+# 安装要求
 官网有安装所需[软件要求](https://tensorflow.google.cn/install/gpu)
 ![](tensor1.png)
-#### 安装cuda及其组件
+# 安装cuda及其组件
 
 
 
@@ -53,7 +53,7 @@ Copyright (c) 2005-2018 NVIDIA Corporation
 Built on Sat_Aug_25_21:08:01_CDT_2018
 Cuda compilation tools, release 10.0, V10.0.130
 ```
-### Anaconda
+# Anaconda
 Anaconda安装十分简单.去喜闻乐见的[tuna](https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2019.07-Linux-x86_64.sh)下载。
 ```bash
 chmod +x Anaconda3-2019.07-Linux-x86_64.sh
@@ -75,20 +75,20 @@ conda create -n tensor pip python=3.6
 source activate tensor
 pip install --upgrade tensorflow-gpu
 ```
-#### 安装jupyter插件
+## 安装jupyter插件
 ```bash
 conda install -c conda-forge jupyter_contrib_nbextensions
 jupyter contrib nbextension install --user
 ```
 
-#### 将conda虚拟环境作为jupyter内核
+## 将conda虚拟环境作为jupyter内核
 ```bash
 conda activate tensorflowenv
 pip install ipykernel
 python -m ipykernel install --user --name tensorflowenv --display-name "Python (tensorflowenv)"
 ```
 
-### 最后使用示例程序来测试一下.
+# 示例测试
 ```python
 import tensorflow as tf
 mnist = tf.keras.datasets.mnist

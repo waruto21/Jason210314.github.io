@@ -9,13 +9,12 @@ tags:
  - XML
 ---
 
-#### 简介
+# 简介
 
-<!--more-->
 
 XML是一种可扩展标记语言，被用来传输和存储数据。它是一种有逻辑的树结构。
 
-#### Python使用xml.ElementTree解析
+# Python使用xml.ElementTree解析
 
 ```python
 import xml.etree.ElementTree as ET
@@ -51,7 +50,7 @@ for country in root.findall('country'):	#找出所有country元素，仅子代
 for country in root.find('country'):	#仅找出第一个符合的子代
 ```
 
-### 其他涉及知识
+# 其他涉及知识
 
 ```python
 import os
@@ -65,4 +64,4 @@ for son_path in os.listdir(root_path):	#遍历root_path下的文件
 json.dump(dic, file_obj, ensure_ascii=False, indent=4, separators=(',', ': '))	#将字典dic输出到文件file_obj中,不对ascii进行编码,缩进4,分隔符为','以及': '
 ```
 
-### 暂时到此
+# 暂时到此
