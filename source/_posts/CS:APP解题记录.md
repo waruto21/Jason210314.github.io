@@ -1,6 +1,7 @@
 ---
 title: CS:APP解题记录
 date: 2018-11-08 21:52:23
+mathjax: true
 categories:
  - CS:APP
 tags: 
@@ -29,10 +30,9 @@ int main()
 }
 ```
 
-    0X1234AB78
+>0X1234AB78
 
-
-利用按位运算$x \& 1 = x$, $b | 0 = b$。
+利用按位运算$x \\& 1 = x , b | 0 = b$。
 
 # Csapp 2.65
 
