@@ -99,7 +99,7 @@ theme: hexo-theme-matery
 ## Docs: https://hexo.io/docs/deployment.html
 deploy:
   type: git
-  repo: https://github.com/Jason210314/Jason210314.github.io
+  repo: git@github.com:Jason210314/Jason210314.github.io.git
   branch: master
 
 
