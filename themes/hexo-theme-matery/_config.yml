@@ -16,9 +16,9 @@ menu:
   About:
     url: /about
     icon: fas fa-user-circle
-  # Contact:
-  #   url: /contact
-  #   icon: fas fa-comments
+  Contact:
+    url: /contact
+    icon: fas fa-comments
   Friends:
     url: /friends
     icon: fas fa-address-book
@@ -273,19 +273,19 @@ postCalendar: true
 # the Gitalk config，default disabled
 # Gitalk 评论模块的配置，默认为不激活
 gitalk:
-  enable: false
-  owner:
-  repo:
+  enable: true
+  owner: Jason210314
+  repo: Jason210314.github.io
   oauth:
-    clientId:
-    clientSecret:
-  admin:
+    clientId: dca7ce36a55be7f5082f
+    clientSecret: fb4156ab5b2fea82d9d6a6d6de05f8e5c075fb87
+  admin: ['Jason210314']
 
 # the Gitment config，default disabled
 # Gitment 评论模块的配置，默认为不激活
 gitment:
   enable: false
-  owner:
+  owner: 
   repo:
   oauth:
     clientId:
@@ -369,8 +369,8 @@ googleAnalytics:
 # Add baidu analytics configuration
 # 添加 baidu Analytics 配置
 baiduAnalytics:
-  enable: false
-  id:
+  enable: true
+  id: 7b96e333da18981129974d1deaa17ff8
 
 # 百度搜索资源平台提交链接
 baiduPush: true
