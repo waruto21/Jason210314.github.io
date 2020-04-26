@@ -39,7 +39,7 @@ jobs:
         yarn install
     - name: Hexo Deploy
       run: |
-        hexo clean
+        hexo c
         hexo g
         hexo d
       env:
