@@ -1,0 +1,46 @@
+# This workflow will do a clean install of node dependencies, build the source code and run tests across different versions of node
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
+
+name: Hexo CI
+
+on:
+  push:
+    branches: hexo
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+    steps:
+    - name: Setup Source
+      uses: actions/checkout@v2
+      with:
+        ref: hexo
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v1
+      with:
+        node-version: ${{ matrix.node-version }}
+    - name: Setup Hexo
+      env:
+        ACTION_DEPLOY_KEY: ${{ secrets.CI_PRIVATE_KEY }}
+      run: |
+        mkdir -p ~/.ssh/
+        echo "$ACTION_DEPLOY_KEY" > ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        ssh-keyscan github.com >> ~/.ssh/known_hosts
+        git config --global user.email "wmc314@outlook.com"
+        git config --global user.name "Jason210314"
+        npm install hexo-cli -g
+        yarn install
+    - name: Hexo Deploy
+      run: |
+        hexo clean
+        hexo g
+        hexo d
+      env:
+        CI: true
