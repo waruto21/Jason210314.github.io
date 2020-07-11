@@ -8,14 +8,14 @@ tags:
     - linux内核
 ---
 
-# 实验步骤
+## 实验步骤
 
 本次试验中，主要涉及keyboard.S，tty_io.c，console.c。其中：keyboard.S主要实现键盘中断处理过程，当按下键盘时，出发中断，由对应函数进行处理，并将字符放入read_q写队列中；tty_io.c包含tty字符设备读函数tty_read()和tty_write()，为文件系统提供了上层访问接口，copy_to_cooked()将输入字符处理后添加到tty辅助队列secondary中，若开启了回显功能，则还会将其添加到write_q写队列中，由console.c中的con_write()函数中写入到终端。
 ![](lab4.png)
 
 ![](struct.png)
 
-## phase1
+### phase1
 
 此关要求将f12作为一个开关，用于启用/关闭*模式，我们需要加一个全局变量用以标示是否开启改模式。首先需要对keyboard.S进行改动，使按下f12时执行正确的中断调用。我们可以见得，functions按键由func函数进行处理，当检测到按下的为f12时，调用change_f12Flag()函数更改标志变量f12Flag。
 
@@ -35,7 +35,7 @@ tags:
 
 运行正确。
 
-## phase2
+### phase2
 
 此阶段，和phase1相似，只是将开启/关闭条件改为了学号/学号-。那么我们在tty_io.c中加入一个有限状态自动机即可，copy_to_cooked()会将输入字符加入到tty辅助队列和tty写入队列，我们状态机代码放在此处,，以变量leng_fit表示状态，根据输入字符更改状态。
 
@@ -53,7 +53,7 @@ tags:
 
 成功。
 
-## 制作补丁
+### 制作补丁
 
 为了方便保存更改后的代码，我们使用diff指令制作补丁，方便以后使用patch恢复。
 

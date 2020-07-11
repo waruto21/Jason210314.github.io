@@ -8,11 +8,11 @@ tags:
 - gitpages
 ---
 
-# 新建Secret
+## 新建Secret
 
 在博客项目的的`Secrets`里面新建一个`Secret`，名为`CI_PRIVATE_KEY`，将内容设置为配置在GitHub中的公钥对应的私钥。
 
-# 配置工作流
+## 配置工作流
 
 在项目根目录下新建`.github/workflow/nodejs.yaml`，内容为
 

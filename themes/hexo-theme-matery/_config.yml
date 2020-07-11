@@ -243,15 +243,17 @@ mySkills:
     SQL:
       background: 'linear-gradient(to right, #4CAF50 0%, #81C784 100%)'
       percent: 60%
-    JavaScript:
+    Golang:
+      background: 'linear-gradient(to right, #00BCD4 0%, #80DEEA 100%)'
+      percent: 60%
+    Rust:
+      background: 'linear-gradient(to right, #2196F3 0%, #42A5F5 100%)'
+      percent: 60%
+    Vue.js:
       background: 'linear-gradient(to right, #9900FF 0%, #CC66FF 100%)'
       percent: 50%
-    HTML5:
-      background: 'linear-gradient(to right, #2196F3 0%, #42A5F5 100%)'
-      percent: 50%
-    CSS:
-      background: 'linear-gradient(to right, #00BCD4 0%, #80DEEA 100%)'
-      percent: 50%
+
+
     程序设计:
       background: 'linear-gradient(to right, #FFEB3B 0%, #FFF176 100%)'
       percent: 75%

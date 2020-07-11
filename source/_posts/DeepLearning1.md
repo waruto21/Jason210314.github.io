@@ -8,11 +8,11 @@ tags:
  - BP
 ---
 
-# 神经网络正向及反向传播核心算法
+## 神经网络正向及反向传播核心算法
 
 ![](equations.png)
 
-# Logistics regression作业
+## Logistics regression作业
 
 ```python
 import numpy as np
@@ -270,7 +270,7 @@ print("y = " + str(np.squeeze(my_predicted_image)) + ", your algorithm predicts 
 
 ```
 
-# 简单BP算法
+## 简单BP算法
 
 ```python
 import numpy as np
