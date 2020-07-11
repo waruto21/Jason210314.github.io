@@ -114,7 +114,7 @@ search:
   field: post
 
 permalink_pinyin:
-  enable: true
+  enable: false
   separator: '-' # default: '-'
 
 postInfo:

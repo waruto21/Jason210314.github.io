@@ -1,5 +1,5 @@
 ---
-title: Github actions自动构建博客
+title: Github Actions自动构建博客
 date: 2020-06-19 23:39:07
 categories:
  - github
