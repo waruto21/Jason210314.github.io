@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>6.S081 lab7 thread | OneStep</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="alternate" type="application/rss+xml" href="https://wmc1999.top/rss.xml" title="OneStep RSS Feed">
+    <meta name="description" content="利用xv6和pthread熟悉多线程">
+    <meta name="msapplication-TileColor" content="#ffffff">
+    <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+    <meta name="theme-color" content="#ffffff">
+    
+    <link rel="preload" href="/assets/css/0.styles.e4481a5a.css" as="style"><link rel="preload" href="/assets/js/app.f25a4321.js" as="script"><link rel="preload" href="/assets/js/6.036fc43e.js" as="script"><link rel="preload" href="/assets/js/3.e3d55509.js" as="script"><link rel="preload" href="/assets/js/30.ea435c6a.js" as="script"><link rel="preload" href="/assets/js/9.151ac344.js" as="script"><link rel="prefetch" href="/assets/js/10.e077d793.js"><link rel="prefetch" href="/assets/js/11.93b1eff1.js"><link rel="prefetch" href="/assets/js/12.165a8f38.js"><link rel="prefetch" href="/assets/js/13.86b71190.js"><link rel="prefetch" href="/assets/js/14.f7c31146.js"><link rel="prefetch" href="/assets/js/15.b61267d7.js"><link rel="prefetch" href="/assets/js/16.e7b2390a.js"><link rel="prefetch" href="/assets/js/17.c6ea5fff.js"><link rel="prefetch" href="/assets/js/18.678082c9.js"><link rel="prefetch" href="/assets/js/19.21a8a34e.js"><link rel="prefetch" href="/assets/js/20.9edcae00.js"><link rel="prefetch" href="/assets/js/21.f0f9d500.js"><link rel="prefetch" href="/assets/js/22.b54c9990.js"><link rel="prefetch" href="/assets/js/23.53b24cbf.js"><link rel="prefetch" href="/assets/js/24.659f2811.js"><link rel="prefetch" href="/assets/js/25.d1cafbf8.js"><link rel="prefetch" href="/assets/js/26.b17873ae.js"><link rel="prefetch" href="/assets/js/27.2aa200a3.js"><link rel="prefetch" href="/assets/js/28.15123e9b.js"><link rel="prefetch" href="/assets/js/29.f9430524.js"><link rel="prefetch" href="/assets/js/31.cefe08f6.js"><link rel="prefetch" href="/assets/js/32.df4e8226.js"><link rel="prefetch" href="/assets/js/33.89c22683.js"><link rel="prefetch" href="/assets/js/34.431af884.js"><link rel="prefetch" href="/assets/js/35.5b664f83.js"><link rel="prefetch" href="/assets/js/36.f179d54b.js"><link rel="prefetch" href="/assets/js/37.11846bd5.js"><link rel="prefetch" href="/assets/js/4.d1c52263.js"><link rel="prefetch" href="/assets/js/5.ed205acd.js"><link rel="prefetch" href="/assets/js/7.43914937.js"><link rel="prefetch" href="/assets/js/8.21172198.js"><link rel="prefetch" href="/assets/js/vuejs-paginate.dfe54976.js">
+    <link rel="stylesheet" href="/assets/css/0.styles.e4481a5a.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div id="vuepress-theme-blog__global-layout"><section id="header-wrapper"><header id="header"><div class="header-wrapper"><div class="title"><a href="/" class="nav-link home-link">OneStep </a></div> <div class="header-right-wrap"><ul class="nav"><li class="nav-item"><a href="/" class="nav-link">Home</a></li><li class="nav-item"><a href="/blog/" class="nav-link">Blog</a></li><li class="nav-item"><a href="/tag/" class="nav-link">Tag</a></li><li class="nav-item"><a href="/about/" class="nav-link">About </a></li><li class="nav-item"><a href="https://github.com/jason210314/" target="_blank" rel="noopener noreferrer" class="nav-link external">github </a></li></ul> <div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <a href="/rss.xml" class="feed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></div></div></header></section> <div id="mobile-header"><div class="mobile-header-bar"><div class="mobile-header-title"><a href="/" class="nav-link mobile-home-link">OneStep </a> <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-menu"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg></div> <div class="mobile-menu-wrapper"><hr class="menu-divider"> <ul class="mobile-nav"><li class="mobile-nav-item"><a href="/" class="nav-link">Home</a></li><li class="mobile-nav-item"><a href="/blog/" class="nav-link">Blog</a></li><li class="mobile-nav-item"><a href="/tag/" class="nav-link">Tag</a></li><li class="mobile-nav-item"><a href="/about/" class="nav-link">About </a></li><li class="mobile-nav-item"><a href="https://github.com/jason210314/" target="_blank" rel="noopener noreferrer" class="nav-link external">github </a></li> <li class="mobile-nav-item"><a href="/rss.xml" class="feed"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-rss"><path d="M4 11a9 9 0 0 1 9 9"></path><path d="M4 4a16 16 0 0 1 16 16"></path><circle cx="5" cy="19" r="1"></circle></svg></a></li></ul></div></div></div> <div class="content-wrapper"><div id="vuepress-theme-blog__post-layout"><article itemscope="itemscope" itemtype="https://schema.org/BlogPosting" class="vuepress-blog-theme-content"><header><h1 itemprop="name headline" class="post-title">
+        6.S081 lab7 thread
+      </h1> <div class="post-meta"><!----> <div class="post-meta-date"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-clock"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg> <time pubdate itemprop="datePublished" datetime="2021-02-28T15:55:05.000Z">
+      2021-02-28
+    </time></div> <ul itemprop="keywords" class="post-meta-tags"><li class="post-tag" data-v-42ccfcd5><a href="/tag/6.S081" data-v-42ccfcd5><span data-v-42ccfcd5>6.S081</span></a></li><li class="post-tag" data-v-42ccfcd5><a href="/tag/Multithreading" data-v-42ccfcd5><span data-v-42ccfcd5>Multithreading</span></a></li></ul></div></header> <div itemprop="articleBody" class="content__default"><p>本实验室将让你熟悉多线程。您将在用户级线程包中实现线程切换；使用多线程来加快程序的速度；并实现一个<code>barrier</code>。</p> <h1 id="uthread-switching-between-threads"><a href="#uthread-switching-between-threads" class="header-anchor">#</a> Uthread: switching between threads</h1> <p>实验代码中为我们提供了一个用户级别线程库，需要我们实现线程切换部分。我们需要给<code>user/uthread.c</code>中的<code>thread_create()</code>和<code>thread_schedule()</code>，以及<code>user/uthread_switch.S</code>中的<code>thread_switch</code>添加代码。</p> <p>首先，我们为<code>thread</code>添加<code>context</code>以保存<code>callee</code>寄存器值，从<code>kernel/proc.h</code>中复制即可。</p> <div class="language-c extra-class"><pre class="language-c"><code><span class="token keyword">struct</span> <span class="token class-name">context</span> <span class="token punctuation">{</span>
+  uint64 ra<span class="token punctuation">;</span>
+  uint64 sp<span class="token punctuation">;</span>
+
+  <span class="token comment">// callee-saved</span>
+  uint64 s0<span class="token punctuation">;</span>
+  uint64 s1<span class="token punctuation">;</span>
+  uint64 s2<span class="token punctuation">;</span>
+  uint64 s3<span class="token punctuation">;</span>
+  uint64 s4<span class="token punctuation">;</span>
+  uint64 s5<span class="token punctuation">;</span>
+  uint64 s6<span class="token punctuation">;</span>
+  uint64 s7<span class="token punctuation">;</span>
+  uint64 s8<span class="token punctuation">;</span>
+  uint64 s9<span class="token punctuation">;</span>
+  uint64 s10<span class="token punctuation">;</span>
+  uint64 s11<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+
+<span class="token keyword">struct</span> <span class="token class-name">thread</span> <span class="token punctuation">{</span>
+  <span class="token keyword">char</span>       stack<span class="token punctuation">[</span>STACK_SIZE<span class="token punctuation">]</span><span class="token punctuation">;</span> <span class="token comment">/* the thread's stack */</span>
+  <span class="token keyword">int</span>        state<span class="token punctuation">;</span>             <span class="token comment">/* FREE, RUNNING, RUNNABLE */</span>
+  <span class="token keyword">struct</span> <span class="token class-name">context</span> context<span class="token punctuation">;</span>
+<span class="token punctuation">}</span><span class="token punctuation">;</span>
+</code></pre></div><p>然后是``thread_create()`：</p> <div class="language-c extra-class"><pre class="language-c"><code><span class="token keyword">void</span>
+<span class="token function">thread_create</span><span class="token punctuation">(</span><span class="token keyword">void</span> <span class="token punctuation">(</span><span class="token operator">*</span>func<span class="token punctuation">)</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">struct</span> <span class="token class-name">thread</span> <span class="token operator">*</span>t<span class="token punctuation">;</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span>t <span class="token operator">=</span> all_thread<span class="token punctuation">;</span> t <span class="token operator">&lt;</span> all_thread <span class="token operator">+</span> MAX_THREAD<span class="token punctuation">;</span> t<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>t<span class="token operator">-&gt;</span>state <span class="token operator">==</span> FREE<span class="token punctuation">)</span> <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  t<span class="token operator">-&gt;</span>state <span class="token operator">=</span> RUNNABLE<span class="token punctuation">;</span>
+  <span class="token comment">// YOUR CODE HERE</span>
+  <span class="token comment">// user ra return func in switch</span>
+  t<span class="token operator">-&gt;</span>context<span class="token punctuation">.</span>ra <span class="token operator">=</span> <span class="token punctuation">(</span>uint64<span class="token punctuation">)</span>func<span class="token punctuation">;</span>
+  <span class="token comment">// point to stack top(highest addr)</span>
+  t<span class="token operator">-&gt;</span>context<span class="token punctuation">.</span>sp <span class="token operator">=</span> <span class="token punctuation">(</span>uint64<span class="token punctuation">)</span>t<span class="token operator">-&gt;</span>stack <span class="token operator">+</span> STACK_SIZE<span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>利用<code>ra</code>在 switch 到 thread 后，返回到函数的位置，将<code>sp</code>指向该<code>thread</code>的栈顶。</p> <p>最后是<code>thread_schedule</code>：</p> <div class="language-c extra-class"><pre class="language-c"><code><span class="token keyword">if</span> <span class="token punctuation">(</span>current_thread <span class="token operator">!=</span> next_thread<span class="token punctuation">)</span> <span class="token punctuation">{</span>         <span class="token comment">/* switch threads?  */</span>
+  next_thread<span class="token operator">-&gt;</span>state <span class="token operator">=</span> RUNNING<span class="token punctuation">;</span>
+  t <span class="token operator">=</span> current_thread<span class="token punctuation">;</span>
+  current_thread <span class="token operator">=</span> next_thread<span class="token punctuation">;</span>
+  <span class="token comment">/* YOUR CODE HERE
+     * Invoke thread_switch to switch from t to next_thread:
+     * thread_switch(??, ??);
+     */</span>
+  <span class="token function">thread_switch</span><span class="token punctuation">(</span><span class="token punctuation">(</span>uint64<span class="token punctuation">)</span><span class="token operator">&amp;</span>t<span class="token operator">-&gt;</span>context<span class="token punctuation">,</span> <span class="token punctuation">(</span>uint64<span class="token punctuation">)</span><span class="token operator">&amp;</span>current_thread<span class="token operator">-&gt;</span>context<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>至于<code>thread_switch</code>的代码，直接从<code>kernel/switch.S</code>中复制即可。</p> <h1 id="using-threads"><a href="#using-threads" class="header-anchor">#</a> Using threads</h1> <p>后面的两关都和<code>xv6</code>无关了，大概是有一些多线程的 feature，<code>xv6</code>无法提供，所以需要我们使用<code>pthread</code>。</p> <p>实验为我们提供了一个无锁的<code>hashtable</code>，单线程下执行无误，但是多线程执行时，会发生如下问题：</p> <div class="language-bash extra-class"><pre class="language-bash"><code>❯ ./ph <span class="token number">2</span>
+<span class="token number">100000</span> puts, <span class="token number">1.780</span> seconds, <span class="token number">56190</span> puts/second
+<span class="token number">0</span>: <span class="token number">16577</span> keys missing
+<span class="token number">1</span>: <span class="token number">16577</span> keys missing
+<span class="token number">200000</span> gets, <span class="token number">4.343</span> seconds, <span class="token number">46055</span> gets/second
+</code></pre></div><p>这是因为，当两个线程同时插入<code>hashtable</code>的一个<code>bucket</code>时，会导致 key 丢失。</p> <p>我们对<code>put</code>操作加锁即可（不要忘了在<code>main()</code>函数中初始化<code>locks</code>）：</p> <div class="language-c extra-class"><pre class="language-c"><code><span class="token class-name">pthread_mutex_t</span> locks<span class="token punctuation">[</span>NBUCKET<span class="token punctuation">]</span><span class="token punctuation">;</span>
+
+<span class="token keyword">static</span>
+<span class="token keyword">void</span> <span class="token function">put</span><span class="token punctuation">(</span><span class="token keyword">int</span> key<span class="token punctuation">,</span> <span class="token keyword">int</span> value<span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token keyword">int</span> i <span class="token operator">=</span> key <span class="token operator">%</span> NBUCKET<span class="token punctuation">;</span>
+  <span class="token function">pthread_mutex_lock</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>locks<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token comment">// is the key already present?</span>
+  <span class="token keyword">struct</span> <span class="token class-name">entry</span> <span class="token operator">*</span>e <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+  <span class="token keyword">for</span> <span class="token punctuation">(</span>e <span class="token operator">=</span> table<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">;</span> e <span class="token operator">!=</span> <span class="token number">0</span><span class="token punctuation">;</span> e <span class="token operator">=</span> e<span class="token operator">-&gt;</span>next<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>e<span class="token operator">-&gt;</span>key <span class="token operator">==</span> key<span class="token punctuation">)</span>
+      <span class="token keyword">break</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">if</span><span class="token punctuation">(</span>e<span class="token punctuation">)</span><span class="token punctuation">{</span>
+    <span class="token comment">// update the existing key.</span>
+    e<span class="token operator">-&gt;</span>value <span class="token operator">=</span> value<span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token comment">// the new is new.</span>
+    <span class="token function">insert</span><span class="token punctuation">(</span>key<span class="token punctuation">,</span> value<span class="token punctuation">,</span> <span class="token operator">&amp;</span>table<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> table<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">pthread_mutex_unlock</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>locks<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h1 id="barrier"><a href="#barrier" class="header-anchor">#</a> Barrier</h1> <p>本关要求我们实现一个<code>barrie</code>：在某个点上，所有相关的的线程必须等待，直到所有其他相关的线程也到达这个点。这个我们参考<code>xv6</code>中的<code>sleep</code>和<code>wait</code>的使用即可：</p> <div class="language-c extra-class"><pre class="language-c"><code><span class="token keyword">static</span> <span class="token keyword">void</span>
+<span class="token function">barrier</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+<span class="token punctuation">{</span>
+  <span class="token comment">// YOUR CODE HERE</span>
+  <span class="token comment">//</span>
+  <span class="token comment">// Block until all threads have called barrier() and</span>
+  <span class="token comment">// then increment bstate.round.</span>
+  <span class="token comment">//</span>
+
+  <span class="token function">pthread_mutex_lock</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>bstate<span class="token punctuation">.</span>barrier_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  bstate<span class="token punctuation">.</span>nthread<span class="token operator">++</span><span class="token punctuation">;</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>bstate<span class="token punctuation">.</span>nthread <span class="token operator">==</span> nthread<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    bstate<span class="token punctuation">.</span>round<span class="token operator">++</span><span class="token punctuation">;</span>
+    bstate<span class="token punctuation">.</span>nthread <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span>
+    <span class="token function">pthread_cond_broadcast</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>bstate<span class="token punctuation">.</span>barrier_cond<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+    <span class="token function">pthread_cond_wait</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>bstate<span class="token punctuation">.</span>barrier_cond<span class="token punctuation">,</span> <span class="token operator">&amp;</span>bstate<span class="token punctuation">.</span>barrier_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+  <span class="token punctuation">}</span>
+  <span class="token function">pthread_mutex_unlock</span><span class="token punctuation">(</span><span class="token operator">&amp;</span>bstate<span class="token punctuation">.</span>barrier_mutex<span class="token punctuation">)</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>最终代码见<a href="https://github.com/Jason210314/xv6-labs-2020/tree/thread" target="_blank" rel="noopener noreferrer">GitHub 仓库<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a>。</p></div> <footer><!----> <hr> <!----></footer></article> <!----></div></div> <footer class="footer" data-v-3d9deeb8><div class="footer-left-wrap" data-v-3d9deeb8><ul class="contact" data-v-3d9deeb8><li class="contact-item" data-v-3d9deeb8><a href="https://github.com/jason210314" target="_blank" rel="noopener noreferrer" class="nav-link external" data-v-3d9deeb8><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-github" data-v-3d9deeb8><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" data-v-3d9deeb8></path></svg>
+          
+        </a></li></ul></div> <div class="footer-right-wrap" data-v-3d9deeb8><ul class="copyright" data-v-3d9deeb8><li class="copyright-item" data-v-3d9deeb8><a href="https://policies.google.com/privacy?hl=en-US" target="_blank" rel="noopener noreferrer" class="nav-link external" data-v-3d9deeb8>Privacy Policy</a></li><li class="copyright-item" data-v-3d9deeb8>MIT Licensed | Copyright © 2018-present</li></ul></div></footer></div><div class="global-ui"><!----></div></div>
+    <script src="/assets/js/app.f25a4321.js" defer></script><script src="/assets/js/6.036fc43e.js" defer></script><script src="/assets/js/3.e3d55509.js" defer></script><script src="/assets/js/30.ea435c6a.js" defer></script><script src="/assets/js/9.151ac344.js" defer></script>
+  </body>
+</html>
