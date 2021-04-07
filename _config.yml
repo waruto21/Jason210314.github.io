@@ -62,3 +62,10 @@ ignore: null
 theme: icarus
 deploy:
   type: ''
+feed:
+  type: atom
+  path: rss.xml
+  limit: 0
+  hub:
+  content: false
+  order_by: -date
