@@ -80,7 +80,7 @@ GitHub Actions 使用`YAML`语法定义`event`，`job`和`step`。这些 YAML �
 
 要更详细了解`workflow`文件，参阅[Understanding the workflow file](https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/introduction-to-github-actions#understanding-the-workflow-file)。
 
-# 自动构建 Vuepress 博客
+# 自动构建 Hexo 博客
 
 ## 配置密钥
 
@@ -102,10 +102,10 @@ name: Deploy
 on:
   push:
     branches:
-      - vuepress
+      - hexo
   pull_request:
     branches:
-      - vuepress
+      - hexo
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -113,17 +113,34 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
         with:
-          ref: "vuepress"
-
+          ref: hexo
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12"
+      - name: Cache node modules
+        uses: actions/cache@v2
+        env:
+          cache-name: cache-node-modules
+        with:
+          # npm cache files are stored in `~/.npm` on Linux/macOS
+          path: ~/.npm
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+            ${{ runner.os }}-build-
+            ${{ runner.os }}-
+      - name: Install Dependencies
+        run: |
+          npm install -g hexo-cli
+          npm install
       - name: build
         run: |
-          yarn install
-          yarn build
+          hexo g
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           deploy_key: ${{ secrets.DEPLOY_KEY }}
-          publish_dir: docs/.vuepress/dist
+          publish_dir: public
 ```
 
 上面使用了 github actions market 中的`peaceiris/actions-gh-pages@v3`,让部署博客更加简单.
