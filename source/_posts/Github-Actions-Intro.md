@@ -143,4 +143,6 @@ jobs:
           publish_dir: public
 ```
 
-上面使用了 github actions market 中的`peaceiris/actions-gh-pages@v3`,让部署博客更加简单.
+上面使用了`actions/cache@v2`l github actions market 中的`peaceiris/actions-gh-pages@v3`,让部署博客更加简单.
+
+> 不过部署 Hexo 博客的话,目前 Vercel 更简单,在国内访问也更快,本博客的 Github Actions 已经被禁用了,由 vercel 进行部署.
