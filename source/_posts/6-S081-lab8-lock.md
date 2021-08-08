@@ -410,4 +410,4 @@ test1 OK
 
 可见`bcache`锁的竞争消失了。
 
-最终代码见[GitHub 仓库](https://github.com/Jason210314/xv6-labs-2020/tree/lock)。
+最终代码见[GitHub 仓库](https://github.com/waruto21/xv6-labs-2020/tree/lock)。

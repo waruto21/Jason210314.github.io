@@ -259,4 +259,4 @@ if (!(omode & O_NOFOLLOW)) {
 }
 ```
 
-完整代码见[GitHub 仓库](https://github.com/Jason210314/xv6-labs-2020/tree/fs)。
+完整代码见[GitHub 仓库](https://github.com/waruto210/xv6-labs-2020/tree/fs)。

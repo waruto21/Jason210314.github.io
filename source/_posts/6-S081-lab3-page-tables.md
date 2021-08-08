@@ -273,4 +273,4 @@ release(&p->lock);
 
 在`copyin_new`中，做了`srcva + len < srcva`判断条件。这是为了防止`len`过大，导致溢出。
 
-最终代码见[github 仓库](https://github.com/Jason210314/xv6-labs-2020/tree/pgtbl)。
+最终代码见[github 仓库](https://github.com/waruto210/xv6-labs-2020/tree/pgtbl)。
