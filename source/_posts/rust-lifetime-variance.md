@@ -9,7 +9,7 @@ tags:
   - subtype
 ---
 
-最近对 rust 的生命周期有一些疑惑，在找资料学习的过程中自然就了解到由 rust 生命周期导出的 rust subtype、variance 的概念，对这一块儿的学习也解答了我一些对其他语言的问题,同时我也被认识的大佬赶鸭子上架,在 BUPT Rust Meetup 做了分享,[keynote 讲稿在此](https://github.com/Jason210314/Jason210314.github.io/blob/hexo/source/_posts/rust-lifetime-variance/variance_rust.key)。
+最近对 rust 的生命周期有一些疑惑，在找资料学习的过程中自然就了解到由 rust 生命周期导出的 rust subtype、variance 的概念，对这一块儿的学习也解答了我一些对其他语言的问题,同时我也被认识的大佬赶鸭子上架,在 BUPT Rust Meetup 做了分享,[keynote 讲稿在此](https://github.com/waruto21/waruto21.github.io/blob/hexo/source/_posts/rust-lifetime-variance/variance_rust.key)。
 
 <!-- more -->
 

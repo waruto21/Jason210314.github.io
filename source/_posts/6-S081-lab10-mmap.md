@@ -262,4 +262,4 @@ void *mmap(void *addr, size_t length, int prot, int flags,
   }
   ```
 
-这样 mmap lab 就完成了，最终代码见[GitHub 仓库](https://github.com/Jason210314/xv6-labs-2020/tree/mmap)。
+这样 mmap lab 就完成了，最终代码见[GitHub 仓库](https://github.com/waruto21/xv6-labs-2020/tree/mmap)。

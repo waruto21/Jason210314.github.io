@@ -195,4 +195,4 @@ if(lazy_uvmalloc(p->pagetable, va) != 0) {
 
 做完如上修改，便能通过所有测试。
 
-最终代码见[github 仓库](https://github.com/Jason210314/xv6-labs-2020/tree/lazy)。
+最终代码见[github 仓库](https://github.com/waruto21/xv6-labs-2020/tree/lazy)。
