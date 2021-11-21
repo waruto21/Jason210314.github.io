@@ -78,7 +78,7 @@ export https_proxy=http://127.0.0.1:7890 http_proxy=http://127.0.0.1:7890 all_pr
 接下来，进行一些完善工作。首先每次都手动启动`clash`并且占用一个终端窗口是很不方便的，先将`clash`作为一个`daemon`进程。参照开发者[推荐](https://github.com/Dreamacro/clash/wiki/clash-as-a-daemon)，使用`pm2`。
 
 ```bash
-$ wget -qO- https://getpm2.com/install.sh | bash
+$ npm install -g nrm
 $ pm2 start clash
 ```
 
