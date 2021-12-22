@@ -311,7 +311,7 @@ id = "UA-164518488-1"
 anonymizeIP = true
 
 [params.cookieconsent]
-enable = true
+enable = false
 # 用于 Cookie 许可横幅的文本字符串
 [params.cookieconsent.content]
 message = ""
