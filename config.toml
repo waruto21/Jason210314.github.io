@@ -65,9 +65,9 @@ mobileMode = "auto"
 # LoveIt 新增 | 0.2.0 页面头部导航栏标题配置
 [params.header.title]
 # LOGO 的 URL
-logo = ""
+logo = "/images/logo.jpeg"
 # 标题名称
-name = ""
+name = "OneStep"
 # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
 pre = ""
 # 你可以在名称 (允许 HTML 格式) 之后添加其他信息, 例如图标
@@ -86,7 +86,7 @@ copyright = true
 # LoveIt 新增 | 0.2.0 是否显示作者
 author = true
 # 网站创立年份
-since = 2018
+since = 2019
 # 许可协议信息 (支持 HTML 格式)
 license = '<a rel="license external nofollow noopener noreffer" href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank">CC BY-NC 4.0</a>'
 
@@ -276,6 +276,15 @@ Skype = false
 Trello = false
 Mix = false
 
+[params.page.comment]
+enable = true
+
+[params.page.comment.disqus]
+# LoveIt 新增 | 0.1.1
+enable = true
+# Disqus 的 shortname，用来在文章中启用 Disqus 评论系统
+shortname = "wmc1999"
+
 # LoveIt 新增 | 0.2.5 TypeIt 配置
 [params.typeit]
 # 每一步的打字速度 (单位是毫秒)
@@ -357,6 +366,15 @@ name = "友链"
 url = "/friendlinks"
 title = ""
 weight = 5
+
+[[menu.main]]
+identifier = "about"
+pre = ""
+post = ""
+name = "关于"
+url = "/about"
+title = ""
+weight = 6
 
 # Hugo 解析文档的配置
 [markup]

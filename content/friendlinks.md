@@ -17,3 +17,5 @@ Q哥: https://qjx.app/
 袁巨巨: https://columbine21.github.io/
 
 LeiWang1999: https://leiblog.wang
+
+clslaid: https://clslaid.icu/
