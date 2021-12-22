@@ -303,7 +303,7 @@ image = ""
 thumbnailUrl = ""
 
 [params.analytics]
-enable = false
+enable = true
 # Google Analytics
 [params.analytics.google]
 id = "UA-164518488-1"
@@ -319,6 +319,7 @@ dismiss = ""
 link = ""
 
 [menu]
+
 [[menu.main]]
 identifier = "home"
 # 你可以在名称 (允许 HTML 格式) 之前添加其他信息, 例如图标
