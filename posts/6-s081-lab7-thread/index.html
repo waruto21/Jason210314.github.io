@@ -1,0 +1,377 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
+<title>6.S081 lab7 thread - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="6.S081 lab7 thread">
+<meta property="og:description" content="本实验室将让你熟悉多线程。您将在用户级线程包中实现线程切换；使用多线程来加快程序的速度；并实现一个barrier。 Uthread: switching between threads 实验代码中为我们提">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wmc1999.top/posts/6-s081-lab7-thread/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-02-28T15:55:05+00:00">
+<meta property="article:modified_time" content="2021-02-28T15:55:05+00:00">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="6.S081 lab7 thread">
+<meta name=twitter:description content="本实验室将让你熟悉多线程。您将在用户级线程包中实现线程切换；使用多线程来加快程序的速度；并实现一个barrier。 Uthread: switching between threads 实验代码中为我们提">
+<meta name=application-name content="OneStep">
+<meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/6-s081-lab7-thread/><link rel=prev href=https://wmc1999.top/posts/6-s081-lab6-cow/><link rel=next href=https://wmc1999.top/posts/6-s081-lab8-lock/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"6.S081 lab7 thread","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/6-s081-lab7-thread\/"},"genre":"posts","keywords":"6.S081, Multithreading","wordcount":1024,"url":"https:\/\/wmc1999.top\/posts\/6-s081-lab7-thread\/","datePublished":"2021-02-28T15:55:05+00:00","dateModified":"2021-02-28T15:55:05+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head>
+<body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=OneStep></a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/> 首页 </a><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><a class=menu-item href=/friendlinks> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-desktop>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=OneStep></a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><div class=search-wrapper>
+<div class="search mobile" id=search-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-mobile>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</div>
+<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+取消
+</a>
+</div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a></div>
+</div>
+</header>
+<div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div>
+</div>
+<div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div>
+</div>
+<main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>目录</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animated flipInX">6.S081 lab7 thread</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/os/><i class="far fa-folder fa-fw"></i>OS</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-02-28>2021-02-28</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1024 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 3 分钟&nbsp;</div>
+</div><div class="details toc" id=toc-static kept=true>
+<div class="details-summary toc-title">
+<span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents></nav></div>
+</div><div class=content id=content><p>本实验室将让你熟悉多线程。您将在用户级线程包中实现线程切换；使用多线程来加快程序的速度；并实现一个<code>barrier</code>。</p>
+<h1 id=uthread-switching-between-threads>Uthread: switching between threads</h1>
+<p>实验代码中为我们提供了一个用户级别线程库，需要我们实现线程切换部分。我们需要给<code>user/uthread.c</code>中的<code>thread_create()</code>和<code>thread_schedule()</code>，以及<code>user/uthread_switch.S</code>中的<code>thread_switch</code>添加代码。</p>
+<p>首先，我们为<code>thread</code>添加<code>context</code>以保存<code>callee</code>寄存器值，从<code>kernel/proc.h</code>中复制即可。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>struct</span> <span class=n>context</span> <span class=p>{</span>
+  <span class=n>uint64</span> <span class=n>ra</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>sp</span><span class=p>;</span>
+
+  <span class=c1>// callee-saved
+</span><span class=c1></span>  <span class=n>uint64</span> <span class=n>s0</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s1</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s2</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s3</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s4</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s5</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s6</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s7</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s8</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s9</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s10</span><span class=p>;</span>
+  <span class=n>uint64</span> <span class=n>s11</span><span class=p>;</span>
+<span class=p>};</span>
+
+<span class=k>struct</span> <span class=kr>thread</span> <span class=p>{</span>
+  <span class=kt>char</span>       <span class=n>stack</span><span class=p>[</span><span class=n>STACK_SIZE</span><span class=p>];</span> <span class=cm>/* the thread&#39;s stack */</span>
+  <span class=kt>int</span>        <span class=n>state</span><span class=p>;</span>             <span class=cm>/* FREE, RUNNING, RUNNABLE */</span>
+  <span class=k>struct</span> <span class=n>context</span> <span class=n>context</span><span class=p>;</span>
+<span class=p>};</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后是``thread_create()`：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=kt>void</span>
+<span class=nf>thread_create</span><span class=p>(</span><span class=kt>void</span> <span class=p>(</span><span class=o>*</span><span class=n>func</span><span class=p>)())</span>
+<span class=p>{</span>
+  <span class=k>struct</span> <span class=kr>thread</span> <span class=o>*</span><span class=n>t</span><span class=p>;</span>
+
+  <span class=k>for</span> <span class=p>(</span><span class=n>t</span> <span class=o>=</span> <span class=n>all_thread</span><span class=p>;</span> <span class=n>t</span> <span class=o>&lt;</span> <span class=n>all_thread</span> <span class=o>+</span> <span class=n>MAX_THREAD</span><span class=p>;</span> <span class=n>t</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=p>(</span><span class=n>t</span><span class=o>-&gt;</span><span class=n>state</span> <span class=o>==</span> <span class=n>FREE</span><span class=p>)</span> <span class=k>break</span><span class=p>;</span>
+  <span class=p>}</span>
+  <span class=n>t</span><span class=o>-&gt;</span><span class=n>state</span> <span class=o>=</span> <span class=n>RUNNABLE</span><span class=p>;</span>
+  <span class=c1>// YOUR CODE HERE
+</span><span class=c1></span>  <span class=c1>// user ra return func in switch
+</span><span class=c1></span>  <span class=n>t</span><span class=o>-&gt;</span><span class=n>context</span><span class=p>.</span><span class=n>ra</span> <span class=o>=</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=n>func</span><span class=p>;</span>
+  <span class=c1>// point to stack top(highest addr)
+</span><span class=c1></span>  <span class=n>t</span><span class=o>-&gt;</span><span class=n>context</span><span class=p>.</span><span class=n>sp</span> <span class=o>=</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=n>t</span><span class=o>-&gt;</span><span class=n>stack</span> <span class=o>+</span> <span class=n>STACK_SIZE</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>利用<code>ra</code>在 switch 到 thread 后，返回到函数的位置，将<code>sp</code>指向该<code>thread</code>的栈顶。</p>
+<p>最后是<code>thread_schedule</code>：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>if</span> <span class=p>(</span><span class=n>current_thread</span> <span class=o>!=</span> <span class=n>next_thread</span><span class=p>)</span> <span class=p>{</span>         <span class=cm>/* switch threads?  */</span>
+  <span class=n>next_thread</span><span class=o>-&gt;</span><span class=n>state</span> <span class=o>=</span> <span class=n>RUNNING</span><span class=p>;</span>
+  <span class=n>t</span> <span class=o>=</span> <span class=n>current_thread</span><span class=p>;</span>
+  <span class=n>current_thread</span> <span class=o>=</span> <span class=n>next_thread</span><span class=p>;</span>
+  <span class=cm>/* YOUR CODE HERE
+</span><span class=cm>     * Invoke thread_switch to switch from t to next_thread:
+</span><span class=cm>     * thread_switch(??, ??);
+</span><span class=cm>     */</span>
+  <span class=n>thread_switch</span><span class=p>((</span><span class=n>uint64</span><span class=p>)</span><span class=o>&amp;</span><span class=n>t</span><span class=o>-&gt;</span><span class=n>context</span><span class=p>,</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=o>&amp;</span><span class=n>current_thread</span><span class=o>-&gt;</span><span class=n>context</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>至于<code>thread_switch</code>的代码，直接从<code>kernel/switch.S</code>中复制即可。</p>
+<h1 id=using-threads>Using threads</h1>
+<p>后面的两关都和<code>xv6</code>无关了，大概是有一些多线程的 feature，<code>xv6</code>无法提供，所以需要我们使用<code>pthread</code>。</p>
+<p>实验为我们提供了一个无锁的<code>hashtable</code>，单线程下执行无误，但是多线程执行时，会发生如下问题：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span><span class=lnt>5
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>❯ ./ph <span class=m>2</span>
+<span class=m>100000</span> puts, 1.780 seconds, <span class=m>56190</span> puts/second
+0: <span class=m>16577</span> keys missing
+1: <span class=m>16577</span> keys missing
+<span class=m>200000</span> gets, 4.343 seconds, <span class=m>46055</span> gets/second
+</code></pre></td></tr></table>
+</div>
+</div><p>这是因为，当两个线程同时插入<code>hashtable</code>的一个<code>bucket</code>时，会导致 key 丢失。</p>
+<p>我们对<code>put</code>操作加锁即可（不要忘了在<code>main()</code>函数中初始化<code>locks</code>）：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>pthread_mutex_t</span> <span class=n>locks</span><span class=p>[</span><span class=n>NBUCKET</span><span class=p>];</span>
+
+<span class=k>static</span>
+<span class=kt>void</span> <span class=nf>put</span><span class=p>(</span><span class=kt>int</span> <span class=n>key</span><span class=p>,</span> <span class=kt>int</span> <span class=n>value</span><span class=p>)</span>
+<span class=p>{</span>
+  <span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=n>key</span> <span class=o>%</span> <span class=n>NBUCKET</span><span class=p>;</span>
+  <span class=n>pthread_mutex_lock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>locks</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+  <span class=c1>// is the key already present?
+</span><span class=c1></span>  <span class=k>struct</span> <span class=n>entry</span> <span class=o>*</span><span class=n>e</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+  <span class=k>for</span> <span class=p>(</span><span class=n>e</span> <span class=o>=</span> <span class=n>table</span><span class=p>[</span><span class=n>i</span><span class=p>];</span> <span class=n>e</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>e</span> <span class=o>=</span> <span class=n>e</span><span class=o>-&gt;</span><span class=n>next</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>if</span> <span class=p>(</span><span class=n>e</span><span class=o>-&gt;</span><span class=n>key</span> <span class=o>==</span> <span class=n>key</span><span class=p>)</span>
+      <span class=k>break</span><span class=p>;</span>
+  <span class=p>}</span>
+  <span class=k>if</span><span class=p>(</span><span class=n>e</span><span class=p>){</span>
+    <span class=c1>// update the existing key.
+</span><span class=c1></span>    <span class=n>e</span><span class=o>-&gt;</span><span class=n>value</span> <span class=o>=</span> <span class=n>value</span><span class=p>;</span>
+  <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+    <span class=c1>// the new is new.
+</span><span class=c1></span>    <span class=n>insert</span><span class=p>(</span><span class=n>key</span><span class=p>,</span> <span class=n>value</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>table</span><span class=p>[</span><span class=n>i</span><span class=p>],</span> <span class=n>table</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+  <span class=p>}</span>
+  <span class=n>pthread_mutex_unlock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>locks</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><h1 id=barrier>Barrier</h1>
+<p>本关要求我们实现一个<code>barrie</code>：在某个点上，所有相关的的线程必须等待，直到所有其他相关的线程也到达这个点。这个我们参考<code>xv6</code>中的<code>sleep</code>和<code>wait</code>的使用即可：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>static</span> <span class=kt>void</span>
+<span class=nf>barrier</span><span class=p>()</span>
+<span class=p>{</span>
+  <span class=c1>// YOUR CODE HERE
+</span><span class=c1></span>  <span class=c1>//
+</span><span class=c1></span>  <span class=c1>// Block until all threads have called barrier() and
+</span><span class=c1></span>  <span class=c1>// then increment bstate.round.
+</span><span class=c1></span>  <span class=c1>//
+</span><span class=c1></span>
+  <span class=n>pthread_mutex_lock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>bstate</span><span class=p>.</span><span class=n>barrier_mutex</span><span class=p>);</span>
+  <span class=n>bstate</span><span class=p>.</span><span class=n>nthread</span><span class=o>++</span><span class=p>;</span>
+  <span class=k>if</span> <span class=p>(</span><span class=n>bstate</span><span class=p>.</span><span class=n>nthread</span> <span class=o>==</span> <span class=n>nthread</span><span class=p>)</span> <span class=p>{</span>
+    <span class=n>bstate</span><span class=p>.</span><span class=n>round</span><span class=o>++</span><span class=p>;</span>
+    <span class=n>bstate</span><span class=p>.</span><span class=n>nthread</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=n>pthread_cond_broadcast</span><span class=p>(</span><span class=o>&amp;</span><span class=n>bstate</span><span class=p>.</span><span class=n>barrier_cond</span><span class=p>);</span>
+  <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+    <span class=n>pthread_cond_wait</span><span class=p>(</span><span class=o>&amp;</span><span class=n>bstate</span><span class=p>.</span><span class=n>barrier_cond</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>bstate</span><span class=p>.</span><span class=n>barrier_mutex</span><span class=p>);</span>
+  <span class=p>}</span>
+  <span class=n>pthread_mutex_unlock</span><span class=p>(</span><span class=o>&amp;</span><span class=n>bstate</span><span class=p>.</span><span class=n>barrier_mutex</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>最终代码见<a href=https://github.com/waruto210/xv6-labs-2020/tree/thread target=_blank rel="noopener noreffer">GitHub 仓库</a>。</p>
+</div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>更新于 2021-02-28</span>
+</div>
+<div class=post-info-license></div>
+</div>
+<div class=post-info-line>
+<div class=post-info-md><span>
+<a class=link-to-markdown href=/posts/6-s081-lab7-thread/index.md target=_blank>阅读原始文档</a>
+</span></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/6-s081-lab7-thread/ data-title="6.S081 lab7 thread" data-via=Jason210314 data-hashtags=6.S081,Multithreading><i class="fab fa-twitter fa-fw"></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/6.s081/>6.S081</a>,&nbsp;<a href=/tags/multithreading/>Multithreading</a></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/6-s081-lab6-cow/ class=prev rel=prev title="6.S081 lab6 cow"><i class="fas fa-angle-left fa-fw"></i>6.S081 lab6 cow</a>
+<a href=/posts/6-s081-lab8-lock/ class=next rel=next title="6.S081 lab8 lock">6.S081 lab8 lock<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+</div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2018 - 2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
+<i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论>
+<i class="fas fa-comment fa-fw"></i>
+</a>
+</div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript src=/lib/cookieconsent/cookieconsent.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},cookieconsent:{content:{dismiss:"同意",link:"了解更多",message:"本网站使用 Cookies 来改善您的浏览体验."},enable:!0,palette:{button:{background:"#f0f0f0"},popup:{background:"#1aa3ff"}},theme:"edgeless"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>

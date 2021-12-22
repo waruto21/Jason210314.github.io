@@ -1,0 +1,581 @@
+<!doctype html><html lang=zh-cn>
+<head>
+<meta charset=utf-8>
+<meta name=viewport content="width=device-width,initial-scale=1">
+<meta name=robots content="noodp">
+<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
+<title>6.S081 lab9 fs - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="6.S081 lab9 fs">
+<meta property="og:description" content="Large files 本关需要为xv6添加对大文件的支持。xv6的 inode 默认使用 12 个直接块指针和 1 个间接块指针（指向一个存储着块指针的数据块），所以xv6支持的最">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://wmc1999.top/posts/6-s081-lab9-fs/"><meta property="article:section" content="posts">
+<meta property="article:published_time" content="2021-03-02T21:03:42+00:00">
+<meta property="article:modified_time" content="2021-03-02T21:03:42+00:00">
+<meta name=twitter:card content="summary">
+<meta name=twitter:title content="6.S081 lab9 fs">
+<meta name=twitter:description content="Large files 本关需要为xv6添加对大文件的支持。xv6的 inode 默认使用 12 个直接块指针和 1 个间接块指针（指向一个存储着块指针的数据块），所以xv6支持的最">
+<meta name=application-name content="OneStep">
+<meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
+<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
+<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/6-s081-lab9-fs/><link rel=prev href=https://wmc1999.top/posts/6-s081-lab8-lock/><link rel=next href=https://wmc1999.top/posts/6-s081-lab10-mmap/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"6.S081 lab9 fs","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/6-s081-lab9-fs\/"},"genre":"posts","keywords":"6.S081, file system","wordcount":1525,"url":"https:\/\/wmc1999.top\/posts\/6-s081-lab9-fs\/","datePublished":"2021-03-02T21:03:42+00:00","dateModified":"2021-03-02T21:03:42+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head>
+<body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
+<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=OneStep></a>
+</div>
+<div class=menu>
+<div class=menu-inner><a class=menu-item href=/> 首页 </a><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><a class=menu-item href=/friendlinks> 友链 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-desktop>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a>
+</div>
+</div>
+</div>
+</header><header class=mobile id=header-mobile>
+<div class=header-container>
+<div class=header-wrapper>
+<div class=header-title>
+<a href=/ title=OneStep></a>
+</div>
+<div class=menu-toggle id=menu-toggle-mobile>
+<span></span><span></span><span></span>
+</div>
+</div>
+<div class=menu id=menu-mobile><div class=search-wrapper>
+<div class="search mobile" id=search-mobile>
+<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
+<i class="fas fa-search fa-fw"></i>
+</a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
+<i class="fas fa-times-circle fa-fw"></i>
+</a>
+<span class="search-button search-loading" id=search-loading-mobile>
+<i class="fas fa-spinner fa-fw fa-spin"></i>
+</span>
+</div>
+<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
+取消
+</a>
+</div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i>
+</a></div>
+</div>
+</header>
+<div class="search-dropdown desktop">
+<div id=search-dropdown-desktop></div>
+</div>
+<div class="search-dropdown mobile">
+<div id=search-dropdown-mobile></div>
+</div>
+<main class=main>
+<div class=container><div class=toc id=toc-auto>
+<h2 class=toc-title>目录</h2>
+<div class=toc-content id=toc-content-auto></div>
+</div><article class="page single"><h1 class="single-title animated flipInX">6.S081 lab9 fs</h1><div class=post-meta>
+<div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/os/><i class="far fa-folder fa-fw"></i>OS</a></span></div>
+<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-03-02>2021-03-02</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1525 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
+</div><div class="details toc" id=toc-static kept=true>
+<div class="details-summary toc-title">
+<span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span>
+</div>
+<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents></nav></div>
+</div><div class=content id=content><h1 id=large-files>Large files</h1>
+<p>本关需要为<code>xv6</code>添加对大文件的支持。<code>xv6</code>的 inode 默认使用 12 个直接块指针和 1 个间接块指针（指向一个存储着块指针的数据块），所以<code>xv6</code>支持的最大文件尺寸是<code>12 + 1*256=268</code>个 block。我们需要将一个直接块指针修改为双重间接块指针（执行一个存储着间接块指针的数据块），将<code>xv6</code>的最大文件尺寸扩展到<code>11 + 1*256 + 1*256*256= 65803</code>个 block。</p>
+<p>首先我们修改<code>kernel/fs.h</code>中的相关宏定义：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cp>#define NDIRECT 11
+</span><span class=cp>#define NINDIRECT (BSIZE / sizeof(uint))
+</span><span class=cp>#define NDOUBLEINDIRECT ((BSIZE / sizeof(uint)) * (BSIZE / sizeof(uint)))
+</span><span class=cp>#define MAXFILE (NDIRECT + NINDIRECT + NDOUBLEINDIRECT)
+</span></code></pre></td></tr></table>
+</div>
+</div><p>然后修改<code>dinode</code>和<code>inode</code>中的地址数组定义：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>uint</span> <span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=o>+</span><span class=mi>2</span><span class=p>];</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>接下来修改<code>bmap</code>函数，该函数用于将一个文件的逻辑块号转换为设备的物理块号，类似于虚实地址转换：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span><span class=lnt>53
+</span><span class=lnt>54
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>static</span> <span class=n>uint</span>
+<span class=nf>bmap</span><span class=p>(</span><span class=k>struct</span> <span class=n>inode</span> <span class=o>*</span><span class=n>ip</span><span class=p>,</span> <span class=n>uint</span> <span class=n>bn</span><span class=p>)</span>
+<span class=p>{</span>
+  <span class=n>uint</span> <span class=n>addr</span><span class=p>,</span> <span class=o>*</span><span class=n>a</span><span class=p>;</span>
+  <span class=k>struct</span> <span class=n>buf</span> <span class=o>*</span><span class=n>bp</span><span class=p>;</span>
+
+  <span class=k>if</span><span class=p>(</span><span class=n>bn</span> <span class=o>&lt;</span> <span class=n>NDIRECT</span><span class=p>){</span>
+    <span class=k>if</span><span class=p>((</span><span class=n>addr</span> <span class=o>=</span> <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>bn</span><span class=p>])</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+      <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>bn</span><span class=p>]</span> <span class=o>=</span> <span class=n>addr</span> <span class=o>=</span> <span class=n>balloc</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>);</span>
+    <span class=k>return</span> <span class=n>addr</span><span class=p>;</span>
+  <span class=p>}</span>
+  <span class=n>bn</span> <span class=o>-=</span> <span class=n>NDIRECT</span><span class=p>;</span>
+
+  <span class=k>if</span><span class=p>(</span><span class=n>bn</span> <span class=o>&lt;</span> <span class=n>NINDIRECT</span><span class=p>){</span>
+    <span class=c1>// Load indirect block, allocating if necessary.
+</span><span class=c1></span>    <span class=k>if</span><span class=p>((</span><span class=n>addr</span> <span class=o>=</span> <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=p>])</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+      <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=p>]</span> <span class=o>=</span> <span class=n>addr</span> <span class=o>=</span> <span class=n>balloc</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>);</span>
+    <span class=n>bp</span> <span class=o>=</span> <span class=n>bread</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>addr</span><span class=p>);</span>
+    <span class=n>a</span> <span class=o>=</span> <span class=p>(</span><span class=n>uint</span><span class=o>*</span><span class=p>)</span><span class=n>bp</span><span class=o>-&gt;</span><span class=n>data</span><span class=p>;</span>
+    <span class=k>if</span><span class=p>((</span><span class=n>addr</span> <span class=o>=</span> <span class=n>a</span><span class=p>[</span><span class=n>bn</span><span class=p>])</span> <span class=o>==</span> <span class=mi>0</span><span class=p>){</span>
+      <span class=n>a</span><span class=p>[</span><span class=n>bn</span><span class=p>]</span> <span class=o>=</span> <span class=n>addr</span> <span class=o>=</span> <span class=n>balloc</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>);</span>
+      <span class=n>log_write</span><span class=p>(</span><span class=n>bp</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=n>brelse</span><span class=p>(</span><span class=n>bp</span><span class=p>);</span>
+    <span class=k>return</span> <span class=n>addr</span><span class=p>;</span>
+  <span class=p>}</span>
+  <span class=n>bn</span> <span class=o>-=</span> <span class=n>NINDIRECT</span><span class=p>;</span>
+  <span class=k>if</span><span class=p>(</span><span class=n>bn</span> <span class=o>&lt;</span> <span class=n>NDOUBLEINDIRECT</span><span class=p>){</span>
+    <span class=c1>// Load double-indirect block, allocating if necessary.
+</span><span class=c1></span>    <span class=k>if</span><span class=p>((</span><span class=n>addr</span> <span class=o>=</span> <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=o>+</span><span class=mi>1</span><span class=p>])</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+      <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=o>+</span><span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=n>addr</span> <span class=o>=</span> <span class=n>balloc</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>);</span>
+    <span class=n>bp</span> <span class=o>=</span> <span class=n>bread</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>addr</span><span class=p>);</span>
+    <span class=n>a</span> <span class=o>=</span> <span class=p>(</span><span class=n>uint</span><span class=o>*</span><span class=p>)</span><span class=n>bp</span><span class=o>-&gt;</span><span class=n>data</span><span class=p>;</span>
+    <span class=n>uint</span> <span class=n>level1</span> <span class=o>=</span> <span class=n>bn</span> <span class=o>/</span> <span class=n>NINDIRECT</span><span class=p>;</span>
+    <span class=k>if</span><span class=p>((</span><span class=n>addr</span> <span class=o>=</span> <span class=n>a</span><span class=p>[</span><span class=n>level1</span><span class=p>])</span> <span class=o>==</span> <span class=mi>0</span><span class=p>){</span>
+      <span class=n>a</span><span class=p>[</span><span class=n>level1</span><span class=p>]</span> <span class=o>=</span> <span class=n>addr</span> <span class=o>=</span> <span class=n>balloc</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>);</span>
+      <span class=n>log_write</span><span class=p>(</span><span class=n>bp</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=n>brelse</span><span class=p>(</span><span class=n>bp</span><span class=p>);</span>
+
+    <span class=n>bp</span> <span class=o>=</span> <span class=n>bread</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>addr</span><span class=p>);</span>
+    <span class=n>a</span> <span class=o>=</span> <span class=p>(</span><span class=n>uint</span><span class=o>*</span><span class=p>)</span><span class=n>bp</span><span class=o>-&gt;</span><span class=n>data</span><span class=p>;</span>
+    <span class=n>uint</span> <span class=n>level2</span> <span class=o>=</span> <span class=n>bn</span> <span class=o>%</span> <span class=n>NINDIRECT</span><span class=p>;</span>
+    <span class=k>if</span><span class=p>((</span><span class=n>addr</span> <span class=o>=</span> <span class=n>a</span><span class=p>[</span><span class=n>level2</span><span class=p>])</span> <span class=o>==</span> <span class=mi>0</span><span class=p>){</span>
+      <span class=n>a</span><span class=p>[</span><span class=n>level2</span><span class=p>]</span> <span class=o>=</span> <span class=n>addr</span> <span class=o>=</span> <span class=n>balloc</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>);</span>
+      <span class=n>log_write</span><span class=p>(</span><span class=n>bp</span><span class=p>);</span>
+    <span class=p>}</span>
+    <span class=n>brelse</span><span class=p>(</span><span class=n>bp</span><span class=p>);</span>
+
+    <span class=k>return</span> <span class=n>addr</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=n>panic</span><span class=p>(</span><span class=s>&#34;bmap: out of range&#34;</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>然后修改<code>itrunc</code>函数，在 truncate 文件时，释放我们新添加的双重间接数据块（不要忘了释放指针块本身）：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span><span class=lnt>36
+</span><span class=lnt>37
+</span><span class=lnt>38
+</span><span class=lnt>39
+</span><span class=lnt>40
+</span><span class=lnt>41
+</span><span class=lnt>42
+</span><span class=lnt>43
+</span><span class=lnt>44
+</span><span class=lnt>45
+</span><span class=lnt>46
+</span><span class=lnt>47
+</span><span class=lnt>48
+</span><span class=lnt>49
+</span><span class=lnt>50
+</span><span class=lnt>51
+</span><span class=lnt>52
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=kt>void</span>
+<span class=nf>itrunc</span><span class=p>(</span><span class=k>struct</span> <span class=n>inode</span> <span class=o>*</span><span class=n>ip</span><span class=p>)</span>
+<span class=p>{</span>
+  <span class=kt>int</span> <span class=n>i</span><span class=p>,</span> <span class=n>j</span><span class=p>,</span> <span class=n>k</span><span class=p>;</span>
+  <span class=k>struct</span> <span class=n>buf</span> <span class=o>*</span><span class=n>bp</span><span class=p>,</span> <span class=o>*</span><span class=n>nbp</span><span class=p>;</span>
+  <span class=n>uint</span> <span class=o>*</span><span class=n>a</span><span class=p>,</span> <span class=o>*</span><span class=n>na</span><span class=p>;</span>
+
+  <span class=k>for</span><span class=p>(</span><span class=n>i</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>i</span> <span class=o>&lt;</span> <span class=n>NDIRECT</span><span class=p>;</span> <span class=n>i</span><span class=o>++</span><span class=p>){</span>
+    <span class=k>if</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>i</span><span class=p>]){</span>
+      <span class=n>bfree</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>i</span><span class=p>]);</span>
+      <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>i</span><span class=p>]</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+    <span class=p>}</span>
+  <span class=p>}</span>
+
+  <span class=k>if</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=p>]){</span>
+    <span class=n>bp</span> <span class=o>=</span> <span class=n>bread</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=p>]);</span>
+    <span class=n>a</span> <span class=o>=</span> <span class=p>(</span><span class=n>uint</span><span class=o>*</span><span class=p>)</span><span class=n>bp</span><span class=o>-&gt;</span><span class=n>data</span><span class=p>;</span>
+    <span class=k>for</span><span class=p>(</span><span class=n>j</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>j</span> <span class=o>&lt;</span> <span class=n>NINDIRECT</span><span class=p>;</span> <span class=n>j</span><span class=o>++</span><span class=p>){</span>
+      <span class=k>if</span><span class=p>(</span><span class=n>a</span><span class=p>[</span><span class=n>j</span><span class=p>])</span>
+        <span class=n>bfree</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>j</span><span class=p>]);</span>
+    <span class=p>}</span>
+    <span class=n>brelse</span><span class=p>(</span><span class=n>bp</span><span class=p>);</span>
+    <span class=n>bfree</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=p>]);</span>
+    <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=p>]</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=k>if</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=o>+</span><span class=mi>1</span><span class=p>]){</span>
+    <span class=n>bp</span> <span class=o>=</span> <span class=n>bread</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=o>+</span><span class=mi>1</span><span class=p>]);</span>
+    <span class=n>a</span> <span class=o>=</span> <span class=p>(</span><span class=n>uint</span><span class=o>*</span><span class=p>)</span><span class=n>bp</span><span class=o>-&gt;</span><span class=n>data</span><span class=p>;</span>
+    <span class=k>for</span><span class=p>(</span><span class=n>j</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>j</span> <span class=o>&lt;</span> <span class=n>NINDIRECT</span><span class=p>;</span> <span class=n>j</span><span class=o>++</span><span class=p>){</span>
+      <span class=c1>// level1
+</span><span class=c1></span>      <span class=k>if</span><span class=p>(</span><span class=n>a</span><span class=p>[</span><span class=n>j</span><span class=p>])</span> <span class=p>{</span>
+        <span class=n>nbp</span> <span class=o>=</span> <span class=n>bread</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>j</span><span class=p>]);</span>
+        <span class=n>na</span> <span class=o>=</span> <span class=p>(</span><span class=n>uint</span><span class=o>*</span><span class=p>)</span><span class=n>nbp</span><span class=o>-&gt;</span><span class=n>data</span><span class=p>;</span>
+        <span class=k>for</span><span class=p>(</span><span class=n>k</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span> <span class=n>k</span> <span class=o>&lt;</span> <span class=n>NINDIRECT</span><span class=p>;</span> <span class=n>k</span><span class=o>++</span><span class=p>)</span> <span class=p>{</span>
+          <span class=c1>// level2
+</span><span class=c1></span>          <span class=k>if</span><span class=p>(</span><span class=n>na</span><span class=p>[</span><span class=n>k</span><span class=p>])</span> <span class=p>{</span>
+            <span class=n>bfree</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>na</span><span class=p>[</span><span class=n>k</span><span class=p>]);</span>
+          <span class=p>}</span>
+        <span class=p>}</span>
+        <span class=n>bfree</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>a</span><span class=p>[</span><span class=n>j</span><span class=p>]);</span>
+        <span class=n>brelse</span><span class=p>(</span><span class=n>nbp</span><span class=p>);</span>
+      <span class=p>}</span>
+    <span class=p>}</span>
+    <span class=n>brelse</span><span class=p>(</span><span class=n>bp</span><span class=p>);</span>
+    <span class=n>bfree</span><span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>dev</span><span class=p>,</span> <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=o>+</span><span class=mi>1</span><span class=p>]);</span>
+    <span class=n>ip</span><span class=o>-&gt;</span><span class=n>addrs</span><span class=p>[</span><span class=n>NDIRECT</span><span class=o>+</span><span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=n>ip</span><span class=o>-&gt;</span><span class=n>size</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+  <span class=n>iupdate</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>运行<code>bigfile</code>测试，看到测试创建了一个 size 为<code>65803</code>个 block 的最大文件。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span><span class=lnt>2
+</span><span class=lnt>3
+</span><span class=lnt>4
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>$ bigfile
+..................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+wrote <span class=m>65803</span> blocks
+bigfile <span class=k>done</span><span class=p>;</span> ok
+</code></pre></td></tr></table>
+</div>
+</div><h1 id=symbolic-links>Symbolic links</h1>
+<p>这次我们需要实现一个<code>syscall</code>，用于创建符号连接，符号链接不会增加实际文件<code>inode</code>的 link 数，只是使用路径指向被 link 的文件。</p>
+<p>首先，按照之前熟悉的方法添加新的<code>syscall</code>。</p>
+<p>在<code>kernel/stat.h</code>中添加符号文件类型：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cp>#define T_SYMLINK 4
+</span></code></pre></td></tr></table>
+</div>
+</div><p>在<code>kernel/fcntl.h</code>中添加：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cp>#define O_NOFOLLOW 0x800
+</span></code></pre></td></tr></table>
+</div>
+</div><p>用于标识是要读取符号文件本身还是符号链接指向的文件。</p>
+<p>之后我们实现<code>symlink</code>本身：</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span><span class=lnt>34
+</span><span class=lnt>35
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>uint64</span>
+<span class=nf>sys_symlink</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=p>{</span>
+
+  <span class=kt>char</span> <span class=n>target</span><span class=p>[</span><span class=n>MAXPATH</span><span class=p>],</span> <span class=n>path</span><span class=p>[</span><span class=n>MAXPATH</span><span class=p>];;</span>
+  <span class=k>struct</span> <span class=n>inode</span> <span class=o>*</span><span class=n>ip</span><span class=p>;</span>
+
+  <span class=k>if</span><span class=p>(</span><span class=n>argstr</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=n>target</span><span class=p>,</span> <span class=n>MAXPATH</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=o>||</span> <span class=n>argstr</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=n>path</span><span class=p>,</span> <span class=n>MAXPATH</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=n>begin_op</span><span class=p>();</span>
+
+  <span class=k>if</span> <span class=p>((</span><span class=n>ip</span> <span class=o>=</span> <span class=n>create</span><span class=p>(</span><span class=n>path</span><span class=p>,</span> <span class=n>T_SYMLINK</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=mi>0</span><span class=p>))</span> <span class=o>==</span> <span class=mi>0</span><span class=p>){</span>
+    <span class=n>end_op</span><span class=p>();</span>
+    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+  <span class=p>}</span>
+  <span class=kt>int</span> <span class=n>len</span> <span class=o>=</span> <span class=n>strlen</span><span class=p>(</span><span class=n>target</span><span class=p>);</span>
+  <span class=c1>// write target path len
+</span><span class=c1></span>  <span class=k>if</span><span class=p>(</span><span class=n>writei</span><span class=p>(</span><span class=n>ip</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=o>&amp;</span><span class=n>len</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>len</span><span class=p>))</span> <span class=o>&lt;</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>len</span><span class=p>))</span> <span class=p>{</span>
+    <span class=n>iunlockput</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+    <span class=n>end_op</span><span class=p>();</span>
+    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+  <span class=p>}</span>
+  <span class=c1>// write target path
+</span><span class=c1></span>  <span class=k>if</span><span class=p>(</span><span class=n>writei</span><span class=p>(</span><span class=n>ip</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=n>target</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>len</span><span class=p>),</span> <span class=n>len</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+    <span class=n>iunlockput</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+    <span class=n>end_op</span><span class=p>();</span>
+    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+  <span class=p>}</span>
+
+  <span class=n>iunlockput</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+  <span class=n>end_op</span><span class=p>();</span>
+
+  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>首先我们为符号文件创建一个新的<code>inode</code>，然后向其数据区写入指向的目标。在写入目标时，使用了<code>[len, target]</code>的格式，方便我们之后能准确地从文件系统中读取出<code>target</code>。</p>
+<p>然后，我们需要修改<code>sys_open</code>，使之正确的处理符号文件。</p>
+<blockquote>
+<ul>
+<li>Modify the <code>open</code> system call to handle the case where the path refers to a symbolic link. If the file does not exist, <code>open</code> must fail. When a process specifies <code>O_NOFOLLOW</code> in the flags to <code>open</code>, <code>open</code> should open the symlink (and not follow the symbolic link).</li>
+<li>If the linked file is also a symbolic link, you must recursively follow it until a non-link file is reached. If the links form a cycle, you must return an error code. You may approximate this by returning an error code if the depth of links reaches some threshold (e.g., 10).</li>
+</ul>
+</blockquote>
+<p>当没有设置<code>O_NOFOLLOW</code>时，<code>open</code>调用需要打开符号文件指向的真实文件，如果被符号文件指向的文件也是符号文件，则需要递归查找，指导找到真实文件。为了防止循环引用，当查找次数一定数值时，可以判断失败。</p>
+<div class=highlight><div class=chroma>
+<table class=lntable><tr><td class=lntd>
+<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span><span class=lnt> 2
+</span><span class=lnt> 3
+</span><span class=lnt> 4
+</span><span class=lnt> 5
+</span><span class=lnt> 6
+</span><span class=lnt> 7
+</span><span class=lnt> 8
+</span><span class=lnt> 9
+</span><span class=lnt>10
+</span><span class=lnt>11
+</span><span class=lnt>12
+</span><span class=lnt>13
+</span><span class=lnt>14
+</span><span class=lnt>15
+</span><span class=lnt>16
+</span><span class=lnt>17
+</span><span class=lnt>18
+</span><span class=lnt>19
+</span><span class=lnt>20
+</span><span class=lnt>21
+</span><span class=lnt>22
+</span><span class=lnt>23
+</span><span class=lnt>24
+</span><span class=lnt>25
+</span><span class=lnt>26
+</span><span class=lnt>27
+</span><span class=lnt>28
+</span><span class=lnt>29
+</span><span class=lnt>30
+</span><span class=lnt>31
+</span><span class=lnt>32
+</span><span class=lnt>33
+</span></code></pre></td>
+<td class=lntd>
+<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=cp>#define MAXSYMLINK 10
+</span><span class=cp></span>
+<span class=k>if</span> <span class=p>(</span><span class=o>!</span><span class=p>(</span><span class=n>omode</span> <span class=o>&amp;</span> <span class=n>O_NOFOLLOW</span><span class=p>))</span> <span class=p>{</span>
+  <span class=kt>int</span> <span class=n>cnt</span> <span class=o>=</span> <span class=n>MAXSYMLINK</span><span class=p>;</span>
+  <span class=kt>int</span> <span class=n>len</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+  <span class=k>while</span> <span class=p>(</span><span class=n>cnt</span><span class=o>--</span> <span class=o>&gt;</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+    <span class=n>ilock</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+    <span class=k>if</span> <span class=p>(</span><span class=n>ip</span><span class=o>-&gt;</span><span class=n>type</span> <span class=o>==</span> <span class=n>T_SYMLINK</span><span class=p>)</span> <span class=p>{</span>
+      <span class=k>if</span> <span class=p>(</span><span class=n>readi</span><span class=p>(</span><span class=n>ip</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=o>&amp;</span><span class=n>len</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>len</span><span class=p>))</span> <span class=o>&lt;</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>len</span><span class=p>))</span> <span class=p>{</span>
+        <span class=n>iunlockput</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+        <span class=n>end_op</span><span class=p>();</span>
+        <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+      <span class=p>}</span>
+      <span class=k>if</span> <span class=p>(</span><span class=n>readi</span><span class=p>(</span><span class=n>ip</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=n>path</span><span class=p>,</span> <span class=k>sizeof</span><span class=p>(</span><span class=n>len</span><span class=p>),</span> <span class=n>len</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=o>&lt;</span> <span class=n>len</span> <span class=o>+</span> <span class=mi>1</span><span class=p>)</span> <span class=p>{</span>
+        <span class=n>iunlockput</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+        <span class=n>end_op</span><span class=p>();</span>
+        <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+      <span class=p>}</span>
+      <span class=n>iunlockput</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+      <span class=n>iunlock</span><span class=p>(</span><span class=n>ip</span><span class=p>);</span>
+      <span class=k>break</span><span class=p>;</span>
+    <span class=p>}</span>
+    <span class=k>if</span><span class=p>((</span><span class=n>ip</span> <span class=o>=</span> <span class=n>namei</span><span class=p>(</span><span class=n>path</span><span class=p>))</span> <span class=o>==</span> <span class=mi>0</span><span class=p>){</span>
+      <span class=n>end_op</span><span class=p>();</span>
+      <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+    <span class=p>}</span>
+  <span class=p>}</span>
+  <span class=k>if</span> <span class=p>(</span><span class=n>cnt</span> <span class=o>&lt;=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+    <span class=n>end_op</span><span class=p>();</span>
+    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+  <span class=p>}</span>
+<span class=p>}</span>
+</code></pre></td></tr></table>
+</div>
+</div><p>完整代码见<a href=https://github.com/waruto210/xv6-labs-2020/tree/fs target=_blank rel="noopener noreffer">GitHub 仓库</a>。</p>
+</div><div class=post-footer id=post-footer>
+<div class=post-info>
+<div class=post-info-line>
+<div class=post-info-mod>
+<span>更新于 2021-03-02</span>
+</div>
+<div class=post-info-license></div>
+</div>
+<div class=post-info-line>
+<div class=post-info-md><span>
+<a class=link-to-markdown href=/posts/6-s081-lab9-fs/index.md target=_blank>阅读原始文档</a>
+</span></div>
+<div class=post-info-share>
+<span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/6-s081-lab9-fs/ data-title="6.S081 lab9 fs" data-via=Jason210314 data-hashtags="6.S081,file system"><i class="fab fa-twitter fa-fw"></i></a></span>
+</div>
+</div>
+</div>
+<div class=post-info-more>
+<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/6.s081/>6.S081</a>,&nbsp;<a href=/tags/file-system/>file system</a></section>
+<section>
+<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
+</section>
+</div>
+<div class=post-nav><a href=/posts/6-s081-lab8-lock/ class=prev rel=prev title="6.S081 lab8 lock"><i class="fas fa-angle-left fa-fw"></i>6.S081 lab8 lock</a>
+<a href=/posts/6-s081-lab10-mmap/ class=next rel=next title="6.S081 lab10 mmap">6.S081 lab10 mmap<i class="fas fa-angle-right fa-fw"></i></a></div>
+</div>
+</article></div>
+</main><footer class=footer>
+<div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.91.0">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
+</div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2018 - 2021</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
+</div>
+</footer></div>
+<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
+<i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论>
+<i class="fas fa-comment fa-fw"></i>
+</a>
+</div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><link rel=stylesheet href=/lib/cookieconsent/cookieconsent.min.css><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript src=/lib/cookieconsent/cookieconsent.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},cookieconsent:{content:{dismiss:"同意",link:"了解更多",message:"本网站使用 Cookies 来改善您的浏览体验."},enable:!0,palette:{button:{background:"#f0f0f0"},popup:{background:"#1aa3ff"}},theme:"edgeless"},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script></body>
+</html>
