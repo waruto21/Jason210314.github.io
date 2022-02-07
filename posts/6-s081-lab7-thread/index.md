@@ -147,5 +147,3 @@ barrier()
 }
 ```
 
-最终代码见[GitHub 仓库](https://github.com/waruto210/xv6-labs-2020/tree/thread)。
-

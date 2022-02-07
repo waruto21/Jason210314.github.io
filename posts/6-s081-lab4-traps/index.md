@@ -204,5 +204,4 @@ if(which_dev == 2) {
 
 此外，还有一点，笔者曾尝试只保存`tramframe`中的`caller save`寄存器，但是无法通过测试。最终查看`asm`文件发现：`callee save`寄存器是在被调用函数尾部的 ret 指令前进行恢复的，但是在`sigreturn`中通过恢复`epc`的方式，将`pc`直接指向了被 time interrupt 打断执行的代码位置，所以`callee save`寄存器在被修改后并未被复原，我们必须保存`trapframe`中的所有寄存器。
 
-最终代码见[github 仓库](https://github.com/waruto210/xv6-labs-2020/tree/traps)。
 
