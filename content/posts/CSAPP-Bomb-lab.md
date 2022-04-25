@@ -9,9 +9,9 @@ tags:
   - 二进制炸弹
 ---
 
-# 实验步骤
+## 实验步骤
 
-## 准备工作
+### 准备工作
 
 使用`tar -vxf`将炸弹压缩包解压,cd 进入,可以从 bomb.c 中看出实验的用意以及程序的大致
 逻辑,bomb 为可执行程序,使用 gdb 调试该程序.
@@ -28,7 +28,7 @@ Breakpoint 2 at 0x4014e4
 
 <!-- more -->
 
-## phase_1
+### phase_1
 
 获得 phase_1 汇编代码
 
@@ -55,7 +55,7 @@ End of assembler dump.
 
 那么答案是 We have to stand with our North Korean allies.
 
-## phase_2
+### phase_2
 
 ```bash
 (gdb) disas phase_2
@@ -107,7 +107,7 @@ for(int *b = &r[1]; b != &r[6]; b++)
 
 故答案应该为 1 2 4 8 16 32.
 
-## phase_3
+### phase_3
 
 ```bash
    0x0000000000400ef1 <+14>:	mov    $0x4027cd,%esi
@@ -171,7 +171,7 @@ $1 = 0x400f47
 那么第一个数为 0 时,跳转到 0x400f23 处,那么第二个数应该为此处的 0x0,
 故一组答案为 4 0;
 
-## phase_4
+### phase_4
 
 ```bash
 (gdb) disas phase_4
@@ -249,7 +249,7 @@ int func4(int a, int b)
 
 穷举 2-4 的值即可得到答案,取答案为 176 2
 
-## phase_5
+### phase_5
 
 ```bash
 (gdb) disas phase_5
@@ -296,7 +296,7 @@ $2 = {0x2, 0xa, 0x6, 0x1, 0xc, 0x10, 0x9, 0x3, 0x4, 0x7, 0xe, 0x5, 0xb, 0x8,
 题目要求 sum = 0x27,故从 array 中选出 6 个和为 0x27 的数,通过这 6 个数的下标找出对应字符.
 答案应为 01347L;
 
-## phase_6
+### phase_6
 
 因为课程未对后续两关作要求,故不做特别详细的解答.
 
@@ -414,7 +414,7 @@ $13 = 0x0
 
 故答案应为 6 5 3 1 2 4;
 
-## secret_phase
+### secret_phase
 
 正常通过前 6 关是无法触发 secret_phase 的,查看汇编发现,在 phase_4 答案之后输入 DrEvil 即可进入 secret_phase.
 
@@ -478,6 +478,6 @@ End of assembler dump.
 二进制数的十进制值必须等于题目中提供的数,其为 4,那么所需查找路径序列为 100,
 根据二叉树结构,应该查找 7,故答案为 7.
 
-## 运行截图
+### 运行截图
 
 ![结果](CSAPP-Bomb-lab/ret1.png)

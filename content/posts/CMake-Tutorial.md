@@ -11,11 +11,12 @@ categories:
 最近因为毕设的原因，需要看 Cpp 项目，首先项目构建就涉及到了 CMake，所以跟着 CMake 官网的 Tutorial 学习了一下，该文章算是官网教程的搬运。
 [Tutorial 点这里](https://cmake.org/cmake/help/latest/guide/tutorial/index.html), [GitHub 代码点这里](https://github.com/Kitware/CMake/tree/master/Help/guide/tutorial).
 <!-- more -->
-# 构建简单项目
+
+## 构建简单项目
 
 最基本的 CMake 项目是由源代码文件构建可执行文件。对于简单的项目，只需要一个三行的 CMakeLists.txt 文件。这将是我们 tutorial 的起点。
 
-## 开始项目
+### 开始项目
 
 ```cmake
 cmake_minimum_required(VERSION 3.10)
@@ -55,7 +56,7 @@ int main(int argc, char* argv[])
 
 ```
 
-## 添加版本号并配置头文件
+### 添加版本号并配置头文件
 
 添加版本号
 
@@ -115,7 +116,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 CMAKE_CXX_STANDARD 生命必须放在 add_executable 之前
 
-## 构建并测试
+### 构建并测试
 
 首先构建
 
@@ -134,7 +135,7 @@ Tutorial 10
 Tutorial
 ```
 
-# 添加一个库
+## 添加一个库
 
 我们将向项目中添加一个库。这个库将包含了自定义的平方根函数的实现。之后，在可执行文件中使用用这个库，替换编译器提供的标准平方根函数。
 
@@ -257,7 +258,7 @@ target_include_directories(Tutorial PUBLIC
 cmake .. -DUSE_MYMATH=OFF
 ```
 
-# 添加库的使用条件
+## 添加库的使用条件
 
 使用条件允许更好地控制库或可执行文件的链接和`include`行，同时也给予 CMake 内部 target 的转义属性更多的控制。利用使用条件的主要命令有:
 
@@ -298,11 +299,11 @@ target_include_directories(Tutorial PUBLIC
 
 之后便可以重新构建项目了。
 
-# 安装和测试
+## 安装和测试
 
 现在我们可以开始为我们的项目添加安装规则和测试支持。
 
-## 安装规则
+### 安装规则
 
 安装规则相当简单：对于`MathFunctions`，我们要安装库和头文件，对于应用程序，我们要安装可执行文件和配置的头文件。
 
@@ -336,7 +337,7 @@ CMake 变量 `CMAKE_INSTALL_PREFIX` 用于确定文件安装的根目录。如�
 cmake --install . --prefix "/home/myuser/installdir"
 ```
 
-## 测试支持
+### 测试支持
 
 接下来，测试我们的应用程序。在顶层的`CMakeLists.txt`文件的末尾，我们可以启用测试，然后添加一些基本测试以验证应用程序是否正常运行。
 
@@ -378,7 +379,7 @@ do_test(Tutorial 0.0001 "0.0001 is 0.01")
 
 重新构建应用程序，然后 cd 到二进制目录，运行`ctest`可执行文件：`ctest -N`（`--show-only[=format]`）和`ctest -VV`（`--extra-verbose`）。对于多配置生成器（如 Visual Studio），必须指定配置类型。例如，要在 Debug 模式下运行测试，从构建目录中使用`ctest -C Debug -VV`（不是 Debug 子目录！）。或者，从 IDE 中构建`RUN_TESTS`目标。
 
-# 添加系统自检
+## 添加系统自检
 
 让我们考虑在我们的项目中添加一些代码，这些代码取决于目标平台可能没有的功能。在这个例子中，我们将添加一些代码，这些代码取决于目标平台是否有 log 和 exp 函数。当然，几乎每个平台都有这些函数，但在本教程中，假设它们并不常见。
 
@@ -399,7 +400,7 @@ target_include_directories(MathFunctions
           )
 ```
 
-## 指定编译定义
+### 指定编译定义
 
 除了在`TutorialConfig.h`中保存`HAVE_LOG`和`HAVE_EXP`值，我们还有更好的方法吗？让我们尝试使用`target_compile_definitions()`。
 
@@ -431,7 +432,7 @@ endif()
 
 之后再重新构建并运行项目，查看结果。
 
-# 添加自定义命令和生成的文件
+## 添加自定义命令和生成的文件
 
 假设，作为本教程的目的，我们决定永远不要使用平台提供的`log`和`exp`函数，而是想生成一个预计算值的表，以便在`mysqrt`函数中使用。在本节中，我们将创建该表作为构建过程的一部分，然后将该表编译到我们的应用程序中。
 
@@ -543,7 +544,7 @@ double mysqrt(double x) {
 
 做完这些更新后，再继续构建项目。运行构建好的 Tutorial 可执行文件，并验证结果是否与前面相同。
 
-# 构建安装程序
+## 构建安装程序
 
 接下来假设我们想把我们的项目发布给其他人，以便他们能够使用它。我们希望在不同的平台上提供二进制和源代码的发布。这与我们之前在安装和测试（第 4 步）中所做的安装有些不同，在这里我们安装的是我们从源代码中构建的二进制文件。在这个例子中，我们将构建支持二进制安装和包管理功能的安装包。为了完成这个任务，我们将使用`CPack`来创建特定平台的安装包。具体来说，我们需要在顶层`CMakeLists.txt`文件的底部添加几行内容:
 
@@ -582,7 +583,7 @@ cpack --config CPackSourceConfig.cmake
 
 运行在二进制目录下找到的安装程序。然后运行已安装的可执行文件，并验证它是否工作。
 
-# 添加 DashBoard 支持
+## 添加 DashBoard 支持
 
 添加支持将我们的测试结果提交到 dashboard 很简单。我们已经为我们的项目定义了一些测试。现在我们只需要运行这些测试并将它们提交到仪表板。为了包含对仪表盘的支持，我们在顶层的`CMakeLists.txt`中加入了`CTest`模块:
 
@@ -610,7 +611,7 @@ ctest [-VV] -D Experimental
 
 请记住，对于多配置生成器（如 Visual Studio），必须指定配置类型。
 
-# 混合静态和共享
+## 混合静态和共享
 
 在这一节中，将展示如何使用`BUILD_SHARED_LIBS`变量来控制`add_library()`的默认行为，并允许控制没有明确类型(`STATIC, SHARED, MODULE or OBJECT`)的库的构建方式。
 
@@ -816,7 +817,7 @@ set_target_properties(SqrtLibrary PROPERTIES
 target_link_libraries(MathFunctions PRIVATE SqrtLibrary)
 ```
 
-# 添加生成器表达式
+## 添加生成器表达式
 
 在构建系统生成期间会执行`Generator expression`，以生成特定于每个构建配置的信息。
 
@@ -858,7 +859,7 @@ target_compile_options(tutorial_compiler_flags INTERFACE
 
 查看此内容，我们看到警告标志封装在`BUILD_INTERFACE`条件内。这样做是为了使我们已安装项目的使用者不会继承我们的警告标志。
 
-# 添加导出配置
+## 添加导出配置
 
 在教程的“安装和测试”中，我们添加了 CMake 安装项目的库和头文件的功能。在”构建安装程序“期间，我们添加了打包这些信息的功能，以便可以将其分发给其他人。
 
@@ -936,7 +937,7 @@ install(FILES
 
 通过这个`export`调用，我们现在可以生成一个`Targets.cmake`，允许构建目录下配置的`MathFunctionsConfig.cmake`被其他项目使用，而不需要安装它。
 
-# 打包 Debug 和 Release
+## 打包 Debug 和 Release
 
 注意：这个例子对单配置生成器有效，对多配置生成器（如 Visual Studio）无效。
 

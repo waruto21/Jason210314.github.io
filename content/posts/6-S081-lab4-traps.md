@@ -8,7 +8,7 @@ tags:
   - traps
 ---
 
-# RISC-V assembly
+## RISC-V assembly
 
 这是一个简单的`RISC-V`汇编热身关卡。
 
@@ -90,7 +90,7 @@ void main(void) {
 
 该`printf`调用少了一个参数，根据 calling convention，对`y=%d`会取`a2`的值进行输出。
 
-# Backtrace
+## Backtrace
 
 该步骤需要实现一个`backtrace`函数，打印出调用轨迹，即每次调用的返回地址。
 
@@ -132,7 +132,7 @@ backtrace(void) {
 
 之后在`sys_sleep`和`panic`中加入对`backtrace`的调用即可。
 
-# Alarm
+## Alarm
 
 本关需要实现一个`sigalarm(interval, handler)`系统调用，cpu 每消耗 interval 个 ticks 后，调用一次 handler 函数。
 

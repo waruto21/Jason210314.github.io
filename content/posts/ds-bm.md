@@ -7,7 +7,7 @@ categories:
   - 数据结构
 ---
 
-# 设计思路
+## 设计思路
 
 BM 算法是一种后缀匹配算法,其具有比 KMP 算法更优秀的性能表现.其核心思想有二
 ,第一是坏字符,坏字符就是 pattern 与 text 从右往左第一失配的在 text 中的字符,
@@ -20,7 +20,7 @@ BM 算法是一种后缀匹配算法,其具有比 KMP 算法更优秀的性能�
 
 <!-- more -->
 
-# 代码说明
+## 代码说明
 
 ```cpp
 int* CreateBC(char* pattern, int len);
@@ -50,7 +50,7 @@ char* get_line(FILE *article, char (&text)[1000]);
 从给定的 article 文件中读取最大 1000 字符的一行,存在 text 位置,读取到文件末尾
 则返回 NULL.
 
-# 运行结果
+## 运行结果
 
 ![运行结果](ds-bm/ret.png)
 

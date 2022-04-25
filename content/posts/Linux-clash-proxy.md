@@ -8,7 +8,7 @@ tags:
   - 代理
 ---
 
-# 起因
+## 起因
 
 偶然发现百度云的学生服务器挺便宜，2 核心 4g 内存机型一个月只要 18 元，有个随时随地能够访问的 Linux 环境还是挺好的，遂购入。新系统初始化完成，第一件事当然是来一套[`ohmyzsh`](https://github.com/ohmyzsh/ohmyzsh)，结果这就出了问题，`git clone`太慢了。
 
@@ -18,7 +18,7 @@ tags:
 
 遂想到是不是该给其使用一下代理。不然之后不止`git clone`，很多资源都无法下载。
 
-# 使用`clash`
+## 使用`clash`
 
 [`clash`](https://github.com/Dreamacro/clash)是一款使用`go`语言开发的多平台代理工具，支持`ss/v2ray`等多种协议，在`macOS`，`windows`上使用起来很方便，在没有`GUI`的`Linux`也只需要稍加配置。
 
@@ -45,7 +45,7 @@ naruto@bdy:~$ mv Country.mmdb .config/clash/
 
 启动遇到`WARN[0000] Failed to start Redir UDP Listener: operation not permitted`，可以使用`sudo clash`启动。
 
-# 配置 GUI 界面
+## 配置 GUI 界面
 
 从上一段的图中可以看到，`clash`服务有一个`RESTful API`的服务，通过其我们可以访问 web 管理页面。在`config.yaml`中制定即可。比较受欢迎的是[`yacd`](https://github.com/haishanh/yacd)，可以直接下载[打包好的版本](https://github.com/haishanh/yacd/archive/gh-pages.zip)。
 
@@ -65,7 +65,7 @@ secret: ""
 
 ![](Linux-clash-proxy/yacd.png)
 
-# 享用代理
+## 享用代理
 
 在 GUI 界面选择好代理服务器后，就可以使用代理了。打开另一个终端窗口，执行如下命令，设置`http(s)`代理环境变量。
 

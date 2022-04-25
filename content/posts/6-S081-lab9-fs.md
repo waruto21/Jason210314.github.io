@@ -8,7 +8,7 @@ tags:
   - file system
 ---
 
-# Large files
+## Large files
 
 本关需要为`xv6`添加对大文件的支持。`xv6`的 inode 默认使用 12 个直接块指针和 1 个间接块指针（指向一个存储着块指针的数据块），所以`xv6`支持的最大文件尺寸是`12 + 1*256=268`个 block。我们需要将一个直接块指针修改为双重间接块指针（执行一个存储着间接块指针的数据块），将`xv6`的最大文件尺寸扩展到`11 + 1*256 + 1*256*256= 65803`个 block。
 
@@ -154,7 +154,7 @@ wrote 65803 blocks
 bigfile done; ok
 ```
 
-# Symbolic links
+## Symbolic links
 
 这次我们需要实现一个`syscall`，用于创建符号连接，符号链接不会增加实际文件`inode`的 link 数，只是使用路径指向被 link 的文件。
 

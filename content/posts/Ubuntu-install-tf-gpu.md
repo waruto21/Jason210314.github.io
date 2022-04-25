@@ -7,7 +7,7 @@ tags:
   - tensorflow-gpu
 ---
 
-# 显卡驱动
+## 显卡驱动
 
 最新的 18.04.3 已经可以安装 430 驱动
 
@@ -19,12 +19,12 @@ sudo apt install nvidia-driver-430
 
 ![](Ubuntu-install-tf-gpu/driver1.png)
 
-# 安装要求
+## 安装要求
 
 官网有安装所需[软件要求](https://tensorflow.google.cn/install/gpu)
 ![](Ubuntu-install-tf-gpu/tensor1.png)
 
-# 安装 cuda 及其组件
+## 安装 cuda 及其组件
 
 去官网下载[cuda 安装 runfile 及其补丁](https://developer.nvidia.com/cuda-10.0-download-archive)，
 
@@ -62,7 +62,7 @@ Built on Sat_Aug_25_21:08:01_CDT_2018
 Cuda compilation tools, release 10.0, V10.0.130
 ```
 
-# Anaconda
+## Anaconda
 
 Anaconda 安装十分简单.去喜闻乐见的[tuna](https://mirrors.tuna.tsinghua.edu.cn/anaconda/archive/Anaconda3-2019.07-Linux-x86_64.sh)下载。
 
@@ -91,14 +91,14 @@ source activate tensor
 pip install --upgrade tensorflow-gpu
 ```
 
-## 安装 jupyter 插件
+### 安装 jupyter 插件
 
 ```bash
 conda install -c conda-forge jupyter_contrib_nbextensions
 jupyter contrib nbextension install --user
 ```
 
-## 将 conda 虚拟环境作为 jupyter 内核
+### 将 conda 虚拟环境作为 jupyter 内核
 
 ```bash
 conda activate tensorflowenv
@@ -106,7 +106,7 @@ pip install ipykernel
 python -m ipykernel install --user --name tensorflowenv --display-name "Python (tensorflowenv)"
 ```
 
-# 示例测试
+## 示例测试
 
 ```python
 import tensorflow as tf
