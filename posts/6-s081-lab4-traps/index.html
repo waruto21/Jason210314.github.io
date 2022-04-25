@@ -1,103 +1,15 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
-<title>6.S081 lab4 traps - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="6.S081 lab4 traps">
-<meta property="og:description" content="RISC-V assembly 这是一个简单的RISC-V汇编热身关卡。 我们需要查看user/call.asm来回答一些问题，其主要内容如下： 1 2 3 4 5 6 7 8 9 10 11 12 13">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://wmc1999.top/posts/6-s081-lab4-traps/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-02-25T00:35:58+00:00">
-<meta property="article:modified_time" content="2021-02-25T00:35:58+00:00">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="6.S081 lab4 traps">
-<meta name=twitter:description content="RISC-V assembly 这是一个简单的RISC-V汇编热身关卡。 我们需要查看user/call.asm来回答一些问题，其主要内容如下： 1 2 3 4 5 6 7 8 9 10 11 12 13">
-<meta name=application-name content="OneStep">
-<meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/6-s081-lab4-traps/><link rel=prev href=https://wmc1999.top/posts/6-s081-lab3-page-tables/><link rel=next href=https://wmc1999.top/posts/6-s081-lab5-lazy/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"6.S081 lab4 traps","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/6-s081-lab4-traps\/"},"genre":"posts","keywords":"6.S081, traps","wordcount":2040,"url":"https:\/\/wmc1999.top\/posts\/6-s081-lab4-traps\/","datePublished":"2021-02-25T00:35:58+00:00","dateModified":"2021-02-25T00:35:58+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head>
-<body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu>
-<div class=menu-inner><a class=menu-item href=/> 首页 </a><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><a class=menu-item href=/friendlinks> 友链 </a><a class=menu-item href=/about> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>6.S081 lab4 traps - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="6.S081 lab4 traps"><meta property="og:description" content="RISC-V assembly 这是一个简单的RISC-V汇编热身关卡。 我们需要查看user/call.asm来回答一些问题，其主要内容如下： 1 2 3 4 5 6 7 8 9 10 11 12 13"><meta property="og:type" content="article"><meta property="og:url" content="https://wmc1999.top/posts/6-s081-lab4-traps/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-02-25T00:35:58+00:00"><meta property="article:modified_time" content="2021-02-25T00:35:58+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="6.S081 lab4 traps"><meta name=twitter:description content="RISC-V assembly 这是一个简单的RISC-V汇编热身关卡。 我们需要查看user/call.asm来回答一些问题，其主要内容如下： 1 2 3 4 5 6 7 8 9 10 11 12 13"><meta name=application-name content="OneStep"><meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/6-s081-lab4-traps/><link rel=prev href=https://wmc1999.top/posts/6-s081-lab3-page-tables/><link rel=next href=https://wmc1999.top/posts/6-s081-lab5-lazy/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"6.S081 lab4 traps","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/6-s081-lab4-traps\/"},"genre":"posts","keywords":"6.S081, traps","wordcount":2040,"url":"https:\/\/wmc1999.top\/posts\/6-s081-lab4-traps\/","datePublished":"2021-02-25T00:35:58+00:00","dateModified":"2021-02-25T00:35:58+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/>首页 </a><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/friendlinks>友链 </a><a class=menu-item href=/about>关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-desktop>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a>
-</div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><div class=search-wrapper>
-<div class="search mobile" id=search-mobile>
-<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-mobile>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</div>
-<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
-取消
-</a>
-</div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2>
-<div class=toc-content id=toc-content-auto></div>
-</div><article class="page single"><h1 class="single-title animated flipInX">6.S081 lab4 traps</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/os/><i class="far fa-folder fa-fw"></i>OS</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-02-25>2021-02-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2040 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div>
-</div><div class="details toc" id=toc-static kept=true>
-<div class="details-summary toc-title">
-<span>目录</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents></nav></div>
-</div><div class=content id=content><h1 id=risc-v-assembly>RISC-V assembly</h1>
-<p>这是一个简单的<code>RISC-V</code>汇编热身关卡。</p>
-<p>我们需要查看<code>user/call.asm</code>来回答一些问题，其主要内容如下：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">6.S081 lab4 traps</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/os/><i class="far fa-folder fa-fw"></i>OS</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-02-25>2021-02-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 2040 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 5 分钟&nbsp;</div></div><div class="details toc" id=toc-static kept=true><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#risc-v-assembly>RISC-V assembly</a></li><li><a href=#backtrace>Backtrace</a></li><li><a href=#alarm>Alarm</a></li></ul></nav></div></div><div class=content id=content><h2 id=risc-v-assembly>RISC-V assembly</h2><p>这是一个简单的<code>RISC-V</code>汇编热身关卡。</p><p>我们需要查看<code>user/call.asm</code>来回答一些问题，其主要内容如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -139,123 +51,69 @@
 </span><span class=lnt>40
 </span><span class=lnt>41
 </span><span class=lnt>42
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback>int g(int x) {
-   0:	1141                	addi	sp,sp,-16
-   2:	e422                	sd	s0,8(sp)
-   4:	0800                	addi	s0,sp,16
-  return x+3;
-}
-   6:	250d                	addiw	a0,a0,3
-   8:	6422                	ld	s0,8(sp)
-   a:	0141                	addi	sp,sp,16
-   c:	8082                	ret
-
-000000000000000e &lt;f&gt;:
-
-int f(int x) {
-   e:	1141                	addi	sp,sp,-16
-  10:	e422                	sd	s0,8(sp)
-  12:	0800                	addi	s0,sp,16
-  return g(x);
-}
-  14:	250d                	addiw	a0,a0,3
-  16:	6422                	ld	s0,8(sp)
-  18:	0141                	addi	sp,sp,16
-  1a:	8082                	ret
-
-000000000000001c &lt;main&gt;:
-
-void main(void) {
-  1c:	1141                	addi	sp,sp,-16
-  1e:	e406                	sd	ra,8(sp)
-  20:	e022                	sd	s0,0(sp)
-  22:	0800                	addi	s0,sp,16
-  printf(&#34;%d %d\n&#34;, f(8)+1, 13);
-  24:	4635                	li	a2,13
-  26:	45b1                	li	a1,12
-  28:	00000517          	auipc	a0,0x0
-  2c:	7b850513          	addi	a0,a0,1976 # 7e0 &lt;malloc+0xea&gt;
-  30:	00000097          	auipc	ra,0x0
-  34:	608080e7          	jalr	1544(ra) # 638 &lt;printf&gt;
-  exit(0);
-  38:	4501                	li	a0,0
-  3a:	00000097          	auipc	ra,0x0
-  3e:	276080e7          	jalr	630(ra) # 2b0 &lt;exit&gt;
-</code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<p>Which registers contain arguments to functions? For example, which register holds 13 in main&rsquo;s call to <code>printf</code>?</p>
-</blockquote>
-<p>根据<code>RISC-V</code>的 calling convention，<code>a0-a7</code>,<code>fa0-fa7</code>包含了函数的参数。调用<code>printf</code>时，<code>a0</code>为格式化字符串，<code>a1</code>是 12，<code>a2</code>是 13。</p>
-<blockquote>
-<p>Where is the call to function <code>f</code> in the assembly code for main? Where is the call to <code>g</code>? (Hint: the compiler may inline functions.)</p>
-</blockquote>
-<p>由于<code>f</code>和<code>g</code>函数都是简单的常数计算，传递的参数也是常数 8，所以函数调用被编译器优化掉了，在<code>0x26</code>位置，直接将函数调用结果立即数 12 载入寄存器<code>a1</code>。</p>
-<blockquote>
-<p>At what address is the function <code>printf</code> located?</p>
-</blockquote>
-<p>从代码中看，很显然，在<code>0x638</code>得位置。</p>
-<blockquote>
-<p>What value is in the register <code>ra</code> just after the <code>jalr</code> to <code>printf</code> in <code>main</code>?</p>
-</blockquote>
-<p><code>jalr</code>指令是链接并跳转，将返回地址保存到<code>ra</code>寄存器，所以应为<code>0x38</code>。</p>
-<blockquote>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-fallback data-lang=fallback><span class=line><span class=cl>int g(int x) {
+</span></span><span class=line><span class=cl>   0:	1141                	addi	sp,sp,-16
+</span></span><span class=line><span class=cl>   2:	e422                	sd	s0,8(sp)
+</span></span><span class=line><span class=cl>   4:	0800                	addi	s0,sp,16
+</span></span><span class=line><span class=cl>  return x+3;
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>   6:	250d                	addiw	a0,a0,3
+</span></span><span class=line><span class=cl>   8:	6422                	ld	s0,8(sp)
+</span></span><span class=line><span class=cl>   a:	0141                	addi	sp,sp,16
+</span></span><span class=line><span class=cl>   c:	8082                	ret
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>000000000000000e &lt;f&gt;:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>int f(int x) {
+</span></span><span class=line><span class=cl>   e:	1141                	addi	sp,sp,-16
+</span></span><span class=line><span class=cl>  10:	e422                	sd	s0,8(sp)
+</span></span><span class=line><span class=cl>  12:	0800                	addi	s0,sp,16
+</span></span><span class=line><span class=cl>  return g(x);
+</span></span><span class=line><span class=cl>}
+</span></span><span class=line><span class=cl>  14:	250d                	addiw	a0,a0,3
+</span></span><span class=line><span class=cl>  16:	6422                	ld	s0,8(sp)
+</span></span><span class=line><span class=cl>  18:	0141                	addi	sp,sp,16
+</span></span><span class=line><span class=cl>  1a:	8082                	ret
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>000000000000001c &lt;main&gt;:
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>void main(void) {
+</span></span><span class=line><span class=cl>  1c:	1141                	addi	sp,sp,-16
+</span></span><span class=line><span class=cl>  1e:	e406                	sd	ra,8(sp)
+</span></span><span class=line><span class=cl>  20:	e022                	sd	s0,0(sp)
+</span></span><span class=line><span class=cl>  22:	0800                	addi	s0,sp,16
+</span></span><span class=line><span class=cl>  printf(&#34;%d %d\n&#34;, f(8)+1, 13);
+</span></span><span class=line><span class=cl>  24:	4635                	li	a2,13
+</span></span><span class=line><span class=cl>  26:	45b1                	li	a1,12
+</span></span><span class=line><span class=cl>  28:	00000517          	auipc	a0,0x0
+</span></span><span class=line><span class=cl>  2c:	7b850513          	addi	a0,a0,1976 # 7e0 &lt;malloc+0xea&gt;
+</span></span><span class=line><span class=cl>  30:	00000097          	auipc	ra,0x0
+</span></span><span class=line><span class=cl>  34:	608080e7          	jalr	1544(ra) # 638 &lt;printf&gt;
+</span></span><span class=line><span class=cl>  exit(0);
+</span></span><span class=line><span class=cl>  38:	4501                	li	a0,0
+</span></span><span class=line><span class=cl>  3a:	00000097          	auipc	ra,0x0
+</span></span><span class=line><span class=cl>  3e:	276080e7          	jalr	630(ra) # 2b0 &lt;exit&gt;
+</span></span></code></pre></td></tr></table></div></div><blockquote><p>Which registers contain arguments to functions? For example, which register holds 13 in main&rsquo;s call to <code>printf</code>?</p></blockquote><p>根据<code>RISC-V</code>的 calling convention，<code>a0-a7</code>,<code>fa0-fa7</code>包含了函数的参数。调用<code>printf</code>时，<code>a0</code>为格式化字符串，<code>a1</code>是 12，<code>a2</code>是 13。</p><blockquote><p>Where is the call to function <code>f</code> in the assembly code for main? Where is the call to <code>g</code>? (Hint: the compiler may inline functions.)</p></blockquote><p>由于<code>f</code>和<code>g</code>函数都是简单的常数计算，传递的参数也是常数 8，所以函数调用被编译器优化掉了，在<code>0x26</code>位置，直接将函数调用结果立即数 12 载入寄存器<code>a1</code>。</p><blockquote><p>At what address is the function <code>printf</code> located?</p></blockquote><p>从代码中看，很显然，在<code>0x638</code>得位置。</p><blockquote><p>What value is in the register <code>ra</code> just after the <code>jalr</code> to <code>printf</code> in <code>main</code>?</p></blockquote><p><code>jalr</code>指令是链接并跳转，将返回地址保存到<code>ra</code>寄存器，所以应为<code>0x38</code>。</p><blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=kt>unsigned</span> <span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mh>0x00646c72</span><span class=p>;</span>
-<span class=n>printf</span><span class=p>(</span><span class=s>&#34;H%x Wo%s&#34;</span><span class=p>,</span> <span class=mi>57616</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>i</span><span class=p>);</span>
-</code></pre></td></tr></table>
-</div>
-</div></blockquote>
-<p>运行以上代码，输出<code>HE110 World</code>。数字 57616 的 16 进制表示为 0xE110；<code>RISC-V</code>采用小端法表示，16 进制的 72、6c、64、00 表示字符串“rld\0”，如果改为大端法，则应反过来，变为<code>i=0x726c6400</code>。</p>
-<blockquote>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>printf</span><span class=p>(</span><span class=s>&#34;x=%d y=%d&#34;</span><span class=p>,</span> <span class=mi>3</span><span class=p>);</span>
-</code></pre></td></tr></table>
-</div>
-</div></blockquote>
-<p>该<code>printf</code>调用少了一个参数，根据 calling convention，对<code>y=%d</code>会取<code>a2</code>的值进行输出。</p>
-<h1 id=backtrace>Backtrace</h1>
-<p>该步骤需要实现一个<code>backtrace</code>函数，打印出调用轨迹，即每次调用的返回地址。</p>
-<p>xv6 运行时的 stack 结构如下图：</p>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=6-S081-lab4-traps/image-20210225005912570.png data-srcset="/6-S081-lab4-traps/image-20210225005912570.png, 6-S081-lab4-traps/image-20210225005912570.png 1.5x, /6-S081-lab4-traps/image-20210225005912570.png 2x" data-sizes=auto alt=/6-S081-lab4-traps/image-20210225005912570.png title=image-20210225005912570></p>
-<p><code>s0/fp</code>中存储着当前的 frame pointer，<code>fp-8</code>指向返回地址，<code>fp-16</code>指向上一个<code>fp</code>地址。</p>
-<p>所以我们只需要不断打印当前<code>fp</code>的返回地址并向前追溯，直到 stack 顶部。</p>
-<p>首先在<code>kernel/riscv.h</code>添加内联汇编函数以获取<code>fp</code>值：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>unsigned</span> <span class=kt>int</span> <span class=n>i</span> <span class=o>=</span> <span class=mh>0x00646c72</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=n>printf</span><span class=p>(</span><span class=s>&#34;H%x Wo%s&#34;</span><span class=p>,</span> <span class=mi>57616</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>i</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div></blockquote><p>运行以上代码，输出<code>HE110 World</code>。数字 57616 的 16 进制表示为 0xE110；<code>RISC-V</code>采用小端法表示，16 进制的 72、6c、64、00 表示字符串“rld\0”，如果改为大端法，则应反过来，变为<code>i=0x726c6400</code>。</p><blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>printf</span><span class=p>(</span><span class=s>&#34;x=%d y=%d&#34;</span><span class=p>,</span> <span class=mi>3</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div></blockquote><p>该<code>printf</code>调用少了一个参数，根据 calling convention，对<code>y=%d</code>会取<code>a2</code>的值进行输出。</p><h2 id=backtrace>Backtrace</h2><p>该步骤需要实现一个<code>backtrace</code>函数，打印出调用轨迹，即每次调用的返回地址。</p><p>xv6 运行时的 stack 结构如下图：</p><p><img class=lazyload src=/svg/loading.min.svg data-src=6-S081-lab4-traps/image-20210225005912570.png data-srcset="/6-S081-lab4-traps/image-20210225005912570.png, 6-S081-lab4-traps/image-20210225005912570.png 1.5x, /6-S081-lab4-traps/image-20210225005912570.png 2x" data-sizes=auto alt=/6-S081-lab4-traps/image-20210225005912570.png title=image-20210225005912570></p><p><code>s0/fp</code>中存储着当前的 frame pointer，<code>fp-8</code>指向返回地址，<code>fp-16</code>指向上一个<code>fp</code>地址。</p><p>所以我们只需要不断打印当前<code>fp</code>的返回地址并向前追溯，直到 stack 顶部。</p><p>首先在<code>kernel/riscv.h</code>添加内联汇编函数以获取<code>fp</code>值：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>static</span> <span class=kr>inline</span> <span class=n>uint64</span>
-<span class=nf>r_fp</span><span class=p>()</span>
-<span class=p>{</span>
-  <span class=n>uint64</span> <span class=n>x</span><span class=p>;</span>
-  <span class=k>asm</span> <span class=k>volatile</span><span class=p>(</span><span class=s>&#34;mv %0, s0&#34;</span> <span class=o>:</span> <span class=s>&#34;=r&#34;</span> <span class=p>(</span><span class=n>x</span><span class=p>)</span> <span class=p>);</span>
-  <span class=k>return</span> <span class=n>x</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>然后在<code>kernel/printf.c</code>实现<code>backtrace</code>：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>static</span> <span class=kr>inline</span> <span class=n>uint64</span>
+</span></span><span class=line><span class=cl><span class=nf>r_fp</span><span class=p>()</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>uint64</span> <span class=n>x</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>asm</span> <span class=k>volatile</span><span class=p>(</span><span class=s>&#34;mv %0, s0&#34;</span> <span class=o>:</span> <span class=s>&#34;=r&#34;</span> <span class=p>(</span><span class=n>x</span><span class=p>)</span> <span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>x</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>然后在<code>kernel/printf.c</code>实现<code>backtrace</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -266,40 +124,22 @@ void main(void) {
 </span><span class=lnt> 9
 </span><span class=lnt>10
 </span><span class=lnt>11
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=kt>void</span>
-<span class=nf>backtrace</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=p>{</span>
-  <span class=n>uint64</span> <span class=n>fp</span><span class=p>,</span> <span class=n>top</span><span class=p>;</span>
-  <span class=n>fp</span> <span class=o>=</span> <span class=n>r_fp</span><span class=p>();</span>
-  <span class=n>top</span> <span class=o>=</span> <span class=n>PGROUNDUP</span><span class=p>(</span><span class=n>fp</span><span class=p>);</span>
-  <span class=k>while</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span> <span class=p>{</span>
-    <span class=k>if</span> <span class=p>(</span><span class=n>fp</span> <span class=o>==</span> <span class=n>top</span><span class=p>)</span> <span class=k>break</span><span class=p>;</span>
-    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;%p</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=o>*</span><span class=p>(</span><span class=n>uint64</span><span class=o>*</span><span class=p>)(</span><span class=n>fp</span><span class=o>-</span><span class=mi>8</span><span class=p>));</span>
-    <span class=n>fp</span> <span class=o>=</span> <span class=o>*</span><span class=p>(</span><span class=n>uint64</span><span class=o>*</span><span class=p>)(</span><span class=n>fp</span><span class=o>-</span><span class=mi>16</span><span class=p>);</span>
-  <span class=p>}</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>之后在<code>sys_sleep</code>和<code>panic</code>中加入对<code>backtrace</code>的调用即可。</p>
-<h1 id=alarm>Alarm</h1>
-<p>本关需要实现一个<code>sigalarm(interval, handler)</code>系统调用，cpu 每消耗 interval 个 ticks 后，调用一次 handler 函数。</p>
-<p>首先要在<code>user/user.h</code>添加对新系统调用的用户接口：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>void</span>
+</span></span><span class=line><span class=cl><span class=nf>backtrace</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>uint64</span> <span class=n>fp</span><span class=p>,</span> <span class=n>top</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>fp</span> <span class=o>=</span> <span class=n>r_fp</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=n>top</span> <span class=o>=</span> <span class=n>PGROUNDUP</span><span class=p>(</span><span class=n>fp</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>while</span><span class=p>(</span><span class=mi>1</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>fp</span> <span class=o>==</span> <span class=n>top</span><span class=p>)</span> <span class=k>break</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>printf</span><span class=p>(</span><span class=s>&#34;%p</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=o>*</span><span class=p>(</span><span class=n>uint64</span><span class=o>*</span><span class=p>)(</span><span class=n>fp</span><span class=o>-</span><span class=mi>8</span><span class=p>));</span>
+</span></span><span class=line><span class=cl>    <span class=n>fp</span> <span class=o>=</span> <span class=o>*</span><span class=p>(</span><span class=n>uint64</span><span class=o>*</span><span class=p>)(</span><span class=n>fp</span><span class=o>-</span><span class=mi>16</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>之后在<code>sys_sleep</code>和<code>panic</code>中加入对<code>backtrace</code>的调用即可。</p><h2 id=alarm>Alarm</h2><p>本关需要实现一个<code>sigalarm(interval, handler)</code>系统调用，cpu 每消耗 interval 个 ticks 后，调用一次 handler 函数。</p><p>首先要在<code>user/user.h</code>添加对新系统调用的用户接口：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=kt>int</span> <span class=nf>sigalarm</span><span class=p>(</span><span class=kt>int</span> <span class=n>ticks</span><span class=p>,</span> <span class=kt>void</span> <span class=p>(</span><span class=o>*</span><span class=n>handler</span><span class=p>)());</span>
-<span class=kt>int</span> <span class=nf>sigreturn</span><span class=p>(</span><span class=kt>void</span><span class=p>);</span>
-</code></pre></td></tr></table>
-</div>
-</div><p><code>sigreturn</code>是一个被设计用来帮助我们实现<code>sigalarm</code>的函数，每个<code>handler</code>执行结束后，都调用<code>sigreturn</code>。</p>
-<p>首先要在<code>proc</code>中添加新的字段，记录<code>interval</code>，<code>handler</code>以及所需的辅助变量，在<code>allocpoc</code>中对它们进行初始化，在系统调用执行时，保存相应的值到<code>proc</code>中。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=kt>int</span> <span class=nf>sigalarm</span><span class=p>(</span><span class=kt>int</span> <span class=n>ticks</span><span class=p>,</span> <span class=kt>void</span> <span class=p>(</span><span class=o>*</span><span class=n>handler</span><span class=p>)());</span>
+</span></span><span class=line><span class=cl><span class=kt>int</span> <span class=nf>sigreturn</span><span class=p>(</span><span class=kt>void</span><span class=p>);</span>
+</span></span></code></pre></td></tr></table></div></div><p><code>sigreturn</code>是一个被设计用来帮助我们实现<code>sigalarm</code>的函数，每个<code>handler</code>执行结束后，都调用<code>sigreturn</code>。</p><p>首先要在<code>proc</code>中添加新的字段，记录<code>interval</code>，<code>handler</code>以及所需的辅助变量，在<code>allocpoc</code>中对它们进行初始化，在系统调用执行时，保存相应的值到<code>proc</code>中。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -309,24 +149,17 @@ void main(void) {
 </span><span class=lnt> 8
 </span><span class=lnt> 9
 </span><span class=lnt>10
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>uint64</span>
-<span class=nf>sys_sigalarm</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-<span class=p>{</span>
-  <span class=k>struct</span> <span class=n>proc</span> <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=n>myproc</span><span class=p>();</span>
-  <span class=k>if</span> <span class=p>(</span><span class=n>argint</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=o>&amp;</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_interval</span><span class=p>))</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
-    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
-  <span class=k>if</span> <span class=p>(</span><span class=n>argaddr</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=o>&amp;</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_hanlder</span><span class=p>))</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
-    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
-  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>之后，我们需要在<code>usertrap</code>识别到 timer interrupt 时，进行处理，hints 告诉我们，是<code>which_dev == 2</code>。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>uint64</span>
+</span></span><span class=line><span class=cl><span class=nf>sys_sigalarm</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=n>proc</span> <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=n>myproc</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>argint</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=o>&amp;</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_interval</span><span class=p>))</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>argaddr</span><span class=p>(</span><span class=mi>1</span><span class=p>,</span> <span class=o>&amp;</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_hanlder</span><span class=p>))</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>之后，我们需要在<code>usertrap</code>识别到 timer interrupt 时，进行处理，hints 告诉我们，是<code>which_dev == 2</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -335,24 +168,16 @@ void main(void) {
 </span><span class=lnt>7
 </span><span class=lnt>8
 </span><span class=lnt>9
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=c1>// give up the CPU if this is a timer interrupt.
-</span><span class=c1></span><span class=k>if</span><span class=p>(</span><span class=n>which_dev</span> <span class=o>==</span> <span class=mi>2</span><span class=p>)</span> <span class=p>{</span>
-  <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span><span class=o>++</span><span class=p>;</span>
-  <span class=k>if</span> <span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span> <span class=o>==</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_interval</span><span class=p>)</span> <span class=p>{</span>
-    <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
-    <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>epc</span> <span class=o>=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_hanlder</span><span class=p>;</span>
-  <span class=p>}</span>
-  <span class=n>yield</span><span class=p>();</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>此时只需让<code>sigreturn</code>直接返回 0，这样简单地添加代码，可以让<code>test0</code>打印出 alarm，但是随后，程序便逻辑崩溃，无法通过测试。这是因为当 kernle 处理完 time interru，回到用户模式，pc 指向 handler 的位置，之后开始执行 handler 函数，在 handler 函数尾部，调用<code>sigreturn</code>陷入 kernel，并无操作，再次返回用户态，执行 handler 尾部的<code>ret</code>。此时用于<code>ret</code>指令的返回地址寄存器<code>ra</code>所存储的值，是在 time interrupt 之时，test 函数执行中产生的<code>ra</code>的值，并非是 time interrupt 发生时，正在执行的代码地址，所以程序不能返回正确位置，并且 handler 执行过程中，修改了的部分寄存器也需要恢复。</p>
-<p>于是，我们需要在 handler 执行前保存<code>tramframe</code>，在执行后的<code>sigreturn</code>中恢复<code>tramframe</code>，让代码返回到正确的位置执行，并使寄存器的数值复原。同时，根据 hints，为了防止 handler 执行过程中被重复调用，添加<code>permission</code>字段来进行控制，此外，<code>interval==0</code>时，意味着取消 alarm。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// give up the CPU if this is a timer interrupt.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>if</span><span class=p>(</span><span class=n>which_dev</span> <span class=o>==</span> <span class=mi>2</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span><span class=o>++</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span> <span class=o>==</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_interval</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>epc</span> <span class=o>=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_hanlder</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>yield</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>此时只需让<code>sigreturn</code>直接返回 0，这样简单地添加代码，可以让<code>test0</code>打印出 alarm，但是随后，程序便逻辑崩溃，无法通过测试。这是因为当 kernle 处理完 time interru，回到用户模式，pc 指向 handler 的位置，之后开始执行 handler 函数，在 handler 函数尾部，调用<code>sigreturn</code>陷入 kernel，并无操作，再次返回用户态，执行 handler 尾部的<code>ret</code>。此时用于<code>ret</code>指令的返回地址寄存器<code>ra</code>所存储的值，是在 time interrupt 之时，test 函数执行中产生的<code>ra</code>的值，并非是 time interrupt 发生时，正在执行的代码地址，所以程序不能返回正确位置，并且 handler 执行过程中，修改了的部分寄存器也需要恢复。</p><p>于是，我们需要在 handler 执行前保存<code>tramframe</code>，在执行后的<code>sigreturn</code>中恢复<code>tramframe</code>，让代码返回到正确的位置执行，并使寄存器的数值复原。同时，根据 hints，为了防止 handler 执行过程中被重复调用，添加<code>permission</code>字段来进行控制，此外，<code>interval==0</code>时，意味着取消 alarm。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
@@ -361,23 +186,16 @@ void main(void) {
 </span><span class=lnt>7
 </span><span class=lnt>8
 </span><span class=lnt>9
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>uint64</span>
-<span class=nf>sys_sigreturn</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-<span class=p>{</span>
-  <span class=k>struct</span> <span class=n>proc</span><span class=o>*</span> <span class=n>p</span> <span class=o>=</span> <span class=n>myproc</span><span class=p>();</span>
-  <span class=n>p</span><span class=o>-&gt;</span><span class=n>permission</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
-  <span class=o>*</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span> <span class=o>=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_frame</span><span class=p>;</span>
-  <span class=n>printf</span><span class=p>(</span><span class=s>&#34;ra:%p</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>ra</span><span class=p>);</span>
-  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>在<code>usertrap</code>中：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>uint64</span>
+</span></span><span class=line><span class=cl><span class=nf>sys_sigreturn</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=n>proc</span><span class=o>*</span> <span class=n>p</span> <span class=o>=</span> <span class=n>myproc</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=n>p</span><span class=o>-&gt;</span><span class=n>permission</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=o>*</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span> <span class=o>=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_frame</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>printf</span><span class=p>(</span><span class=s>&#34;ra:%p</span><span class=se>\n</span><span class=s>&#34;</span><span class=p>,</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>ra</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>在<code>usertrap</code>中：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -389,62 +207,18 @@ void main(void) {
 </span><span class=lnt>10
 </span><span class=lnt>11
 </span><span class=lnt>12
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>if</span><span class=p>(</span><span class=n>which_dev</span> <span class=o>==</span> <span class=mi>2</span><span class=p>)</span> <span class=p>{</span>
-  <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span><span class=o>++</span><span class=p>;</span>
-  <span class=k>if</span> <span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>permission</span> <span class=o>&amp;&amp;</span>
-      <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_interval</span> <span class=o>&amp;&amp;</span>
-      <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span> <span class=o>==</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_interval</span><span class=p>)</span> <span class=p>{</span>
-    <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
-    <span class=n>p</span><span class=o>-&gt;</span><span class=n>permission</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
-    <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_frame</span> <span class=o>=</span> <span class=o>*</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=p>;</span>
-    <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>epc</span> <span class=o>=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_hanlder</span><span class=p>;</span>
-  <span class=p>}</span>
-  <span class=n>yield</span><span class=p>();</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>到此，便完成了 lab4 traps。</p>
-<p>此外，还有一点，笔者曾尝试只保存<code>tramframe</code>中的<code>caller save</code>寄存器，但是无法通过测试。最终查看<code>asm</code>文件发现：<code>callee save</code>寄存器是在被调用函数尾部的 ret 指令前进行恢复的，但是在<code>sigreturn</code>中通过恢复<code>epc</code>的方式，将<code>pc</code>直接指向了被 time interrupt 打断执行的代码位置，所以<code>callee save</code>寄存器在被修改后并未被复原，我们必须保存<code>trapframe</code>中的所有寄存器。</p>
-</div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>更新于 2021-02-25</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md><span>
-<a class=link-to-markdown href=/posts/6-s081-lab4-traps/index.md target=_blank>阅读原始文档</a>
-</span></div>
-<div class=post-info-share>
-<span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/6-s081-lab4-traps/ data-title="6.S081 lab4 traps" data-via=Jason210314 data-hashtags=6.S081,traps><i class="fab fa-twitter fa-fw"></i></a></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/6.s081/>6.S081</a>,&nbsp;<a href=/tags/traps/>traps</a></section>
-<section>
-<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/6-s081-lab3-page-tables/ class=prev rel=prev title="6.S081 lab3 page tables"><i class="fas fa-angle-left fa-fw"></i>6.S081 lab3 page tables</a>
-<a href=/posts/6-s081-lab5-lazy/ class=next rel=next title="6.S081 lab5 lazy">6.S081 lab5 lazy<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=disqus_thread class=comment></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.92.1">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
-</div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
-</div>
-</footer></div>
-<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title=查看评论>
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-164518488-1',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body>
-</html>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=n>which_dev</span> <span class=o>==</span> <span class=mi>2</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span><span class=o>++</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span> <span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>permission</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>      <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_interval</span> <span class=o>&amp;&amp;</span>
+</span></span><span class=line><span class=cl>      <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span> <span class=o>==</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_interval</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>p</span><span class=o>-&gt;</span><span class=n>passed</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>p</span><span class=o>-&gt;</span><span class=n>permission</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_frame</span> <span class=o>=</span> <span class=o>*</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>epc</span> <span class=o>=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>alarm_hanlder</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>yield</span><span class=p>();</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>到此，便完成了 lab4 traps。</p><p>此外，还有一点，笔者曾尝试只保存<code>tramframe</code>中的<code>caller save</code>寄存器，但是无法通过测试。最终查看<code>asm</code>文件发现：<code>callee save</code>寄存器是在被调用函数尾部的 ret 指令前进行恢复的，但是在<code>sigreturn</code>中通过恢复<code>epc</code>的方式，将<code>pc</code>直接指向了被 time interrupt 打断执行的代码位置，所以<code>callee save</code>寄存器在被修改后并未被复原，我们必须保存<code>trapframe</code>中的所有寄存器。</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2021-02-25</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/posts/6-s081-lab4-traps/index.md target=_blank>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/6-s081-lab4-traps/ data-title="6.S081 lab4 traps" data-via=Jason210314 data-hashtags=6.S081,traps><i class="fab fa-twitter fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/6.s081/>6.S081</a>,&nbsp;<a href=/tags/traps/>traps</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/6-s081-lab3-page-tables/ class=prev rel=prev title="6.S081 lab3 page tables"><i class="fas fa-angle-left fa-fw"></i>6.S081 lab3 page tables</a>
+<a href=/posts/6-s081-lab5-lazy/ class=next rel=next title="6.S081 lab5 lazy">6.S081 lab5 lazy<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=disqus_thread class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.97.3">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-164518488-1",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body></html>

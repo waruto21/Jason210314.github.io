@@ -1,7 +1,7 @@
 # 6.S081 lab3 page tables
 
 
-# 环境配置
+## 环境配置
 
 前两个 lab 比较基础，就不写博客记录了，于是从 lab3 开始。
 
@@ -11,7 +11,7 @@
 
 2021-02-24 修正：做 lab4 查看`call.asm`，发现.text 指令长度不一，有的为 2，有的为 4，遂找人请教，猜测是指令压缩导致，于是联想到之前几乎所有人都遇到的一个问题，使用 gdb 打断点调试时，出现："Cannot access memory at address xxx"。经过大佬查阅并尝试，发现在`.gdbinit.tmpl-riscv`中加入`set riscv use-compressed-breakpoints yes`可以有效解决。
 
-# Print a page table
+## Print a page table
 
 该部分的内容是打印出第一个进程的用户页表。这个非常简单：
 
@@ -73,7 +73,7 @@ page table 0x0000000087f67000
 
 在用户地址空间最高处，511，510 entry 对应`trampoline`和`trapframe`。在用户地址空间最低处，0，1，2 entry 对应`text\data`，`guard page`，`stack`，如果修改下`_vmprint`打印出更多信息，可以发现 entry 1 的`PTE_U`是无效的，可以防止栈溢出。顶级页表只使用到第 255 个 entry，因为`xv6`只使用了 38 位地址。
 
-# A kernel page table per process
+## A kernel page table per process
 
 第二部分是让每个进程拥有单独的内核页表，为第三部分直接使用用户虚拟地址做准备。
 
@@ -184,7 +184,7 @@ proc_freekpagetable(pagetable_t kpagetable) {
 pte = walk(myproc()->kpagetable, va, 0);
 ```
 
-# Simplify `copyin/copyinstr`
+## Simplify `copyin/copyinstr`
 
 该部分需要利用第二部分中的进程内核页表简化`copyin/copyinstr`函数，使之不需要传递用户页表。
 

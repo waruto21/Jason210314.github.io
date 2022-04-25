@@ -5,7 +5,7 @@
 
 <!-- more -->
 
-# Lab: mmap
+## Lab: mmap
 
 `mmap`的 API 如下：
 
@@ -247,7 +247,7 @@ void *mmap(void *addr, size_t length, int prot, int flags,
     np->vma[i].used = p->vma[i].used;
     np->vma[i].flags = p->vma[i].flags;
     np->vma[i].prot = p->vma[i].prot;
-
+  
     if(p->vma[i].used && p->vma[i].f) {
       np->vma[i].f = filedup(p->vma[i].f);
     }

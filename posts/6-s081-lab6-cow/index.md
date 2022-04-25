@@ -1,7 +1,7 @@
 # 6.S081 lab6 cow
 
 
-# Copy-on-Write Fork for xv6
+## Copy-on-Write Fork for xv6
 
 这次 lab 只有一关，那就是为`xv6`实现`copy on write`。
 
@@ -206,7 +206,7 @@
   copyout(pagetable_t pagetable, uint64 dstva, char *src, uint64 len)
   {
     uint64 n, va0, pa0;
-
+  
     while(len > 0){
       va0 = PGROUNDDOWN(dstva);
       cow_alloc(pagetable, va0);
@@ -217,7 +217,7 @@
       if(n > len)
         n = len;
       memmove((void *)(pa0 + (dstva - va0)), src, n);
-
+  
       len -= n;
       src += n;
       dstva = va0 + PGSIZE;

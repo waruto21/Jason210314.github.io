@@ -5,7 +5,7 @@
 
 <!-- more -->
 
-# 子类型与变形
+## 子类型与变形
 
 子类型是程序语言类型系统中的一个概念，Wikipedia 对其有如下解释：
 
@@ -25,7 +25,7 @@
 
 `covariant`、`contravariant`的概念来自于范畴论(`Category Theory`)中的函子(`Functor`)。
 
-# 变形与类型安全
+## 变形与类型安全
 
 在下面的 Java 代码中，`Cat[]`赋值给`Animal[]`类型的变量可以通过编译，但是`ArrayList<Cat>`赋值给`ArrayList<Animal>`类型的变量则无法通过编译。说明 Java 在编译时对数组采用了协变，而对泛型容器采用了抗变。但是在运行时，对数组元素进行错误的赋值，会抛出运行时错误，这实际是一种对于编译期数组协变的补救，数组采用协变本身是一种很差劲的设计。
 
@@ -109,7 +109,7 @@ $$
 
 即我们可以用一个作用域较大的函数代替一个作用域较小的函数，因为我们可以在使用时安全地收缩它的作用域至和后者一样，即只使用`Animal`中属于`Cat`的那一部分。
 
-# Rust 生命周期
+## Rust 生命周期
 
 Rust 没有类型继承，但是 Rust 有 lifetime 啊，所以 Rust 的子类型必定是指 lifetime 之间的关系。
 
@@ -222,7 +222,7 @@ build 结果如下：
 - `a.f`类型为`fn(&'a i32)`，`f2`类型为`fn(&'static i32)`；
 - `a.f = f2`，相当于把父类型变量赋值给了子类型，类型不匹配，失败了。
 
-# 资料援引
+## 资料援引
 
 - https://doc.rust-lang.org/nomicon/subtyping.html
 - https://en.wikipedia.org/wiki/Type_constructor

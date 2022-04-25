@@ -1,102 +1,15 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
-<title>6.S081 lab5 lazy - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="6.S081 lab5 lazy">
-<meta property="og:description" content="Eliminate allocation from sbrk() 这次实验的第一关非常简单，就是从sbrk调用中取消内存分配，为之后的lay allocation做准备。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 uint64">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://wmc1999.top/posts/6-s081-lab5-lazy/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-02-25T21:46:35+00:00">
-<meta property="article:modified_time" content="2021-02-25T21:46:35+00:00">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="6.S081 lab5 lazy">
-<meta name=twitter:description content="Eliminate allocation from sbrk() 这次实验的第一关非常简单，就是从sbrk调用中取消内存分配，为之后的lay allocation做准备。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 uint64">
-<meta name=application-name content="OneStep">
-<meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/6-s081-lab5-lazy/><link rel=prev href=https://wmc1999.top/posts/6-s081-lab4-traps/><link rel=next href=https://wmc1999.top/posts/6-s081-lab6-cow/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"6.S081 lab5 lazy","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/6-s081-lab5-lazy\/"},"genre":"posts","keywords":"6.S081, lazy allocation","wordcount":1527,"url":"https:\/\/wmc1999.top\/posts\/6-s081-lab5-lazy\/","datePublished":"2021-02-25T21:46:35+00:00","dateModified":"2021-02-25T21:46:35+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head>
-<body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu>
-<div class=menu-inner><a class=menu-item href=/> 首页 </a><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><a class=menu-item href=/friendlinks> 友链 </a><a class=menu-item href=/about> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>6.S081 lab5 lazy - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="6.S081 lab5 lazy"><meta property="og:description" content="Eliminate allocation from sbrk() 这次实验的第一关非常简单，就是从sbrk调用中取消内存分配，为之后的lay allocation做准备。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 uint64"><meta property="og:type" content="article"><meta property="og:url" content="https://wmc1999.top/posts/6-s081-lab5-lazy/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-02-25T21:46:35+00:00"><meta property="article:modified_time" content="2021-02-25T21:46:35+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="6.S081 lab5 lazy"><meta name=twitter:description content="Eliminate allocation from sbrk() 这次实验的第一关非常简单，就是从sbrk调用中取消内存分配，为之后的lay allocation做准备。 1 2 3 4 5 6 7 8 9 10 11 12 13 14 uint64"><meta name=application-name content="OneStep"><meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/6-s081-lab5-lazy/><link rel=prev href=https://wmc1999.top/posts/6-s081-lab4-traps/><link rel=next href=https://wmc1999.top/posts/6-s081-lab6-cow/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"6.S081 lab5 lazy","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/6-s081-lab5-lazy\/"},"genre":"posts","keywords":"6.S081, lazy allocation","wordcount":1527,"url":"https:\/\/wmc1999.top\/posts\/6-s081-lab5-lazy\/","datePublished":"2021-02-25T21:46:35+00:00","dateModified":"2021-02-25T21:46:35+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/>首页 </a><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/friendlinks>友链 </a><a class=menu-item href=/about>关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-desktop>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a>
-</div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><div class=search-wrapper>
-<div class="search mobile" id=search-mobile>
-<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-mobile>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</div>
-<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
-取消
-</a>
-</div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2>
-<div class=toc-content id=toc-content-auto></div>
-</div><article class="page single"><h1 class="single-title animated flipInX">6.S081 lab5 lazy</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/os/><i class="far fa-folder fa-fw"></i>OS</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-02-25>2021-02-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1527 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div>
-</div><div class="details toc" id=toc-static kept=true>
-<div class="details-summary toc-title">
-<span>目录</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents></nav></div>
-</div><div class=content id=content><h1 id=eliminate-allocation-from-sbrk>Eliminate allocation from sbrk()</h1>
-<p>这次实验的第一关非常简单，就是从<code>sbrk</code>调用中取消内存分配，为之后的<code>lay allocation</code>做准备。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">6.S081 lab5 lazy</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/os/><i class="far fa-folder fa-fw"></i>OS</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-02-25>2021-02-25</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 1527 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 4 分钟&nbsp;</div></div><div class="details toc" id=toc-static kept=true><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#eliminate-allocation-from-sbrk>Eliminate allocation from sbrk()</a></li><li><a href=#lazy-allocation>Lazy allocation</a></li><li><a href=#lazytests-and-usertests>Lazytests and Usertests</a></li></ul></nav></div></div><div class=content id=content><h2 id=eliminate-allocation-from-sbrk>Eliminate allocation from sbrk()</h2><p>这次实验的第一关非常简单，就是从<code>sbrk</code>调用中取消内存分配，为之后的<code>lay allocation</code>做准备。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -110,52 +23,31 @@
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>uint64</span>
-<span class=nf>sys_sbrk</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
-<span class=p>{</span>
-  <span class=kt>int</span> <span class=n>addr</span><span class=p>;</span>
-  <span class=kt>int</span> <span class=n>n</span><span class=p>;</span>
-
-  <span class=k>if</span><span class=p>(</span><span class=n>argint</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>n</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
-    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
-  <span class=k>struct</span> <span class=n>proc</span> <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=n>myproc</span><span class=p>();</span>
-  <span class=n>addr</span> <span class=o>=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span><span class=p>;</span>
-	<span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>+=</span> <span class=n>n</span><span class=p>;</span>
-
-  <span class=k>return</span> <span class=n>addr</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div>
-<p>hints 提示我们，修改完代码后，尝试运行<code>echo hi</code>，会产生类似下面的结果:</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>uint64</span>
+</span></span><span class=line><span class=cl><span class=nf>sys_sbrk</span><span class=p>(</span><span class=kt>void</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>addr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=kt>int</span> <span class=n>n</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span><span class=p>(</span><span class=n>argint</span><span class=p>(</span><span class=mi>0</span><span class=p>,</span> <span class=o>&amp;</span><span class=n>n</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=n>proc</span> <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=n>myproc</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=n>addr</span> <span class=o>=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>+=</span> <span class=n>n</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>addr</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>hints 提示我们，修改完代码后，尝试运行<code>echo hi</code>，会产生类似下面的结果:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>$ <span class=nb>echo</span> hi
-usertrap<span class=o>()</span>: unexpected scause 0x000000000000000f <span class=nv>pid</span><span class=o>=</span><span class=m>3</span>
-            <span class=nv>sepc</span><span class=o>=</span>0x0000000000001258 <span class=nv>stval</span><span class=o>=</span>0x0000000000004008
-<span class=nv>va</span><span class=o>=</span>0x0000000000004000 <span class=nv>pte</span><span class=o>=</span>0x0000000000000000
-panic: uvmunmap: not mapped
-</code></pre></td></tr></table>
-</div>
-</div><p>其实并不一定是<code>echo</code>才会导致 crash，其他的执行任意的命令或者输入无意义字符都会导致 crash。在<code>user/umalloc.c</code>中，<code>morecore</code>调用了<code>sbrk</code>，<code>malloc</code>调用了<code>morecore</code>。在<code>user/sh.c</code>中，shell 运行过程中不断地调用<code>malloc</code>为 command 申请分配空间，然后运行 command。这个过程中，malloc 并未真正分配空间，运行时访问到对应虚拟地址就会产生 page fault，导致 panic；</p>
-<h1 id=lazy-allocation>Lazy allocation</h1>
-<p>这一关需要我们实现<code>lazy allocation</code>，在<code>usertrap()</code>中处理<code>page fault</code>，为产生<code>page fault</code>的虚拟地址分配一个真实的物理页面，并 map 到对应虚拟地址。</p>
-<p><code>r_scause()</code>用于获取 trap 产生的原因，为 13/15 时为<code>page fault</code>。</p>
-<p><code>r_stval()</code>获取<code>stval</code>寄存器值，它是导致<code>page fault</code>的虚拟地址值。</p>
-<p><code>uvmunmap()</code>会 panic，因为进程地址空间有些虚拟地址并未被 map，所要加以修改。</p>
-<p>参照<code>uvmalloc()</code>，完成如下函数，为虚拟地址<code>va</code>分配一个真实物理页：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ <span class=nb>echo</span> hi
+</span></span><span class=line><span class=cl>usertrap<span class=o>()</span>: unexpected scause 0x000000000000000f <span class=nv>pid</span><span class=o>=</span><span class=m>3</span>
+</span></span><span class=line><span class=cl>            <span class=nv>sepc</span><span class=o>=</span>0x0000000000001258 <span class=nv>stval</span><span class=o>=</span>0x0000000000004008
+</span></span><span class=line><span class=cl><span class=nv>va</span><span class=o>=</span>0x0000000000004000 <span class=nv>pte</span><span class=o>=</span>0x0000000000000000
+</span></span><span class=line><span class=cl>panic: uvmunmap: not mapped
+</span></span></code></pre></td></tr></table></div></div><p>其实并不一定是<code>echo</code>才会导致 crash，其他的执行任意的命令或者输入无意义字符都会导致 crash。在<code>user/umalloc.c</code>中，<code>morecore</code>调用了<code>sbrk</code>，<code>malloc</code>调用了<code>morecore</code>。在<code>user/sh.c</code>中，shell 运行过程中不断地调用<code>malloc</code>为 command 申请分配空间，然后运行 command。这个过程中，malloc 并未真正分配空间，运行时访问到对应虚拟地址就会产生 page fault，导致 panic；</p><h2 id=lazy-allocation>Lazy allocation</h2><p>这一关需要我们实现<code>lazy allocation</code>，在<code>usertrap()</code>中处理<code>page fault</code>，为产生<code>page fault</code>的虚拟地址分配一个真实的物理页面，并 map 到对应虚拟地址。</p><p><code>r_scause()</code>用于获取 trap 产生的原因，为 13/15 时为<code>page fault</code>。</p><p><code>r_stval()</code>获取<code>stval</code>寄存器值，它是导致<code>page fault</code>的虚拟地址值。</p><p><code>uvmunmap()</code>会 panic，因为进程地址空间有些虚拟地址并未被 map，所要加以修改。</p><p>参照<code>uvmalloc()</code>，完成如下函数，为虚拟地址<code>va</code>分配一个真实物理页：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -172,163 +64,86 @@ panic: uvmunmap: not mapped
 </span><span class=lnt>15
 </span><span class=lnt>16
 </span><span class=lnt>17
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>uint64</span>
-<span class=nf>lazy_uvmalloc</span><span class=p>(</span><span class=n>pagetable_t</span> <span class=n>pagetable</span><span class=p>,</span> <span class=n>uint64</span> <span class=n>va</span><span class=p>)</span>
-<span class=p>{</span>
-  <span class=kt>char</span> <span class=o>*</span><span class=n>mem</span><span class=p>;</span>
-
-  <span class=n>va</span> <span class=o>=</span> <span class=n>PGROUNDDOWN</span><span class=p>(</span><span class=n>va</span><span class=p>);</span>
-  <span class=n>mem</span> <span class=o>=</span> <span class=n>kalloc</span><span class=p>();</span>
-  <span class=k>if</span><span class=p>(</span><span class=n>mem</span> <span class=o>==</span> <span class=mi>0</span><span class=p>){</span>
-    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
-  <span class=p>}</span>
-  <span class=n>memset</span><span class=p>(</span><span class=n>mem</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=n>PGSIZE</span><span class=p>);</span>
-  <span class=k>if</span><span class=p>(</span><span class=n>mappages</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>,</span> <span class=n>PGSIZE</span><span class=p>,</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=n>mem</span><span class=p>,</span> <span class=n>PTE_W</span><span class=o>|</span><span class=n>PTE_X</span><span class=o>|</span><span class=n>PTE_R</span><span class=o>|</span><span class=n>PTE_U</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
-    <span class=n>kfree</span><span class=p>(</span><span class=n>mem</span><span class=p>);</span>
-    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
-  <span class=p>}</span>
-  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>在<code>usertrap()</code>中加入对于<code>page fault</code>的处理：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>uint64</span>
+</span></span><span class=line><span class=cl><span class=nf>lazy_uvmalloc</span><span class=p>(</span><span class=n>pagetable_t</span> <span class=n>pagetable</span><span class=p>,</span> <span class=n>uint64</span> <span class=n>va</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=kt>char</span> <span class=o>*</span><span class=n>mem</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>va</span> <span class=o>=</span> <span class=n>PGROUNDDOWN</span><span class=p>(</span><span class=n>va</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>mem</span> <span class=o>=</span> <span class=n>kalloc</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span><span class=p>(</span><span class=n>mem</span> <span class=o>==</span> <span class=mi>0</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=n>memset</span><span class=p>(</span><span class=n>mem</span><span class=p>,</span> <span class=mi>0</span><span class=p>,</span> <span class=n>PGSIZE</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span><span class=p>(</span><span class=n>mappages</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>,</span> <span class=n>PGSIZE</span><span class=p>,</span> <span class=p>(</span><span class=n>uint64</span><span class=p>)</span><span class=n>mem</span><span class=p>,</span> <span class=n>PTE_W</span><span class=o>|</span><span class=n>PTE_X</span><span class=o>|</span><span class=n>PTE_R</span><span class=o>|</span><span class=n>PTE_U</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>kfree</span><span class=p>(</span><span class=n>mem</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>在<code>usertrap()</code>中加入对于<code>page fault</code>的处理：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>else</span> <span class=nf>if</span><span class=p>(</span><span class=n>cause</span> <span class=o>==</span> <span class=mi>13</span> <span class=o>||</span> <span class=n>cause</span> <span class=o>==</span> <span class=mi>15</span><span class=p>)</span> <span class=p>{</span>
-  <span class=n>uint64</span> <span class=n>va</span> <span class=o>=</span> <span class=n>r_stval</span><span class=p>();</span>
-  <span class=k>if</span><span class=p>(</span><span class=n>lazy_uvmalloc</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
-    <span class=n>p</span><span class=o>-&gt;</span><span class=n>killed</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
-	<span class=p>}</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>添加以上代码之后，在<code>uvmunmap()</code>中添加如下修改，取消<code>panic</code>：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>else</span> <span class=nf>if</span><span class=p>(</span><span class=n>cause</span> <span class=o>==</span> <span class=mi>13</span> <span class=o>||</span> <span class=n>cause</span> <span class=o>==</span> <span class=mi>15</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>uint64</span> <span class=n>va</span> <span class=o>=</span> <span class=n>r_stval</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span><span class=p>(</span><span class=n>lazy_uvmalloc</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=n>p</span><span class=o>-&gt;</span><span class=n>killed</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>	<span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>添加以上代码之后，在<code>uvmunmap()</code>中添加如下修改，取消<code>panic</code>：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>if</span><span class=p>((</span><span class=n>pte</span> <span class=o>=</span> <span class=n>walk</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>a</span><span class=p>,</span> <span class=mi>0</span><span class=p>))</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
-  <span class=c1>// panic(&#34;uvmunmap: walk&#34;);
-</span><span class=c1></span>  <span class=k>continue</span><span class=p>;</span>
-<span class=k>if</span><span class=p>((</span><span class=o>*</span><span class=n>pte</span> <span class=o>&amp;</span> <span class=n>PTE_V</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
-  <span class=c1>// panic(&#34;uvmunmap: not mapped&#34;);
-</span><span class=c1></span>  <span class=k>continue</span><span class=p>;</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>完成如上代码后，<code>echo hi</code>可以正常运行。</p>
-<h1 id=lazytests-and-usertests>Lazytests and Usertests</h1>
-<p>第三关需要处理第二关的一些遗留细节问题，完善<code>lazy allocation</code>，使之通过全部测试。</p>
-<blockquote>
-<ul>
-<li>Handle negative sbrk() arguments.</li>
-</ul>
-</blockquote>
-<p>对于负数参数，需要<code>unmap</code>对应页面:</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span><span class=p>((</span><span class=n>pte</span> <span class=o>=</span> <span class=n>walk</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>a</span><span class=p>,</span> <span class=mi>0</span><span class=p>))</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// panic(&#34;uvmunmap: walk&#34;);
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>((</span><span class=o>*</span><span class=n>pte</span> <span class=o>&amp;</span> <span class=n>PTE_V</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// panic(&#34;uvmunmap: not mapped&#34;);
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>continue</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><p>完成如上代码后，<code>echo hi</code>可以正常运行。</p><h2 id=lazytests-and-usertests>Lazytests and Usertests</h2><p>第三关需要处理第二关的一些遗留细节问题，完善<code>lazy allocation</code>，使之通过全部测试。</p><blockquote><ul><li>Handle negative sbrk() arguments.</li></ul></blockquote><p>对于负数参数，需要<code>unmap</code>对应页面:</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>if</span><span class=p>(</span><span class=n>n</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>){</span>
-  <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>=</span> <span class=n>uvmdealloc</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span><span class=p>,</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>+</span> <span class=n>n</span><span class=p>);</span>
-<span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
-  <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>+=</span> <span class=n>n</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<ul>
-<li>
-<p>Kill a process if it page-faults on a virtual memory address higher than any allocated with sbrk().</p>
-</li>
-<li>
-<p>Handle faults on the invalid page below the user stack.</p>
-</li>
-</ul>
-</blockquote>
-<p>这里需要判断产生<code>page fault</code>的 va 是否在当前进程拥有的地址范围之外。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=n>n</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>  <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>=</span> <span class=n>uvmdealloc</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span><span class=p>,</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>+</span> <span class=n>n</span><span class=p>);</span>
+</span></span><span class=line><span class=cl><span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>+=</span> <span class=n>n</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><ul><li><p>Kill a process if it page-faults on a virtual memory address higher than any allocated with sbrk().</p></li><li><p>Handle faults on the invalid page below the user stack.</p></li></ul></blockquote><p>这里需要判断产生<code>page fault</code>的 va 是否在当前进程拥有的地址范围之外。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>if</span> <span class=p>(</span><span class=n>va</span> <span class=o>&gt;=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>||</span> <span class=n>va</span> <span class=o>&lt;</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>sp</span><span class=p>)</span>
-  <span class=n>p</span><span class=o>-&gt;</span><span class=n>killed</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
-</code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<ul>
-<li>Handle the parent-to-child memory copy in fork() correctly.</li>
-</ul>
-</blockquote>
-<p>在<code>fork()</code>中，使用如下代码将内存从父进程复制到子进程：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span> <span class=p>(</span><span class=n>va</span> <span class=o>&gt;=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>||</span> <span class=n>va</span> <span class=o>&lt;</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>sp</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=n>p</span><span class=o>-&gt;</span><span class=n>killed</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><ul><li>Handle the parent-to-child memory copy in fork() correctly.</li></ul></blockquote><p>在<code>fork()</code>中，使用如下代码将内存从父进程复制到子进程：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=c1>// Copy user memory from parent to child.
-</span><span class=c1></span><span class=k>if</span><span class=p>(</span><span class=n>uvmcopy</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>np</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>){</span>
-  <span class=n>freeproc</span><span class=p>(</span><span class=n>np</span><span class=p>);</span>
-  <span class=n>release</span><span class=p>(</span><span class=o>&amp;</span><span class=n>np</span><span class=o>-&gt;</span><span class=n>lock</span><span class=p>);</span>
-  <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>进入<code>uvmcopy()</code>，做出如下修改：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=c1>// Copy user memory from parent to child.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>if</span><span class=p>(</span><span class=n>uvmcopy</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>np</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span><span class=p>)</span> <span class=o>&lt;</span> <span class=mi>0</span><span class=p>){</span>
+</span></span><span class=line><span class=cl>  <span class=n>freeproc</span><span class=p>(</span><span class=n>np</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=n>release</span><span class=p>(</span><span class=o>&amp;</span><span class=n>np</span><span class=o>-&gt;</span><span class=n>lock</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=o>-</span><span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>进入<code>uvmcopy()</code>，做出如下修改：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>if</span><span class=p>((</span><span class=n>pte</span> <span class=o>=</span> <span class=n>walk</span><span class=p>(</span><span class=n>old</span><span class=p>,</span> <span class=n>i</span><span class=p>,</span> <span class=mi>0</span><span class=p>))</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
-  <span class=c1>// panic(&#34;uvmcopy: pte should exist&#34;);
-</span><span class=c1></span>  <span class=k>continue</span><span class=p>;</span>
-<span class=k>if</span><span class=p>((</span><span class=o>*</span><span class=n>pte</span> <span class=o>&amp;</span> <span class=n>PTE_V</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
-  <span class=c1>// panic(&#34;uvmcopy: page not present&#34;);
-</span><span class=c1></span>  <span class=k>continue</span><span class=p>;</span>
-</code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<ul>
-<li>Handle the case in which a process passes a valid address from sbrk() to a system call such as read or write, but the memory for that address has not yet been allocated.</li>
-</ul>
-</blockquote>
-<p>当进程进行<code>syscall</code>时，会陷入 kernel，此时<code>stap</code>切换为内核页表，<code>RISC-V</code>硬件无法再为用户地址空间产生<code>page fault</code>，所以当用户执行<code>read()</code>和<code>write()</code>，将用户地址空间的有效虚拟地址传递给内核时，如果该虚拟地址没有 map 到有效物理内存，将会导致程序 panic。kernel 运行时，使用<code>walkaddr</code>进行虚实地址转换，所以我们需要修改其中的代码，当虚拟地址有效而页表中未 map 时，尝试为其分配物理内存：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span><span class=p>((</span><span class=n>pte</span> <span class=o>=</span> <span class=n>walk</span><span class=p>(</span><span class=n>old</span><span class=p>,</span> <span class=n>i</span><span class=p>,</span> <span class=mi>0</span><span class=p>))</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// panic(&#34;uvmcopy: pte should exist&#34;);
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>continue</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=k>if</span><span class=p>((</span><span class=o>*</span><span class=n>pte</span> <span class=o>&amp;</span> <span class=n>PTE_V</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>  <span class=c1>// panic(&#34;uvmcopy: page not present&#34;);
+</span></span></span><span class=line><span class=cl><span class=c1></span>  <span class=k>continue</span><span class=p>;</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><ul><li>Handle the case in which a process passes a valid address from sbrk() to a system call such as read or write, but the memory for that address has not yet been allocated.</li></ul></blockquote><p>当进程进行<code>syscall</code>时，会陷入 kernel，此时<code>stap</code>切换为内核页表，<code>RISC-V</code>硬件无法再为用户地址空间产生<code>page fault</code>，所以当用户执行<code>read()</code>和<code>write()</code>，将用户地址空间的有效虚拟地址传递给内核时，如果该虚拟地址没有 map 到有效物理内存，将会导致程序 panic。kernel 运行时，使用<code>walkaddr</code>进行虚实地址转换，所以我们需要修改其中的代码，当虚拟地址有效而页表中未 map 时，尝试为其分配物理内存：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -354,93 +169,38 @@ panic: uvmunmap: not mapped
 </span><span class=lnt>24
 </span><span class=lnt>25
 </span><span class=lnt>26
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=n>uint64</span>
-<span class=nf>walkaddr</span><span class=p>(</span><span class=n>pagetable_t</span> <span class=n>pagetable</span><span class=p>,</span> <span class=n>uint64</span> <span class=n>va</span><span class=p>)</span>
-<span class=p>{</span>
-  <span class=n>pte_t</span> <span class=o>*</span><span class=n>pte</span><span class=p>;</span>
-  <span class=n>uint64</span> <span class=n>pa</span><span class=p>;</span>
-  <span class=k>struct</span> <span class=n>proc</span> <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=n>myproc</span><span class=p>();</span>
-
-  <span class=k>if</span><span class=p>(</span><span class=n>va</span> <span class=o>&gt;=</span> <span class=n>MAXVA</span><span class=p>)</span>
-    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-
-  <span class=n>pte</span> <span class=o>=</span> <span class=n>walk</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
-  <span class=k>if</span><span class=p>(</span><span class=n>pte</span> <span class=o>==</span> <span class=mi>0</span> <span class=o>||</span> <span class=p>(</span><span class=o>*</span><span class=n>pte</span> <span class=o>&amp;</span> <span class=n>PTE_V</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
-    <span class=k>if</span> <span class=p>(</span><span class=n>va</span> <span class=o>&gt;=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>||</span> <span class=n>va</span> <span class=o>&lt;</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>sp</span><span class=p>)</span> <span class=p>{</span>
-      <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-    <span class=p>}</span>
-    <span class=k>if</span><span class=p>(</span><span class=n>lazy_uvmalloc</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
-      <span class=n>pte</span> <span class=o>=</span> <span class=n>walk</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>,</span> <span class=mi>0</span><span class=p>);;</span>
-    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
-      <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-    <span class=p>}</span>
-  <span class=p>}</span>
-  <span class=k>if</span><span class=p>((</span><span class=o>*</span><span class=n>pte</span> <span class=o>&amp;</span> <span class=n>PTE_U</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
-    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
-  <span class=n>pa</span> <span class=o>=</span> <span class=n>PTE2PA</span><span class=p>(</span><span class=o>*</span><span class=n>pte</span><span class=p>);</span>
-  <span class=k>return</span> <span class=n>pa</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><blockquote>
-<ul>
-<li>Handle out-of-memory correctly: if kalloc() fails in the page fault handler, kill the current process.</li>
-</ul>
-</blockquote>
-<p>在关卡 2 中，已经做到了这一点，当<code>lazy_uvmalloc()</code>调用<code>kalloc()</code>失败时，返回非 0，杀掉进程：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=n>uint64</span>
+</span></span><span class=line><span class=cl><span class=nf>walkaddr</span><span class=p>(</span><span class=n>pagetable_t</span> <span class=n>pagetable</span><span class=p>,</span> <span class=n>uint64</span> <span class=n>va</span><span class=p>)</span>
+</span></span><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>pte_t</span> <span class=o>*</span><span class=n>pte</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>uint64</span> <span class=n>pa</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=k>struct</span> <span class=n>proc</span> <span class=o>*</span><span class=n>p</span> <span class=o>=</span> <span class=n>myproc</span><span class=p>();</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=k>if</span><span class=p>(</span><span class=n>va</span> <span class=o>&gt;=</span> <span class=n>MAXVA</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl>  <span class=n>pte</span> <span class=o>=</span> <span class=n>walk</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>,</span> <span class=mi>0</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span><span class=p>(</span><span class=n>pte</span> <span class=o>==</span> <span class=mi>0</span> <span class=o>||</span> <span class=p>(</span><span class=o>*</span><span class=n>pte</span> <span class=o>&amp;</span> <span class=n>PTE_V</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=p>(</span><span class=n>va</span> <span class=o>&gt;=</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>sz</span> <span class=o>||</span> <span class=n>va</span> <span class=o>&lt;</span> <span class=n>p</span><span class=o>-&gt;</span><span class=n>trapframe</span><span class=o>-&gt;</span><span class=n>sp</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span><span class=p>(</span><span class=n>lazy_uvmalloc</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=n>pte</span> <span class=o>=</span> <span class=n>walk</span><span class=p>(</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>,</span> <span class=mi>0</span><span class=p>);;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span> <span class=k>else</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=k>if</span><span class=p>((</span><span class=o>*</span><span class=n>pte</span> <span class=o>&amp;</span> <span class=n>PTE_U</span><span class=p>)</span> <span class=o>==</span> <span class=mi>0</span><span class=p>)</span>
+</span></span><span class=line><span class=cl>    <span class=k>return</span> <span class=mi>0</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>  <span class=n>pa</span> <span class=o>=</span> <span class=n>PTE2PA</span><span class=p>(</span><span class=o>*</span><span class=n>pte</span><span class=p>);</span>
+</span></span><span class=line><span class=cl>  <span class=k>return</span> <span class=n>pa</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><blockquote><ul><li>Handle out-of-memory correctly: if kalloc() fails in the page fault handler, kill the current process.</li></ul></blockquote><p>在关卡 2 中，已经做到了这一点，当<code>lazy_uvmalloc()</code>调用<code>kalloc()</code>失败时，返回非 0，杀掉进程：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=k>if</span><span class=p>(</span><span class=n>lazy_uvmalloc</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
-  <span class=n>p</span><span class=o>-&gt;</span><span class=n>killed</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
-<span class=p>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>做完如上修改，便能通过所有测试。</p>
-</div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>更新于 2021-02-25</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md><span>
-<a class=link-to-markdown href=/posts/6-s081-lab5-lazy/index.md target=_blank>阅读原始文档</a>
-</span></div>
-<div class=post-info-share>
-<span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/6-s081-lab5-lazy/ data-title="6.S081 lab5 lazy" data-via=Jason210314 data-hashtags="6.S081,lazy allocation"><i class="fab fa-twitter fa-fw"></i></a></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/6.s081/>6.S081</a>,&nbsp;<a href=/tags/lazy-allocation/>lazy allocation</a></section>
-<section>
-<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/6-s081-lab4-traps/ class=prev rel=prev title="6.S081 lab4 traps"><i class="fas fa-angle-left fa-fw"></i>6.S081 lab4 traps</a>
-<a href=/posts/6-s081-lab6-cow/ class=next rel=next title="6.S081 lab6 cow">6.S081 lab6 cow<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=disqus_thread class=comment></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.92.1">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
-</div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
-</div>
-</footer></div>
-<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title=查看评论>
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-164518488-1',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body>
-</html>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-c data-lang=c><span class=line><span class=cl><span class=k>if</span><span class=p>(</span><span class=n>lazy_uvmalloc</span><span class=p>(</span><span class=n>p</span><span class=o>-&gt;</span><span class=n>pagetable</span><span class=p>,</span> <span class=n>va</span><span class=p>)</span> <span class=o>!=</span> <span class=mi>0</span><span class=p>)</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=n>p</span><span class=o>-&gt;</span><span class=n>killed</span> <span class=o>=</span> <span class=mi>1</span><span class=p>;</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>做完如上修改，便能通过所有测试。</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2021-02-25</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/posts/6-s081-lab5-lazy/index.md target=_blank>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/6-s081-lab5-lazy/ data-title="6.S081 lab5 lazy" data-via=Jason210314 data-hashtags="6.S081,lazy allocation"><i class="fab fa-twitter fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/6.s081/>6.S081</a>,&nbsp;<a href=/tags/lazy-allocation/>lazy allocation</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/6-s081-lab4-traps/ class=prev rel=prev title="6.S081 lab4 traps"><i class="fas fa-angle-left fa-fw"></i>6.S081 lab4 traps</a>
+<a href=/posts/6-s081-lab6-cow/ class=next rel=next title="6.S081 lab6 cow">6.S081 lab6 cow<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=disqus_thread class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.97.3">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-164518488-1",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body></html>

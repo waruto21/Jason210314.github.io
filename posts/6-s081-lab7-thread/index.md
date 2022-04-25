@@ -5,7 +5,7 @@
 
 <!-- more -->
 
-# Uthread: switching between threads
+## Uthread: switching between threads
 
 实验代码中为我们提供了一个用户级别线程库，需要我们实现线程切换部分。我们需要给`user/uthread.c`中的`thread_create()`和`thread_schedule()`，以及`user/uthread_switch.S`中的`thread_switch`添加代码。
 
@@ -77,7 +77,7 @@ if (current_thread != next_thread) {         /* switch threads?  */
 
 至于`thread_switch`的代码，直接从`kernel/switch.S`中复制即可。
 
-# Using threads
+## Using threads
 
 后面的两关都和`xv6`无关了，大概是有一些多线程的 feature，`xv6`无法提供，所以需要我们使用`pthread`。
 
@@ -120,7 +120,7 @@ void put(int key, int value)
 }
 ```
 
-# Barrier
+## Barrier
 
 本关要求我们实现一个`barrie`：在某个点上，所有相关的的线程必须等待，直到所有其他相关的线程也到达这个点。这个我们参考`xv6`中的`sleep`和`wait`的使用即可：
 

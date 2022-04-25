@@ -1,19 +1,19 @@
 # CS:APP Attack lab
 
 
-# 实验描述
+## 实验描述
 
 本次实验利用程序需要外部输入的特点，输入机器码对程序返回值覆盖，以达到攻击的目的，即在 getbuf 函数需要的输入中做手脚，以致不能正常返回，执行攻击代码。
 
 <!-- more -->
 
-# 第一阶段
+## 第一阶段
 
 第一阶段中栈随机化未开机，可以得知内存位置的确切地址，且栈中机器码可执行。
 
 那么我们将需要执行的操作码和地址输入机器码即可。
 
-## phase_1
+### phase_1
 
 第一关非常简单，题目主要我们在 getbuf 执行完成后执行 touch1,touch1()无参。
 
@@ -62,7 +62,7 @@ PASS: Would have posted the following:
 	result	117:PASS:0xffffffff:ctarget:1:00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 A0 16 40 00 00 00 00 00
 ```
 
-## phase_2
+### phase_2
 
 第二关根据题意，需要调用 touch2，需要传递一个无符号整数值，其值为 cookie，查看 cookie 文件，如下。
 
@@ -116,7 +116,7 @@ PASS: Would have posted the following:
 	result	117:PASS:0xffffffff:ctarget:2:48 C7 C7 80 93 14 63 68 CC 16 40 00 C3 00 00 00 00 00 00 00 00 00 00 00 A8 F7 66 55 00 00 00 00
 ```
 
-## phase_3
+### phase_3
 
 查看 touch3
 
@@ -195,7 +195,7 @@ PASS: Would have posted the following:
 	result	117:PASS:0xffffffff:ctarget:3:48 C7 C7 C8 F7 66 55 68 A0 17 40 00 C3 00 00 00 00 00 00 00 00 00 00 00 A8 F7 66 55 00 00 00 00 36 33 31 34 39 33 38 30 00
 ```
 
-# 第二阶段
+## 第二阶段
 
 在此阶段，程序添加了两个现代计算机程序几乎必须的对抗缓缓冲区溢出攻击的措施：
 
@@ -205,7 +205,7 @@ PASS: Would have posted the following:
 
 故此，我们需要使用 ROP(面向返回编程)，即使用程序中本来就存在的代码组成我们需要的操作，再将其地址作为返回值，不断用 ret 指令返回完成所需操作。
 
-## phase_4
+### phase_4
 
 此关需用 ROP 方法完成 phase_2 内容。那么就需要在操作中得到 cookie 值，那么只有用 pop 指令了，需要指令为。
 
@@ -238,7 +238,7 @@ PASS: Sent exploit string to server to be validated.
 NICE JOB!
 ```
 
-## phase_5
+### phase_5
 
 此关为 phase_3 的 ROP 版本，我们需要查找 start_farm 到 end_farm 中的 gadgets，拼凑出代码实现 phase_3 中插入代码的功能。还需注意：
 
@@ -290,5 +290,5 @@ PASS: Sent exploit string to server to be validated.
 NICE JOB!
 ```
 
-# 到此为止
+## 到此为止
 

@@ -1,7 +1,7 @@
 # CS:APP解题记录
 
 
-# CS:APP 2.60
+## CS:APP 2.60
 
 ```c
 #include <stdio.h>
@@ -25,7 +25,7 @@ int main()
 
 <!-- more -->
 
-# Csapp 2.65
+## Csapp 2.65
 
 ```c
 #include <stdio.h>
@@ -50,13 +50,13 @@ int main()
 
 对 32 位编码，1 亦或所有 0 仍为 1，偶数个 1 连续亦或结果为 0，奇数个 1 连续亦或结果为 1。对 32 位数，按照右移 16，8，4，2，1 依次右移使得前后各二分之一编码对齐，亦或结果存在后二分之一编码中，直至亦或总结过存于最低位中，结束，取最低位返回。
 
-# Csapp 2.67
+## Csapp 2.67
 
-## A
+### A
 
 在 int 为 w 位的机器中，移位长度不应该超过$w - 1$。
 
-## B
+### B
 
 ```c
 #include <stdio.h>
@@ -76,7 +76,7 @@ int main()
 
 若 int 为 32 位,则$1 << 31 ==$ INT_MIN.
 
-## C
+### C
 
 ```c
 #include <stdio.h>
@@ -96,7 +96,7 @@ int main()
 
 当$1 << 15 !=$ INT_MIN，证明 int 非 16 位后，后面即可判断 int 是否为 32 位.
 
-# Csapp 2.68
+## Csapp 2.68
 
 ```c
 #include <stdio.h>

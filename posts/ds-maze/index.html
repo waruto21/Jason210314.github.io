@@ -1,118 +1,15 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
-<title>数据结构:迷宫问题 - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="数据结构:迷宫问题">
-<meta property="og:description" content="设计思路 图编号 如图所示，从上到下，从左到右，给 17 个顶点进行编号，以两个顶点代表一条边，例入 2-3 代表可以从顶点 2 走到顶点 3。问题即为求解从 2 -> 17">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://wmc1999.top/posts/ds-maze/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2018-11-10T14:31:06+00:00">
-<meta property="article:modified_time" content="2018-11-10T14:31:06+00:00">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="数据结构:迷宫问题">
-<meta name=twitter:description content="设计思路 图编号 如图所示，从上到下，从左到右，给 17 个顶点进行编号，以两个顶点代表一条边，例入 2-3 代表可以从顶点 2 走到顶点 3。问题即为求解从 2 -> 17">
-<meta name=application-name content="OneStep">
-<meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/ds-maze/><link rel=prev href=https://wmc1999.top/posts/csapp-problems/><link rel=next href=https://wmc1999.top/posts/ds-bm/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"数据结构:迷宫问题","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/ds-maze\/"},"genre":"posts","keywords":"数据结构, 迷宫问题","wordcount":870,"url":"https:\/\/wmc1999.top\/posts\/ds-maze\/","datePublished":"2018-11-10T14:31:06+00:00","dateModified":"2018-11-10T14:31:06+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head>
-<body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu>
-<div class=menu-inner><a class=menu-item href=/> 首页 </a><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><a class=menu-item href=/friendlinks> 友链 </a><a class=menu-item href=/about> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>数据结构:迷宫问题 - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="数据结构:迷宫问题"><meta property="og:description" content="设计思路 图编号 如图所示，从上到下，从左到右，给 17 个顶点进行编号，以两个顶点代表一条边，例入 2-3 代表可以从顶点 2 走到顶点 3。问题即为求解从 2 -> 17"><meta property="og:type" content="article"><meta property="og:url" content="https://wmc1999.top/posts/ds-maze/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2018-11-10T14:31:06+00:00"><meta property="article:modified_time" content="2018-11-10T14:31:06+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="数据结构:迷宫问题"><meta name=twitter:description content="设计思路 图编号 如图所示，从上到下，从左到右，给 17 个顶点进行编号，以两个顶点代表一条边，例入 2-3 代表可以从顶点 2 走到顶点 3。问题即为求解从 2 -> 17"><meta name=application-name content="OneStep"><meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/ds-maze/><link rel=prev href=https://wmc1999.top/posts/csapp-problems/><link rel=next href=https://wmc1999.top/posts/ds-bm/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"数据结构:迷宫问题","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/ds-maze\/"},"genre":"posts","keywords":"数据结构, 迷宫问题","wordcount":870,"url":"https:\/\/wmc1999.top\/posts\/ds-maze\/","datePublished":"2018-11-10T14:31:06+00:00","dateModified":"2018-11-10T14:31:06+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/>首页 </a><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/friendlinks>友链 </a><a class=menu-item href=/about>关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-desktop>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a>
-</div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><div class=search-wrapper>
-<div class="search mobile" id=search-mobile>
-<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-mobile>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</div>
-<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
-取消
-</a>
-</div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2>
-<div class=toc-content id=toc-content-auto></div>
-</div><article class="page single"><h1 class="single-title animated flipInX">数据结构:迷宫问题</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/><i class="far fa-folder fa-fw"></i>数据结构</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-11-10>2018-11-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 870 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
-</div><div class="details toc" id=toc-static kept=true>
-<div class="details-summary toc-title">
-<span>目录</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents>
-<ul>
-<li><a href=#图编号>图编号</a></li>
-<li><a href=#求解思想>求解思想</a></li>
-</ul>
-<ul>
-<li><a href=#结构体及全局变量定义>结构体及全局变量定义</a></li>
-<li><a href=#函数定义>函数定义</a></li>
-</ul>
-</nav></div>
-</div><div class=content id=content><h1 id=设计思路>设计思路</h1>
-<h2 id=图编号>图编号</h2>
-<p>如图所示，从上到下，从左到右，给 17 个顶点进行编号，以两个顶点代表一条边，例入 2-3 代表可以从顶点 2 走到顶点 3。问题即为求解从 2 -> 17 的通路。</p>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=ds-maze/maze-graph.png data-srcset="/ds-maze/maze-graph.png, ds-maze/maze-graph.png 1.5x, /ds-maze/maze-graph.png 2x" data-sizes=auto alt=/ds-maze/maze-graph.png title=graph></p>
-<h2 id=求解思想>求解思想</h2>
-<p>求解一条通路，应当从起点出发，不断前进到后续可行顶点，当在一个顶点无法继续前进时，则回退到上一个顶点，寻找其他可行顶点，直到到达终点。此思想符合数据结构栈的特点。首先将起点压栈，然后将从当前顶点可到达的一个顶点压栈，然后将该顶点标记为已访问，随后到达下一个顶点，在某个顶点无法继续走通时，将当前顶点出栈，回退到上一个顶点重新选择可以到达的且未访问的顶点。如此循环，直到终点被压入栈中，此时栈中所有顶点即为一条通路。</p>
-<p>求解一条最短路径，应当从起点出发，访问所有可以到达的下一级顶点。再从所有下一级顶点出发，访问所有可访问的再下一级顶点，如此循环，每一级顶点距起点距离相同。过程中记录路线。此想法符合数据结构中队列的特点。首先，将起点入队。然后将队头元素出队，将该元素可访问到的且未被访问的顶点置为已访问，然后入队，注意记录被入队节点的前一个节点。直到队列为空。最后顺着终点的前驱顶点输出即可得到路线。若有多个终点，要寻找到最近的终点出去，则将结束循环条件改为有终点入队即可。</p>
-<h1 id=代码说明>代码说明</h1>
-<h2 id=结构体及全局变量定义>结构体及全局变量定义</h2>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">数据结构:迷宫问题</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/><i class="far fa-folder fa-fw"></i>数据结构</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2018-11-10>2018-11-10</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 870 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div></div><div class="details toc" id=toc-static kept=true><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#设计思路>设计思路</a><ul><li><a href=#图编号>图编号</a></li><li><a href=#求解思想>求解思想</a></li></ul></li><li><a href=#代码说明>代码说明</a><ul><li><a href=#结构体及全局变量定义>结构体及全局变量定义</a></li><li><a href=#函数定义>函数定义</a></li></ul></li><li><a href=#运行结果>运行结果</a></li><li><a href=#实验总结>实验总结</a></li></ul></nav></div></div><div class=content id=content><h2 id=设计思路>设计思路</h2><h3 id=图编号>图编号</h3><p>如图所示，从上到下，从左到右，给 17 个顶点进行编号，以两个顶点代表一条边，例入 2-3 代表可以从顶点 2 走到顶点 3。问题即为求解从 2 -> 17 的通路。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=ds-maze/maze-graph.png data-srcset="/ds-maze/maze-graph.png, ds-maze/maze-graph.png 1.5x, /ds-maze/maze-graph.png 2x" data-sizes=auto alt=/ds-maze/maze-graph.png title=graph></p><h3 id=求解思想>求解思想</h3><p>求解一条通路，应当从起点出发，不断前进到后续可行顶点，当在一个顶点无法继续前进时，则回退到上一个顶点，寻找其他可行顶点，直到到达终点。此思想符合数据结构栈的特点。首先将起点压栈，然后将从当前顶点可到达的一个顶点压栈，然后将该顶点标记为已访问，随后到达下一个顶点，在某个顶点无法继续走通时，将当前顶点出栈，回退到上一个顶点重新选择可以到达的且未访问的顶点。如此循环，直到终点被压入栈中，此时栈中所有顶点即为一条通路。</p><p>求解一条最短路径，应当从起点出发，访问所有可以到达的下一级顶点。再从所有下一级顶点出发，访问所有可访问的再下一级顶点，如此循环，每一级顶点距起点距离相同。过程中记录路线。此想法符合数据结构中队列的特点。首先，将起点入队。然后将队头元素出队，将该元素可访问到的且未被访问的顶点置为已访问，然后入队，注意记录被入队节点的前一个节点。直到队列为空。最后顺着终点的前驱顶点输出即可得到路线。若有多个终点，要寻找到最近的终点出去，则将结束循环条件改为有终点入队即可。</p><h2 id=代码说明>代码说明</h2><h3 id=结构体及全局变量定义>结构体及全局变量定义</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -127,86 +24,33 @@
 </span><span class=lnt>13
 </span><span class=lnt>14
 </span><span class=lnt>15
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=k>typedef</span> <span class=k>struct</span> <span class=nc>p</span>    <span class=c1>//表示顶点,用于寻找最短路径时记录路径
-</span><span class=c1></span><span class=p>{</span>
-    <span class=kt>int</span> <span class=n>code</span><span class=p>;</span>
-    <span class=k>struct</span> <span class=nc>p</span><span class=o>*</span> <span class=n>pre</span><span class=p>;</span>  <span class=c1>//前一个顶点
-</span><span class=c1></span><span class=p>}</span> <span class=n>Ver</span><span class=p>;</span>
-
-<span class=k>const</span> <span class=kt>int</span> <span class=n>edge_cnt</span> <span class=o>=</span> <span class=mi>29</span><span class=p>;</span>    <span class=c1>//边的数量
-</span><span class=c1></span><span class=k>const</span> <span class=kt>int</span> <span class=n>ver_cnt</span> <span class=o>=</span> <span class=mi>17</span><span class=p>;</span>     <span class=c1>//顶点数量
-</span><span class=c1></span><span class=kt>int</span> <span class=n>map</span><span class=p>[</span><span class=n>edge_cnt</span><span class=p>][</span><span class=mi>2</span><span class=p>];</span>       <span class=c1>//记录边
-</span><span class=c1></span><span class=kt>int</span> <span class=n>my_stack</span><span class=p>[</span><span class=n>MAX</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>};</span>    <span class=c1>//数组模拟栈
-</span><span class=c1></span><span class=kt>int</span> <span class=n>my_quque</span><span class=p>[</span><span class=n>MAX</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>};</span>    <span class=c1>//数组模拟队列
-</span><span class=c1></span><span class=kt>int</span> <span class=n>top</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>                <span class=c1>//栈顶指示
-</span><span class=c1></span><span class=kt>int</span> <span class=n>front</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>rear</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>    <span class=c1>//队列首位指示
-</span><span class=c1></span><span class=kt>bool</span> <span class=n>visit</span><span class=p>[</span><span class=n>ver_cnt</span> <span class=o>+</span> <span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=nb>false</span><span class=p>};</span>  <span class=c1>//记录点是否访问过
-</span><span class=c1></span><span class=n>Ver</span> <span class=n>vers</span><span class=p>[</span><span class=n>ver_cnt</span> <span class=o>+</span> <span class=mi>1</span><span class=p>];</span>              <span class=c1>//每个点路径链表头结点
-</span></code></pre></td></tr></table>
-</div>
-</div><h2 id=函数定义>函数定义</h2>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=k>typedef</span> <span class=k>struct</span> <span class=nc>p</span>    <span class=c1>//表示顶点,用于寻找最短路径时记录路径
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=kt>int</span> <span class=n>code</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>    <span class=k>struct</span> <span class=nc>p</span><span class=o>*</span> <span class=n>pre</span><span class=p>;</span>  <span class=c1>//前一个顶点
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=p>}</span> <span class=n>Ver</span><span class=p>;</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>const</span> <span class=kt>int</span> <span class=n>edge_cnt</span> <span class=o>=</span> <span class=mi>29</span><span class=p>;</span>    <span class=c1>//边的数量
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>const</span> <span class=kt>int</span> <span class=n>ver_cnt</span> <span class=o>=</span> <span class=mi>17</span><span class=p>;</span>     <span class=c1>//顶点数量
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=n>map</span><span class=p>[</span><span class=n>edge_cnt</span><span class=p>][</span><span class=mi>2</span><span class=p>];</span>       <span class=c1>//记录边
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=n>my_stack</span><span class=p>[</span><span class=n>MAX</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>};</span>    <span class=c1>//数组模拟栈
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=n>my_quque</span><span class=p>[</span><span class=n>MAX</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=mi>0</span><span class=p>};</span>    <span class=c1>//数组模拟队列
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=n>top</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>                <span class=c1>//栈顶指示
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>int</span> <span class=n>front</span> <span class=o>=</span> <span class=mi>0</span><span class=p>,</span> <span class=n>rear</span> <span class=o>=</span> <span class=mi>0</span><span class=p>;</span>    <span class=c1>//队列首位指示
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>bool</span> <span class=n>visit</span><span class=p>[</span><span class=n>ver_cnt</span> <span class=o>+</span> <span class=mi>1</span><span class=p>]</span> <span class=o>=</span> <span class=p>{</span><span class=nb>false</span><span class=p>};</span>  <span class=c1>//记录点是否访问过
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=n>Ver</span> <span class=n>vers</span><span class=p>[</span><span class=n>ver_cnt</span> <span class=o>+</span> <span class=mi>1</span><span class=p>];</span>              <span class=c1>//每个点路径链表头结点
+</span></span></span></code></pre></td></tr></table></div></div><h3 id=函数定义>函数定义</h3><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=kt>void</span> <span class=nf>loadmaze</span><span class=p>();</span>            <span class=c1>//读入迷宫地图
-</span><span class=c1></span><span class=kt>void</span> <span class=nf>visited</span><span class=p>(</span><span class=kt>int</span> <span class=n>i</span><span class=p>);</span>        <span class=c1>//将点i状态置为访问过
-</span><span class=c1></span><span class=kt>bool</span> <span class=nf>isvisited</span><span class=p>(</span><span class=kt>int</span> <span class=n>i</span><span class=p>);</span>      <span class=c1>//判断点i是否访问过
-</span><span class=c1></span><span class=kt>bool</span> <span class=nf>hasway</span><span class=p>(</span><span class=kt>int</span> <span class=n>s</span><span class=p>);</span>         <span class=c1>//从点s出发是否有没去过的可行路径
-</span><span class=c1></span><span class=kt>void</span> <span class=nf>find_way</span><span class=p>(</span><span class=kt>int</span> <span class=n>start</span><span class=p>,</span> <span class=kt>int</span> <span class=n>end</span><span class=p>);</span>      <span class=c1>//找到一条通路
-</span><span class=c1></span><span class=kt>void</span> <span class=nf>find_least</span><span class=p>(</span><span class=kt>int</span> <span class=n>start</span><span class=p>,</span> <span class=kt>int</span> <span class=n>end</span><span class=p>);</span>    <span class=c1>//找到一条最短路径
-</span></code></pre></td></tr></table>
-</div>
-</div><h1 id=运行结果>运行结果</h1>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=ds-maze/ret.png data-srcset="/ds-maze/ret.png, ds-maze/ret.png 1.5x, /ds-maze/ret.png 2x" data-sizes=auto alt=/ds-maze/ret.png title=运行结果></p>
-<h1 id=实验总结>实验总结</h1>
-<p>本次实验，求解迷宫通路和最短通路，在不利用递归的情况下，使用模拟的栈和队列，实现了深度优先搜索和广度优先搜索。加强了对于栈和队列的理解以及使用熟练度。</p>
-</div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>更新于 2018-11-10</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md><span>
-<a class=link-to-markdown href=/posts/ds-maze/index.md target=_blank>阅读原始文档</a>
-</span></div>
-<div class=post-info-share>
-<span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/ds-maze/ data-title=数据结构:迷宫问题 data-via=Jason210314 data-hashtags=数据结构,迷宫问题><i class="fab fa-twitter fa-fw"></i></a></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/>数据结构</a>,&nbsp;<a href=/tags/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/>迷宫问题</a></section>
-<section>
-<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/csapp-problems/ class=prev rel=prev title=CS:APP解题记录><i class="fas fa-angle-left fa-fw"></i>CS:APP解题记录</a>
-<a href=/posts/ds-bm/ class=next rel=next title=数据结构:BM算法>数据结构:BM算法<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=disqus_thread class=comment></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.92.1">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
-</div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
-</div>
-</footer></div>
-<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title=查看评论>
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-164518488-1',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body>
-</html>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-cpp data-lang=cpp><span class=line><span class=cl><span class=kt>void</span> <span class=nf>loadmaze</span><span class=p>();</span>            <span class=c1>//读入迷宫地图
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>visited</span><span class=p>(</span><span class=kt>int</span> <span class=n>i</span><span class=p>);</span>        <span class=c1>//将点i状态置为访问过
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>bool</span> <span class=nf>isvisited</span><span class=p>(</span><span class=kt>int</span> <span class=n>i</span><span class=p>);</span>      <span class=c1>//判断点i是否访问过
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>bool</span> <span class=nf>hasway</span><span class=p>(</span><span class=kt>int</span> <span class=n>s</span><span class=p>);</span>         <span class=c1>//从点s出发是否有没去过的可行路径
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>find_way</span><span class=p>(</span><span class=kt>int</span> <span class=n>start</span><span class=p>,</span> <span class=kt>int</span> <span class=n>end</span><span class=p>);</span>      <span class=c1>//找到一条通路
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=kt>void</span> <span class=nf>find_least</span><span class=p>(</span><span class=kt>int</span> <span class=n>start</span><span class=p>,</span> <span class=kt>int</span> <span class=n>end</span><span class=p>);</span>    <span class=c1>//找到一条最短路径
+</span></span></span></code></pre></td></tr></table></div></div><h2 id=运行结果>运行结果</h2><p><img class=lazyload src=/svg/loading.min.svg data-src=ds-maze/ret.png data-srcset="/ds-maze/ret.png, ds-maze/ret.png 1.5x, /ds-maze/ret.png 2x" data-sizes=auto alt=/ds-maze/ret.png title=运行结果></p><h2 id=实验总结>实验总结</h2><p>本次实验，求解迷宫通路和最短通路，在不利用递归的情况下，使用模拟的栈和队列，实现了深度优先搜索和广度优先搜索。加强了对于栈和队列的理解以及使用熟练度。</p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2018-11-10</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/posts/ds-maze/index.md target=_blank>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/ds-maze/ data-title=数据结构:迷宫问题 data-via=Jason210314 data-hashtags=数据结构,迷宫问题><i class="fab fa-twitter fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84/>数据结构</a>,&nbsp;<a href=/tags/%E8%BF%B7%E5%AE%AB%E9%97%AE%E9%A2%98/>迷宫问题</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/csapp-problems/ class=prev rel=prev title=CS:APP解题记录><i class="fas fa-angle-left fa-fw"></i>CS:APP解题记录</a>
+<a href=/posts/ds-bm/ class=next rel=next title=数据结构:BM算法>数据结构:BM算法<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=disqus_thread class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.97.3">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-164518488-1",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body></html>

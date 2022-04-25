@@ -5,7 +5,7 @@
 
 <!-- more -->
 
-# Memory allocator
+## Memory allocator
 
 `xv6`的内存分配与释放使用了一个全局锁`kmem.lock`，所有 cpu 想要分配和释放内存时，调用`kfree()`和`kalloc()`将对`kmem.lock`加锁，所以多线程同时获取和释放内存时，将造成激烈的锁竞争。本次实验将为每一个 cpu 实现单独的空闲内存链表，当一个 cpu 没有可用内存时，从另一个 cpu“窃取”。
 
@@ -145,7 +145,7 @@ test2 OK
 
 可以看到`kmem`锁竞争消失了。
 
-# Buffer cache
+## Buffer cache
 
 在`xv6`中，使用`buffer cache`缓存一个磁盘`block`的内容，`bcache`使用一个锁来维护，每次`bget`和`brelse`都需要获取锁，这样将带来很激烈的锁竞争。
 

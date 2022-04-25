@@ -1,126 +1,29 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
-<title>Rust智能指针Cow - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="Rust智能指针Cow">
-<meta property="og:description" content="定义 Cow是一个提供了写时克隆功能的智能指针，它可以包装对数据的借用，当需要修改数据或者获取数据的所有权时，对数据clone。它的定义如下：">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://wmc1999.top/posts/rust-smartpointer-cow/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2021-01-30T23:26:30+00:00">
-<meta property="article:modified_time" content="2021-01-30T23:26:30+00:00">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Rust智能指针Cow">
-<meta name=twitter:description content="定义 Cow是一个提供了写时克隆功能的智能指针，它可以包装对数据的借用，当需要修改数据或者获取数据的所有权时，对数据clone。它的定义如下：">
-<meta name=application-name content="OneStep">
-<meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/rust-smartpointer-cow/><link rel=prev href=https://wmc1999.top/posts/cmake-tutorial/><link rel=next href=https://wmc1999.top/posts/goodbyte-2020/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Rust智能指针Cow","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/rust-smartpointer-cow\/"},"genre":"posts","keywords":"rust, 智能指针, cow","wordcount":639,"url":"https:\/\/wmc1999.top\/posts\/rust-smartpointer-cow\/","datePublished":"2021-01-30T23:26:30+00:00","dateModified":"2021-01-30T23:26:30+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head>
-<body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu>
-<div class=menu-inner><a class=menu-item href=/> 首页 </a><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><a class=menu-item href=/friendlinks> 友链 </a><a class=menu-item href=/about> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Rust智能指针Cow - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="Rust智能指针Cow"><meta property="og:description" content="定义 Cow是一个提供了写时克隆功能的智能指针，它可以包装对数据的借用，当需要修改数据或者获取数据的所有权时，对数据clone。它的定义如下："><meta property="og:type" content="article"><meta property="og:url" content="https://wmc1999.top/posts/rust-smartpointer-cow/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2021-01-30T23:26:30+00:00"><meta property="article:modified_time" content="2021-01-30T23:26:30+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Rust智能指针Cow"><meta name=twitter:description content="定义 Cow是一个提供了写时克隆功能的智能指针，它可以包装对数据的借用，当需要修改数据或者获取数据的所有权时，对数据clone。它的定义如下："><meta name=application-name content="OneStep"><meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/rust-smartpointer-cow/><link rel=prev href=https://wmc1999.top/posts/cmake-tutorial/><link rel=next href=https://wmc1999.top/posts/goodbyte-2020/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Rust智能指针Cow","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/rust-smartpointer-cow\/"},"genre":"posts","keywords":"rust, 智能指针, cow","wordcount":639,"url":"https:\/\/wmc1999.top\/posts\/rust-smartpointer-cow\/","datePublished":"2021-01-30T23:26:30+00:00","dateModified":"2021-01-30T23:26:30+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/>首页 </a><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/friendlinks>友链 </a><a class=menu-item href=/about>关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-desktop>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a>
-</div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><div class=search-wrapper>
-<div class="search mobile" id=search-mobile>
-<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-mobile>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</div>
-<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
-取消
-</a>
-</div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2>
-<div class=toc-content id=toc-content-auto></div>
-</div><article class="page single"><h1 class="single-title animated flipInX">Rust智能指针Cow</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/rust/><i class="far fa-folder fa-fw"></i>rust</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-01-30>2021-01-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 639 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
-</div><div class="details toc" id=toc-static kept=true>
-<div class="details-summary toc-title">
-<span>目录</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents></nav></div>
-</div><div class=content id=content><h1 id=定义>定义</h1>
-<p><code>Cow</code>是一个提供了写时克隆功能的智能指针，它可以包装对数据的借用，当需要修改数据或者获取数据的所有权时，对数据<code>clone</code>。它的定义如下：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Rust智能指针Cow</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/rust/><i class="far fa-folder fa-fw"></i>rust</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2021-01-30>2021-01-30</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 639 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div></div><div class="details toc" id=toc-static kept=true><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#定义>定义</a></li><li><a href=#使用>使用</a></li></ul></nav></div></div><div class=content id=content><h2 id=定义>定义</h2><p><code>Cow</code>是一个提供了写时克隆功能的智能指针，它可以包装对数据的借用，当需要修改数据或者获取数据的所有权时，对数据<code>clone</code>。它的定义如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
 </span><span class=lnt>4
 </span><span class=lnt>5
 </span><span class=lnt>6
 </span><span class=lnt>7
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=k>pub</span><span class=w> </span><span class=k>enum</span> <span class=nc>Cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>B</span><span class=o>&gt;</span><span class=w>
-</span><span class=w></span><span class=k>where</span><span class=w>
-</span><span class=w>    </span><span class=n>B</span>: <span class=o>&#39;</span><span class=na>a</span> <span class=o>+</span><span class=w> </span><span class=nb>ToOwned</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=o>?</span><span class=nb>Sized</span><span class=p>,</span><span class=w>
-</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>    </span><span class=n>Borrowed</span><span class=p>(</span><span class=o>&amp;&#39;</span><span class=na>a</span><span class=w> </span><span class=n>B</span><span class=p>),</span><span class=w>
-</span><span class=w>    </span><span class=n>Owned</span><span class=p>(</span><span class=o>&lt;</span><span class=n>B</span><span class=w> </span><span class=k>as</span><span class=w> </span><span class=nb>ToOwned</span><span class=o>&gt;</span>::<span class=n>Owned</span><span class=p>),</span><span class=w>
-</span><span class=w></span><span class=p>}</span><span class=w>
-</span></code></pre></td></tr></table>
-</div>
-</div><ul>
-<li><code>Cow</code>名为<code>clone-on-write</code>，但是对数据类型<code>B</code>的<code>trait</code>要求是<code>ToOwned</code>，而不是<code>Clone</code>。这是因为<code>Clone</code>只能从<code>&T</code>生成<code>T</code>，但是<code>ToOwned</code>泛化为从任意给定类型的借用数据构建新类型的数据。功能更为强大。</li>
-</ul>
-<p>如下一段示例代码，将<code>Cow</code>应用在结构体中。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=line><span class=cl><span class=k>pub</span><span class=w> </span><span class=k>enum</span> <span class=nc>Cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>B</span><span class=o>&gt;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>where</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>B</span>: <span class=o>&#39;</span><span class=na>a</span> <span class=o>+</span><span class=w> </span><span class=nb>ToOwned</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=o>?</span><span class=nb>Sized</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>Borrowed</span><span class=p>(</span><span class=o>&amp;&#39;</span><span class=na>a</span><span class=w> </span><span class=n>B</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>Owned</span><span class=p>(</span><span class=o>&lt;</span><span class=n>B</span><span class=w> </span><span class=k>as</span><span class=w> </span><span class=nb>ToOwned</span><span class=o>&gt;</span>::<span class=n>Owned</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><ul><li><code>Cow</code>名为<code>clone-on-write</code>，但是对数据类型<code>B</code>的<code>trait</code>要求是<code>ToOwned</code>，而不是<code>Clone</code>。这是因为<code>Clone</code>只能从<code>&T</code>生成<code>T</code>，但是<code>ToOwned</code>泛化为从任意给定类型的借用数据构建新类型的数据。功能更为强大。</li></ul><p>如下一段示例代码，将<code>Cow</code>应用在结构体中。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -162,71 +65,55 @@
 </span><span class=lnt>40
 </span><span class=lnt>41
 </span><span class=lnt>42
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=k>use</span><span class=w> </span><span class=n>std</span>::<span class=n>borrow</span>::<span class=n>Cow</span><span class=p>;</span><span class=w>
-</span><span class=w>
-</span><span class=w></span><span class=k>struct</span> <span class=nc>Items</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>X</span>: <span class=o>&#39;</span><span class=na>a</span><span class=o>&gt;</span><span class=w>
-</span><span class=w></span><span class=k>where</span><span class=w>
-</span><span class=w>    </span><span class=p>[</span><span class=n>X</span><span class=p>]</span>: <span class=nb>ToOwned</span><span class=o>&lt;</span><span class=n>Owned</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=nb>Vec</span><span class=o>&lt;</span><span class=n>X</span><span class=o>&gt;&gt;</span><span class=p>,</span><span class=w>
-</span><span class=w></span><span class=p>{</span><span class=w>
-</span><span class=w>    </span><span class=n>values</span>: <span class=nc>Cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=p>[</span><span class=n>X</span><span class=p>]</span><span class=o>&gt;</span><span class=p>,</span><span class=w>
-</span><span class=w></span><span class=p>}</span><span class=w>
-</span><span class=w>
-</span><span class=w></span><span class=k>impl</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>X</span>: <span class=nb>Clone</span> <span class=o>+</span><span class=w> </span><span class=o>&#39;</span><span class=na>a</span><span class=o>&gt;</span><span class=w> </span><span class=n>Items</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>X</span><span class=o>&gt;</span><span class=w>
-</span><span class=w></span><span class=k>where</span><span class=w>
-</span><span class=w>    </span><span class=p>[</span><span class=n>X</span><span class=p>]</span>: <span class=nb>ToOwned</span><span class=o>&lt;</span><span class=n>Owned</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=nb>Vec</span><span class=o>&lt;</span><span class=n>X</span><span class=o>&gt;&gt;</span><span class=p>,</span><span class=w>
-</span><span class=w></span><span class=p>{</span><span class=w>
-</span><span class=w>    </span><span class=k>fn</span> <span class=nf>new</span><span class=p>(</span><span class=n>v</span>: <span class=nc>Cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=p>[</span><span class=n>X</span><span class=p>]</span><span class=o>&gt;</span><span class=p>)</span><span class=w> </span>-&gt; <span class=nc>Self</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>        </span><span class=n>Items</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=n>values</span>: <span class=nc>v</span><span class=w> </span><span class=p>}</span><span class=w>
-</span><span class=w>    </span><span class=p>}</span><span class=w>
-</span><span class=w></span><span class=p>}</span><span class=w>
-</span><span class=w>
-</span><span class=w></span><span class=c1>// Creates a container from borrowed values of a slice
-</span><span class=c1></span><span class=k>fn</span> <span class=nf>main</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>    </span><span class=kd>let</span><span class=w> </span><span class=n>readonly</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>[</span><span class=mi>1</span><span class=p>,</span><span class=w> </span><span class=mi>2</span><span class=p>];</span><span class=w>
-</span><span class=w>    </span><span class=kd>let</span><span class=w> </span><span class=n>borrowed</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>Items</span>::<span class=n>new</span><span class=p>((</span><span class=o>&amp;</span><span class=n>readonly</span><span class=p>[</span><span class=o>..</span><span class=p>]).</span><span class=n>into</span><span class=p>());</span><span class=w>
-</span><span class=w>    </span><span class=k>match</span><span class=w> </span><span class=n>borrowed</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>        </span><span class=n>Items</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>            </span><span class=n>values</span>: <span class=nc>Cow</span>::<span class=n>Borrowed</span><span class=p>(</span><span class=n>b</span><span class=p>),</span><span class=w>
-</span><span class=w>        </span><span class=p>}</span><span class=w> </span><span class=o>=&gt;</span><span class=w> </span><span class=fm>println!</span><span class=p>(</span><span class=s>&#34;borrowed {:?}&#34;</span><span class=p>,</span><span class=w> </span><span class=n>b</span><span class=p>),</span><span class=w>
-</span><span class=w>        </span><span class=n>_</span><span class=w> </span><span class=o>=&gt;</span><span class=w> </span><span class=fm>panic!</span><span class=p>(</span><span class=s>&#34;expect borrowed value&#34;</span><span class=p>),</span><span class=w>
-</span><span class=w>    </span><span class=p>}</span><span class=w>
-</span><span class=w>
-</span><span class=w>    </span><span class=kd>let</span><span class=w> </span><span class=k>mut</span><span class=w> </span><span class=n>clone_on_write</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>borrowed</span><span class=p>;</span><span class=w>
-</span><span class=w>    </span><span class=c1>// Mutates the data from slice into owned vec and pushes a new value on top
-</span><span class=c1></span><span class=w>    </span><span class=n>clone_on_write</span><span class=p>.</span><span class=n>values</span><span class=p>.</span><span class=n>to_mut</span><span class=p>().</span><span class=n>push</span><span class=p>(</span><span class=mi>3</span><span class=p>);</span><span class=w>
-</span><span class=w>    </span><span class=fm>println!</span><span class=p>(</span><span class=s>&#34;clone_on_write = {:?}&#34;</span><span class=p>,</span><span class=w> </span><span class=n>clone_on_write</span><span class=p>.</span><span class=n>values</span><span class=p>);</span><span class=w>
-</span><span class=w>
-</span><span class=w>    </span><span class=c1>// The data was mutated. Let check it out.
-</span><span class=c1></span><span class=w>    </span><span class=k>match</span><span class=w> </span><span class=n>clone_on_write</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>        </span><span class=n>Items</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>            </span><span class=n>values</span>: <span class=nc>Cow</span>::<span class=n>Owned</span><span class=p>(</span><span class=n>_</span><span class=p>),</span><span class=w>
-</span><span class=w>        </span><span class=p>}</span><span class=w> </span><span class=o>=&gt;</span><span class=w> </span><span class=fm>println!</span><span class=p>(</span><span class=s>&#34;clone_on_write contains owned data&#34;</span><span class=p>),</span><span class=w>
-</span><span class=w>        </span><span class=n>_</span><span class=w> </span><span class=o>=&gt;</span><span class=w> </span><span class=fm>panic!</span><span class=p>(</span><span class=s>&#34;expect owned data&#34;</span><span class=p>),</span><span class=w>
-</span><span class=w>    </span><span class=p>}</span><span class=w>
-</span><span class=w></span><span class=p>}</span><span class=w>
-</span></code></pre></td></tr></table>
-</div>
-</div><p>运行生成如下结果，可见对借用的数据进行修改后，发生了克隆。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=line><span class=cl><span class=k>use</span><span class=w> </span><span class=n>std</span>::<span class=n>borrow</span>::<span class=n>Cow</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>struct</span> <span class=nc>Items</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>X</span>: <span class=o>&#39;</span><span class=na>a</span><span class=o>&gt;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>where</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>[</span><span class=n>X</span><span class=p>]</span>: <span class=nb>ToOwned</span><span class=o>&lt;</span><span class=n>Owned</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=nb>Vec</span><span class=o>&lt;</span><span class=n>X</span><span class=o>&gt;&gt;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>values</span>: <span class=nc>Cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=p>[</span><span class=n>X</span><span class=p>]</span><span class=o>&gt;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>impl</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>X</span>: <span class=nb>Clone</span> <span class=o>+</span><span class=w> </span><span class=o>&#39;</span><span class=na>a</span><span class=o>&gt;</span><span class=w> </span><span class=n>Items</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>X</span><span class=o>&gt;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>where</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>[</span><span class=n>X</span><span class=p>]</span>: <span class=nb>ToOwned</span><span class=o>&lt;</span><span class=n>Owned</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=nb>Vec</span><span class=o>&lt;</span><span class=n>X</span><span class=o>&gt;&gt;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>fn</span> <span class=nf>new</span><span class=p>(</span><span class=n>v</span>: <span class=nc>Cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=p>[</span><span class=n>X</span><span class=p>]</span><span class=o>&gt;</span><span class=p>)</span><span class=w> </span>-&gt; <span class=nc>Self</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Items</span><span class=w> </span><span class=p>{</span><span class=w> </span><span class=n>values</span>: <span class=nc>v</span><span class=w> </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=c1>// Creates a container from borrowed values of a slice
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=k>fn</span> <span class=nf>main</span><span class=p>()</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>let</span><span class=w> </span><span class=n>readonly</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=p>[</span><span class=mi>1</span><span class=p>,</span><span class=w> </span><span class=mi>2</span><span class=p>];</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>let</span><span class=w> </span><span class=n>borrowed</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>Items</span>::<span class=n>new</span><span class=p>((</span><span class=o>&amp;</span><span class=n>readonly</span><span class=p>[</span><span class=o>..</span><span class=p>]).</span><span class=n>into</span><span class=p>());</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=k>match</span><span class=w> </span><span class=n>borrowed</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Items</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>values</span>: <span class=nc>Cow</span>::<span class=n>Borrowed</span><span class=p>(</span><span class=n>b</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w> </span><span class=o>=&gt;</span><span class=w> </span><span class=fm>println!</span><span class=p>(</span><span class=s>&#34;borrowed {:?}&#34;</span><span class=p>,</span><span class=w> </span><span class=n>b</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>_</span><span class=w> </span><span class=o>=&gt;</span><span class=w> </span><span class=fm>panic!</span><span class=p>(</span><span class=s>&#34;expect borrowed value&#34;</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>let</span><span class=w> </span><span class=k>mut</span><span class=w> </span><span class=n>clone_on_write</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>borrowed</span><span class=p>;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// Mutates the data from slice into owned vec and pushes a new value on top
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=w>    </span><span class=n>clone_on_write</span><span class=p>.</span><span class=n>values</span><span class=p>.</span><span class=n>to_mut</span><span class=p>().</span><span class=n>push</span><span class=p>(</span><span class=mi>3</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=fm>println!</span><span class=p>(</span><span class=s>&#34;clone_on_write = {:?}&#34;</span><span class=p>,</span><span class=w> </span><span class=n>clone_on_write</span><span class=p>.</span><span class=n>values</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=c1>// The data was mutated. Let check it out.
+</span></span></span><span class=line><span class=cl><span class=c1></span><span class=w>    </span><span class=k>match</span><span class=w> </span><span class=n>clone_on_write</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>Items</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>values</span>: <span class=nc>Cow</span>::<span class=n>Owned</span><span class=p>(</span><span class=n>_</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>}</span><span class=w> </span><span class=o>=&gt;</span><span class=w> </span><span class=fm>println!</span><span class=p>(</span><span class=s>&#34;clone_on_write contains owned data&#34;</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>_</span><span class=w> </span><span class=o>=&gt;</span><span class=w> </span><span class=fm>panic!</span><span class=p>(</span><span class=s>&#34;expect owned data&#34;</span><span class=p>),</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>运行生成如下结果，可见对借用的数据进行修改后，发生了克隆。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>borrowed <span class=o>[</span>1, 2<span class=o>]</span>
-<span class=nv>clone_on_write</span> <span class=o>=</span> <span class=o>[</span>1, 2, 3<span class=o>]</span>
-clone_on_write contains owned data
-</code></pre></td></tr></table>
-</div>
-</div><h1 id=使用>使用</h1>
-<p>试想这样一个场景，我们需要给处理一些<code>Url</code>，其中一部分是<code>https://</code>开头的，而另一部分不是，现在要给缺少<code>https://</code>前缀的<code>Url</code>加上前缀。</p>
-<p>使用<code>Cow</code>，函数如下：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>borrowed <span class=o>[</span>1, 2<span class=o>]</span>
+</span></span><span class=line><span class=cl><span class=nv>clone_on_write</span> <span class=o>=</span> <span class=o>[</span>1, 2, 3<span class=o>]</span>
+</span></span><span class=line><span class=cl>clone_on_write contains owned data
+</span></span></code></pre></td></tr></table></div></div><h2 id=使用>使用</h2><p>试想这样一个场景，我们需要给处理一些<code>Url</code>，其中一部分是<code>https://</code>开头的，而另一部分不是，现在要给缺少<code>https://</code>前缀的<code>Url</code>加上前缀。</p><p>使用<code>Cow</code>，函数如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -240,28 +127,21 @@ clone_on_write contains owned data
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=k>fn</span> <span class=nf>add_prefix_by_cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>T</span><span class=o>&gt;</span><span class=p>(</span><span class=n>urls</span>: <span class=nc>T</span><span class=p>,</span><span class=w> </span><span class=n>prefix</span>: <span class=kp>&amp;</span><span class=kt>str</span><span class=p>)</span><span class=w> </span>-&gt; <span class=nb>Vec</span><span class=o>&lt;</span><span class=n>Cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=nb>String</span><span class=o>&gt;&gt;</span><span class=w>
-</span><span class=w></span><span class=k>where</span><span class=w>
-</span><span class=w>    </span><span class=n>T</span>: <span class=nb>IntoIterator</span><span class=o>&lt;</span><span class=n>Item</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=o>&amp;&#39;</span><span class=na>a</span><span class=w> </span><span class=nb>String</span><span class=o>&gt;</span><span class=p>,</span><span class=w>
-</span><span class=w></span><span class=p>{</span><span class=w>
-</span><span class=w>    </span><span class=n>urls</span><span class=p>.</span><span class=n>into_iter</span><span class=p>()</span><span class=w>
-</span><span class=w>        </span><span class=p>.</span><span class=n>map</span><span class=p>(</span><span class=o>|</span><span class=n>url</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>            </span><span class=k>if</span><span class=w> </span><span class=n>url</span><span class=p>.</span><span class=n>starts_with</span><span class=p>(</span><span class=n>prefix</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>                </span><span class=n>Cow</span>::<span class=n>Borrowed</span><span class=p>(</span><span class=n>url</span><span class=p>)</span><span class=w>
-</span><span class=w>            </span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>                </span><span class=n>Cow</span>::<span class=n>Owned</span><span class=p>(</span><span class=nb>String</span>::<span class=n>with_capacity</span><span class=p>(</span><span class=n>url</span><span class=p>.</span><span class=n>len</span><span class=p>()</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>prefix</span><span class=p>.</span><span class=n>len</span><span class=p>())</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>prefix</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>url</span><span class=p>)</span><span class=w>
-</span><span class=w>            </span><span class=p>}</span><span class=w>
-</span><span class=w>        </span><span class=p>})</span><span class=w>
-</span><span class=w>        </span><span class=p>.</span><span class=n>collect</span><span class=p>()</span><span class=w>
-</span><span class=w></span><span class=p>}</span><span class=w>
-</span></code></pre></td></tr></table>
-</div>
-</div><p>不使用<code>Cow</code>，函数如下：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=line><span class=cl><span class=k>fn</span> <span class=nf>add_prefix_by_cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>T</span><span class=o>&gt;</span><span class=p>(</span><span class=n>urls</span>: <span class=nc>T</span><span class=p>,</span><span class=w> </span><span class=n>prefix</span>: <span class=kp>&amp;</span><span class=kt>str</span><span class=p>)</span><span class=w> </span>-&gt; <span class=nb>Vec</span><span class=o>&lt;</span><span class=n>Cow</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=nb>String</span><span class=o>&gt;&gt;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>where</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>T</span>: <span class=nb>IntoIterator</span><span class=o>&lt;</span><span class=n>Item</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=o>&amp;&#39;</span><span class=na>a</span><span class=w> </span><span class=nb>String</span><span class=o>&gt;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>urls</span><span class=p>.</span><span class=n>into_iter</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>.</span><span class=n>map</span><span class=p>(</span><span class=o>|</span><span class=n>url</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>if</span><span class=w> </span><span class=n>url</span><span class=p>.</span><span class=n>starts_with</span><span class=p>(</span><span class=n>prefix</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>Cow</span>::<span class=n>Borrowed</span><span class=p>(</span><span class=n>url</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>Cow</span>::<span class=n>Owned</span><span class=p>(</span><span class=nb>String</span>::<span class=n>with_capacity</span><span class=p>(</span><span class=n>url</span><span class=p>.</span><span class=n>len</span><span class=p>()</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>prefix</span><span class=p>.</span><span class=n>len</span><span class=p>())</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>prefix</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>url</span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>.</span><span class=n>collect</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>不使用<code>Cow</code>，函数如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -275,28 +155,21 @@ clone_on_write contains owned data
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=k>fn</span> <span class=nf>add_prefix_by_clone</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>T</span><span class=o>&gt;</span><span class=p>(</span><span class=n>urls</span>: <span class=nc>T</span><span class=p>,</span><span class=w> </span><span class=n>prefix</span>: <span class=kp>&amp;</span><span class=o>&#39;</span><span class=na>a</span> <span class=kt>str</span><span class=p>)</span><span class=w> </span>-&gt; <span class=nb>Vec</span><span class=o>&lt;</span><span class=nb>String</span><span class=o>&gt;</span><span class=w>
-</span><span class=w></span><span class=k>where</span><span class=w>
-</span><span class=w>    </span><span class=n>T</span>: <span class=nb>IntoIterator</span><span class=o>&lt;</span><span class=n>Item</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=o>&amp;&#39;</span><span class=na>a</span><span class=w> </span><span class=nb>String</span><span class=o>&gt;</span><span class=p>,</span><span class=w>
-</span><span class=w></span><span class=p>{</span><span class=w>
-</span><span class=w>    </span><span class=n>urls</span><span class=p>.</span><span class=n>into_iter</span><span class=p>()</span><span class=w>
-</span><span class=w>        </span><span class=p>.</span><span class=n>map</span><span class=p>(</span><span class=o>|</span><span class=n>url</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>            </span><span class=k>if</span><span class=w> </span><span class=n>url</span><span class=p>.</span><span class=n>starts_with</span><span class=p>(</span><span class=n>prefix</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>                </span><span class=n>url</span><span class=p>.</span><span class=n>clone</span><span class=p>()</span><span class=w>
-</span><span class=w>            </span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>                </span><span class=n>url</span><span class=p>.</span><span class=n>clone</span><span class=p>()</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>prefix</span><span class=w>
-</span><span class=w>            </span><span class=p>}</span><span class=w>
-</span><span class=w>        </span><span class=p>})</span><span class=w>
-</span><span class=w>        </span><span class=p>.</span><span class=n>collect</span><span class=p>()</span><span class=w>
-</span><span class=w></span><span class=p>}</span><span class=w>
-</span></code></pre></td></tr></table>
-</div>
-</div><p>用<code>Criterion</code>来进行 benchmark 测试</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=line><span class=cl><span class=k>fn</span> <span class=nf>add_prefix_by_clone</span><span class=o>&lt;&#39;</span><span class=na>a</span><span class=p>,</span><span class=w> </span><span class=n>T</span><span class=o>&gt;</span><span class=p>(</span><span class=n>urls</span>: <span class=nc>T</span><span class=p>,</span><span class=w> </span><span class=n>prefix</span>: <span class=kp>&amp;</span><span class=o>&#39;</span><span class=na>a</span> <span class=kt>str</span><span class=p>)</span><span class=w> </span>-&gt; <span class=nb>Vec</span><span class=o>&lt;</span><span class=nb>String</span><span class=o>&gt;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=k>where</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>T</span>: <span class=nb>IntoIterator</span><span class=o>&lt;</span><span class=n>Item</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=o>&amp;&#39;</span><span class=na>a</span><span class=w> </span><span class=nb>String</span><span class=o>&gt;</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>urls</span><span class=p>.</span><span class=n>into_iter</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>.</span><span class=n>map</span><span class=p>(</span><span class=o>|</span><span class=n>url</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=k>if</span><span class=w> </span><span class=n>url</span><span class=p>.</span><span class=n>starts_with</span><span class=p>(</span><span class=n>prefix</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>url</span><span class=p>.</span><span class=n>clone</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>}</span><span class=w> </span><span class=k>else</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=n>url</span><span class=p>.</span><span class=n>clone</span><span class=p>()</span><span class=w> </span><span class=o>+</span><span class=w> </span><span class=n>prefix</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>}</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>})</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>.</span><span class=n>collect</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>用<code>Criterion</code>来进行 benchmark 测试</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -327,93 +200,41 @@ clone_on_write contains owned data
 </span><span class=lnt>29
 </span><span class=lnt>30
 </span><span class=lnt>31
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=k>fn</span> <span class=nf>bench</span><span class=p>(</span><span class=n>c</span>: <span class=kp>&amp;</span><span class=nc>mut</span><span class=w> </span><span class=n>Criterion</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>    </span><span class=kd>let</span><span class=w> </span><span class=k>mut</span><span class=w> </span><span class=n>group</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>c</span><span class=p>.</span><span class=n>benchmark_group</span><span class=p>(</span><span class=s>&#34;cow_bench&#34;</span><span class=p>);</span><span class=w>
-</span><span class=w>    </span><span class=n>group</span><span class=p>.</span><span class=n>sampling_mode</span><span class=p>(</span><span class=n>SamplingMode</span>::<span class=n>Linear</span><span class=p>);</span><span class=w>
-</span><span class=w>    </span><span class=n>group</span><span class=p>.</span><span class=n>bench_function</span><span class=p>(</span><span class=s>&#34;cow&#34;</span><span class=p>,</span><span class=w> </span><span class=o>|</span><span class=n>b</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>        </span><span class=n>b</span><span class=p>.</span><span class=n>iter_batched</span><span class=p>(</span><span class=w>
-</span><span class=w>            </span><span class=o>||</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>pre</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=fm>vec!</span><span class=p>[</span><span class=s>&#34;https://127.0.0.1&#34;</span><span class=p>.</span><span class=n>to_string</span><span class=p>();</span><span class=w> </span><span class=mi>1024</span><span class=p>];</span><span class=w>
-</span><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>non_pre</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=fm>vec!</span><span class=p>[</span><span class=s>&#34;127.0.0.1&#34;</span><span class=p>.</span><span class=n>to_string</span><span class=p>();</span><span class=w> </span><span class=mi>1024</span><span class=p>];</span><span class=w>
-</span><span class=w>                </span><span class=p>[</span><span class=n>pre</span><span class=p>,</span><span class=w> </span><span class=n>non_pre</span><span class=p>].</span><span class=n>concat</span><span class=p>()</span><span class=w>
-</span><span class=w>            </span><span class=p>},</span><span class=w>
-</span><span class=w>            </span><span class=o>|</span><span class=n>v</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>_</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>add_prefix_by_cow</span><span class=p>(</span><span class=o>&amp;</span><span class=n>v</span><span class=p>,</span><span class=w> </span><span class=s>&#34;https://&#34;</span><span class=p>);</span><span class=w>
-</span><span class=w>            </span><span class=p>},</span><span class=w>
-</span><span class=w>            </span><span class=n>BatchSize</span>::<span class=n>SmallInput</span><span class=p>,</span><span class=w>
-</span><span class=w>        </span><span class=p>)</span><span class=w>
-</span><span class=w>    </span><span class=p>});</span><span class=w>
-</span><span class=w>    </span><span class=n>group</span><span class=p>.</span><span class=n>bench_function</span><span class=p>(</span><span class=s>&#34;clone&#34;</span><span class=p>,</span><span class=w> </span><span class=o>|</span><span class=n>b</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>        </span><span class=n>b</span><span class=p>.</span><span class=n>iter_batched</span><span class=p>(</span><span class=w>
-</span><span class=w>            </span><span class=o>||</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>pre</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=fm>vec!</span><span class=p>[</span><span class=s>&#34;https://127.0.0.1&#34;</span><span class=p>.</span><span class=n>to_string</span><span class=p>();</span><span class=w> </span><span class=mi>1024</span><span class=p>];</span><span class=w>
-</span><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>non_pre</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=fm>vec!</span><span class=p>[</span><span class=s>&#34;127.0.0.1&#34;</span><span class=p>.</span><span class=n>to_string</span><span class=p>();</span><span class=w> </span><span class=mi>1024</span><span class=p>];</span><span class=w>
-</span><span class=w>                </span><span class=p>[</span><span class=n>pre</span><span class=p>,</span><span class=w> </span><span class=n>non_pre</span><span class=p>].</span><span class=n>concat</span><span class=p>()</span><span class=w>
-</span><span class=w>            </span><span class=p>},</span><span class=w>
-</span><span class=w>            </span><span class=o>|</span><span class=n>v</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
-</span><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>_</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>add_prefix_by_clone</span><span class=p>(</span><span class=o>&amp;</span><span class=n>v</span><span class=p>,</span><span class=w> </span><span class=s>&#34;https://&#34;</span><span class=p>);</span><span class=w>
-</span><span class=w>            </span><span class=p>},</span><span class=w>
-</span><span class=w>            </span><span class=n>BatchSize</span>::<span class=n>SmallInput</span><span class=p>,</span><span class=w>
-</span><span class=w>        </span><span class=p>)</span><span class=w>
-</span><span class=w>    </span><span class=p>});</span><span class=w>
-</span><span class=w>    </span><span class=n>group</span><span class=p>.</span><span class=n>finish</span><span class=p>();</span><span class=w>
-</span><span class=w></span><span class=p>}</span><span class=w>
-</span></code></pre></td></tr></table>
-</div>
-</div><p>输出如下：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-rust data-lang=rust><span class=line><span class=cl><span class=k>fn</span> <span class=nf>bench</span><span class=p>(</span><span class=n>c</span>: <span class=kp>&amp;</span><span class=nc>mut</span><span class=w> </span><span class=n>Criterion</span><span class=p>)</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=kd>let</span><span class=w> </span><span class=k>mut</span><span class=w> </span><span class=n>group</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>c</span><span class=p>.</span><span class=n>benchmark_group</span><span class=p>(</span><span class=s>&#34;cow_bench&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>group</span><span class=p>.</span><span class=n>sampling_mode</span><span class=p>(</span><span class=n>SamplingMode</span>::<span class=n>Linear</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>group</span><span class=p>.</span><span class=n>bench_function</span><span class=p>(</span><span class=s>&#34;cow&#34;</span><span class=p>,</span><span class=w> </span><span class=o>|</span><span class=n>b</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>b</span><span class=p>.</span><span class=n>iter_batched</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=o>||</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>pre</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=fm>vec!</span><span class=p>[</span><span class=s>&#34;https://127.0.0.1&#34;</span><span class=p>.</span><span class=n>to_string</span><span class=p>();</span><span class=w> </span><span class=mi>1024</span><span class=p>];</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>non_pre</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=fm>vec!</span><span class=p>[</span><span class=s>&#34;127.0.0.1&#34;</span><span class=p>.</span><span class=n>to_string</span><span class=p>();</span><span class=w> </span><span class=mi>1024</span><span class=p>];</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>[</span><span class=n>pre</span><span class=p>,</span><span class=w> </span><span class=n>non_pre</span><span class=p>].</span><span class=n>concat</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=o>|</span><span class=n>v</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>_</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>add_prefix_by_cow</span><span class=p>(</span><span class=o>&amp;</span><span class=n>v</span><span class=p>,</span><span class=w> </span><span class=s>&#34;https://&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>BatchSize</span>::<span class=n>SmallInput</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>});</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>group</span><span class=p>.</span><span class=n>bench_function</span><span class=p>(</span><span class=s>&#34;clone&#34;</span><span class=p>,</span><span class=w> </span><span class=o>|</span><span class=n>b</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=n>b</span><span class=p>.</span><span class=n>iter_batched</span><span class=p>(</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=o>||</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>pre</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=fm>vec!</span><span class=p>[</span><span class=s>&#34;https://127.0.0.1&#34;</span><span class=p>.</span><span class=n>to_string</span><span class=p>();</span><span class=w> </span><span class=mi>1024</span><span class=p>];</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>non_pre</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=fm>vec!</span><span class=p>[</span><span class=s>&#34;127.0.0.1&#34;</span><span class=p>.</span><span class=n>to_string</span><span class=p>();</span><span class=w> </span><span class=mi>1024</span><span class=p>];</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=p>[</span><span class=n>pre</span><span class=p>,</span><span class=w> </span><span class=n>non_pre</span><span class=p>].</span><span class=n>concat</span><span class=p>()</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=o>|</span><span class=n>v</span><span class=o>|</span><span class=w> </span><span class=p>{</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>                </span><span class=kd>let</span><span class=w> </span><span class=n>_</span><span class=w> </span><span class=o>=</span><span class=w> </span><span class=n>add_prefix_by_clone</span><span class=p>(</span><span class=o>&amp;</span><span class=n>v</span><span class=p>,</span><span class=w> </span><span class=s>&#34;https://&#34;</span><span class=p>);</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=p>},</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>            </span><span class=n>BatchSize</span>::<span class=n>SmallInput</span><span class=p>,</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>        </span><span class=p>)</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=p>});</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w>    </span><span class=n>group</span><span class=p>.</span><span class=n>finish</span><span class=p>();</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=p>}</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>输出如下：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>cow_bench/cow           time:   <span class=o>[</span>256.10 us 259.48 us 262.41 us<span class=o>]</span>
-cow_bench/clone         time:   <span class=o>[</span>448.13 us 457.38 us 467.73 us<span class=o>]</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>生成分析图片如下图所示，可见<code>Cow</code>在大量的内存操作时，能尽可能的进行内存共享，延迟耗时的克隆操作，进行更加细致的内存操作控制。</p>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=Rust-Smartpointer-Cow/image-20210131002520961.png data-srcset="/Rust-Smartpointer-Cow/image-20210131002520961.png, Rust-Smartpointer-Cow/image-20210131002520961.png 1.5x, /Rust-Smartpointer-Cow/image-20210131002520961.png 2x" data-sizes=auto alt=/Rust-Smartpointer-Cow/image-20210131002520961.png title=image-20210131002520961></p>
-<disqus>
-</div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>更新于 2021-01-30</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md><span>
-<a class=link-to-markdown href=/posts/rust-smartpointer-cow/index.md target=_blank>阅读原始文档</a>
-</span></div>
-<div class=post-info-share>
-<span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/rust-smartpointer-cow/ data-title=Rust智能指针Cow data-via=Jason210314 data-hashtags=rust,智能指针,cow><i class="fab fa-twitter fa-fw"></i></a></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/rust/>rust</a>,&nbsp;<a href=/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/>智能指针</a>,&nbsp;<a href=/tags/cow/>cow</a></section>
-<section>
-<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/cmake-tutorial/ class=prev rel=prev title="CMake Tutorial"><i class="fas fa-angle-left fa-fw"></i>CMake Tutorial</a>
-<a href=/posts/goodbyte-2020/ class=next rel=next title=告别2020庚子鼠年>告别2020庚子鼠年<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=disqus_thread class=comment></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.92.1">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
-</div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
-</div>
-</footer></div>
-<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title=查看评论>
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-164518488-1',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body>
-</html>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>cow_bench/cow           time:   <span class=o>[</span>256.10 us 259.48 us 262.41 us<span class=o>]</span>
+</span></span><span class=line><span class=cl>cow_bench/clone         time:   <span class=o>[</span>448.13 us 457.38 us 467.73 us<span class=o>]</span>
+</span></span></code></pre></td></tr></table></div></div><p>生成分析图片如下图所示，可见<code>Cow</code>在大量的内存操作时，能尽可能的进行内存共享，延迟耗时的克隆操作，进行更加细致的内存操作控制。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=Rust-Smartpointer-Cow/image-20210131002520961.png data-srcset="/Rust-Smartpointer-Cow/image-20210131002520961.png, Rust-Smartpointer-Cow/image-20210131002520961.png 1.5x, /Rust-Smartpointer-Cow/image-20210131002520961.png 2x" data-sizes=auto alt=/Rust-Smartpointer-Cow/image-20210131002520961.png title=image-20210131002520961></p><disqus></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2021-01-30</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/posts/rust-smartpointer-cow/index.md target=_blank>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/rust-smartpointer-cow/ data-title=Rust智能指针Cow data-via=Jason210314 data-hashtags=rust,智能指针,cow><i class="fab fa-twitter fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/rust/>rust</a>,&nbsp;<a href=/tags/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/>智能指针</a>,&nbsp;<a href=/tags/cow/>cow</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/cmake-tutorial/ class=prev rel=prev title="CMake Tutorial"><i class="fas fa-angle-left fa-fw"></i>CMake Tutorial</a>
+<a href=/posts/goodbyte-2020/ class=next rel=next title=告别2020庚子鼠年>告别2020庚子鼠年<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=disqus_thread class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.97.3">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-164518488-1",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body></html>

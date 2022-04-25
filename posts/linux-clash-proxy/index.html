@@ -1,185 +1,39 @@
-<!doctype html><html lang=zh-cn>
-<head>
-<meta charset=utf-8>
-<meta name=viewport content="width=device-width,initial-scale=1">
-<meta name=robots content="noodp">
-<meta http-equiv=x-ua-compatible content="IE=edge, chrome=1">
-<title>Linux使用clash代理 - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="Linux使用clash代理">
-<meta property="og:description" content="起因 偶然发现百度云的学生服务器挺便宜，2 核心 4g 内存机型一个月只要 18 元，有个随时随地能够访问的 Linux 环境还是挺好的，遂购入。新系统初始化完成，第一">
-<meta property="og:type" content="article">
-<meta property="og:url" content="https://wmc1999.top/posts/linux-clash-proxy/"><meta property="article:section" content="posts">
-<meta property="article:published_time" content="2020-08-21T09:19:53+00:00">
-<meta property="article:modified_time" content="2020-08-21T09:19:53+00:00">
-<meta name=twitter:card content="summary">
-<meta name=twitter:title content="Linux使用clash代理">
-<meta name=twitter:description content="起因 偶然发现百度云的学生服务器挺便宜，2 核心 4g 内存机型一个月只要 18 元，有个随时随地能够访问的 Linux 环境还是挺好的，遂购入。新系统初始化完成，第一">
-<meta name=application-name content="OneStep">
-<meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico>
-<link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png>
-<link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/linux-clash-proxy/><link rel=prev href=https://wmc1999.top/posts/github-actions-intro/><link rel=next href=https://wmc1999.top/posts/cmake-tutorial/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Linux使用clash代理","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/linux-clash-proxy\/"},"genre":"posts","keywords":"clash, 代理","wordcount":874,"url":"https:\/\/wmc1999.top\/posts\/linux-clash-proxy\/","datePublished":"2020-08-21T09:19:53+00:00","dateModified":"2020-08-21T09:19:53+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head>
-<body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem('theme')?localStorage.getItem('theme')==='dark':'auto'==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches:'auto'==='dark')&&document.body.setAttribute('theme','dark')</script>
-<div id=mask></div><div class=wrapper><header class=desktop id=header-desktop>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu>
-<div class=menu-inner><a class=menu-item href=/> 首页 </a><a class=menu-item href=/posts/> 文章 </a><a class=menu-item href=/tags/> 标签 </a><a class=menu-item href=/categories/> 分类 </a><a class=menu-item href=/friendlinks> 友链 </a><a class=menu-item href=/about> 关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
+<!doctype html><html lang=zh-cn><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><meta name=robots content="noodp"><meta http-equiv=x-ua-compatible content="IE=edge, chrome=1"><title>Linux使用clash代理 - OneStep</title><meta name=Description content="用尽全力，活成一个普通人"><meta property="og:title" content="Linux使用clash代理"><meta property="og:description" content="起因 偶然发现百度云的学生服务器挺便宜，2 核心 4g 内存机型一个月只要 18 元，有个随时随地能够访问的 Linux 环境还是挺好的，遂购入。新系统初始化完成，第一"><meta property="og:type" content="article"><meta property="og:url" content="https://wmc1999.top/posts/linux-clash-proxy/"><meta property="article:section" content="posts"><meta property="article:published_time" content="2020-08-21T09:19:53+00:00"><meta property="article:modified_time" content="2020-08-21T09:19:53+00:00"><meta name=twitter:card content="summary"><meta name=twitter:title content="Linux使用clash代理"><meta name=twitter:description content="起因 偶然发现百度云的学生服务器挺便宜，2 核心 4g 内存机型一个月只要 18 元，有个随时随地能够访问的 Linux 环境还是挺好的，遂购入。新系统初始化完成，第一"><meta name=application-name content="OneStep"><meta name=apple-mobile-web-app-title content="OneStep"><meta name=theme-color content="#ffffff"><meta name=msapplication-TileColor content="#da532c"><link rel="shortcut icon" type=image/x-icon href=/favicon.ico><link rel=icon type=image/png sizes=32x32 href=/favicon-32x32.png><link rel=icon type=image/png sizes=16x16 href=/favicon-16x16.png><link rel=apple-touch-icon sizes=180x180 href=/apple-touch-icon.png><link rel=mask-icon href=/safari-pinned-tab.svg color=#5bbad5><link rel=manifest href=/site.webmanifest><link rel=canonical href=https://wmc1999.top/posts/linux-clash-proxy/><link rel=prev href=https://wmc1999.top/posts/github-actions-intro/><link rel=next href=https://wmc1999.top/posts/cmake-tutorial/><link rel=stylesheet href=/lib/normalize/normalize.min.css><link rel=stylesheet href=/css/style.min.css><link rel=stylesheet href=/lib/fontawesome-free/all.min.css><link rel=stylesheet href=/lib/animate/animate.min.css><script type=application/ld+json>{"@context":"http://schema.org","@type":"BlogPosting","headline":"Linux使用clash代理","inLanguage":"zh-CN","mainEntityOfPage":{"@type":"WebPage","@id":"https:\/\/wmc1999.top\/posts\/linux-clash-proxy\/"},"genre":"posts","keywords":"clash, 代理","wordcount":874,"url":"https:\/\/wmc1999.top\/posts\/linux-clash-proxy\/","datePublished":"2020-08-21T09:19:53+00:00","dateModified":"2020-08-21T09:19:53+00:00","publisher":{"@type":"Organization","name":"waruto210"},"author":{"@type":"Person","name":"waruto210"},"description":""}</script></head><body header-desktop=fixed header-mobile=auto><script type=text/javascript>(window.localStorage&&localStorage.getItem("theme")?localStorage.getItem("theme")==="dark":"auto"==="auto"?window.matchMedia("(prefers-color-scheme: dark)").matches:"auto"==="dark")&&document.body.setAttribute("theme","dark")</script><div id=mask></div><div class=wrapper><header class=desktop id=header-desktop><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu><div class=menu-inner><a class=menu-item href=/>首页 </a><a class=menu-item href=/posts/>文章 </a><a class=menu-item href=/tags/>标签 </a><a class=menu-item href=/categories/>分类 </a><a class=menu-item href=/friendlinks>友链 </a><a class=menu-item href=/about>关于 </a><span class="menu-item delimiter"></span><span class="menu-item search" id=search-desktop>
 <input type=text placeholder=搜索文章标题或内容... id=search-input-desktop>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-desktop>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a>
-</div>
-</div>
-</div>
-</header><header class=mobile id=header-mobile>
-<div class=header-container>
-<div class=header-wrapper>
-<div class=header-title>
-<a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a>
-</div>
-<div class=menu-toggle id=menu-toggle-mobile>
-<span></span><span></span><span></span>
-</div>
-</div>
-<div class=menu id=menu-mobile><div class=search-wrapper>
-<div class="search mobile" id=search-mobile>
-<input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
-<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索>
-<i class="fas fa-search fa-fw"></i>
-</a>
-<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空>
-<i class="fas fa-times-circle fa-fw"></i>
-</a>
-<span class="search-button search-loading" id=search-loading-mobile>
-<i class="fas fa-spinner fa-fw fa-spin"></i>
-</span>
-</div>
-<a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>
-取消
-</a>
-</div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
-<i class="fas fa-adjust fa-fw"></i>
-</a></div>
-</div>
-</header>
-<div class="search-dropdown desktop">
-<div id=search-dropdown-desktop></div>
-</div>
-<div class="search-dropdown mobile">
-<div id=search-dropdown-mobile></div>
-</div>
-<main class=main>
-<div class=container><div class=toc id=toc-auto>
-<h2 class=toc-title>目录</h2>
-<div class=toc-content id=toc-content-auto></div>
-</div><article class="page single"><h1 class="single-title animated flipInX">Linux使用clash代理</h1><div class=post-meta>
-<div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/linux/><i class="far fa-folder fa-fw"></i>Linux</a></span></div>
-<div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2020-08-21>2020-08-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 874 字&nbsp;
-<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div>
-</div><div class="details toc" id=toc-static kept=true>
-<div class="details-summary toc-title">
-<span>目录</span>
-<span><i class="details-icon fas fa-angle-right"></i></span>
-</div>
-<div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents></nav></div>
-</div><div class=content id=content><h1 id=起因>起因</h1>
-<p>偶然发现百度云的学生服务器挺便宜，2 核心 4g 内存机型一个月只要 18 元，有个随时随地能够访问的 Linux 环境还是挺好的，遂购入。新系统初始化完成，第一件事当然是来一套<a href=https://github.com/ohmyzsh/ohmyzsh target=_blank rel="noopener noreffer"><code>ohmyzsh</code></a>，结果这就出了问题，<code>git clone</code>太慢了。</p>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/ohmyzsh.png data-srcset="/Linux-clash-proxy/ohmyzsh.png, Linux-clash-proxy/ohmyzsh.png 1.5x, /Linux-clash-proxy/ohmyzsh.png 2x" data-sizes=auto alt=/Linux-clash-proxy/ohmyzsh.png title=/Linux-clash-proxy/ohmyzsh.png></p>
-<p>遂想到是不是该给其使用一下代理。不然之后不止<code>git clone</code>，很多资源都无法下载。</p>
-<h1 id=使用clash>使用<code>clash</code></h1>
-<p><a href=https://github.com/Dreamacro/clash target=_blank rel="noopener noreffer"><code>clash</code></a>是一款使用<code>go</code>语言开发的多平台代理工具，支持<code>ss/v2ray</code>等多种协议，在<code>macOS</code>，<code>windows</code>上使用起来很方便，在没有<code>GUI</code>的<code>Linux</code>也只需要稍加配置。</p>
-<p>先从<a href=https://github.com/Dreamacro/clash/releases target=_blank rel="noopener noreffer">这里</a>下载<code>clash</code>的<code>linux-amd64</code>可执行文件。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-desktop title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-desktop title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-desktop><i class="fas fa-spinner fa-fw fa-spin"></i></span>
+</span><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题><i class="fas fa-adjust fa-fw"></i></a></div></div></div></header><header class=mobile id=header-mobile><div class=header-container><div class=header-wrapper><div class=header-title><a href=/ title=OneStep><img class="lazyload logo" src=/svg/loading.min.svg data-src=/images/logo.jpeg data-srcset="/images/logo.jpeg, /images/logo.jpeg 1.5x, /images/logo.jpeg 2x" data-sizes=auto alt=/images/logo.jpeg title=/images/logo.jpeg>OneStep</a></div><div class=menu-toggle id=menu-toggle-mobile><span></span><span></span><span></span></div></div><div class=menu id=menu-mobile><div class=search-wrapper><div class="search mobile" id=search-mobile><input type=text placeholder=搜索文章标题或内容... id=search-input-mobile>
+<a href=javascript:void(0); class="search-button search-toggle" id=search-toggle-mobile title=搜索><i class="fas fa-search fa-fw"></i></a>
+<a href=javascript:void(0); class="search-button search-clear" id=search-clear-mobile title=清空><i class="fas fa-times-circle fa-fw"></i></a>
+<span class="search-button search-loading" id=search-loading-mobile><i class="fas fa-spinner fa-fw fa-spin"></i></span></div><a href=javascript:void(0); class=search-cancel id=search-cancel-mobile>取消</a></div><a class=menu-item href=/ title>首页</a><a class=menu-item href=/posts/ title>文章</a><a class=menu-item href=/tags/ title>标签</a><a class=menu-item href=/categories/ title>分类</a><a class=menu-item href=/friendlinks title>友链</a><a class=menu-item href=/about title>关于</a><a href=javascript:void(0); class="menu-item theme-switch" title=切换主题>
+<i class="fas fa-adjust fa-fw"></i></a></div></div></header><div class="search-dropdown desktop"><div id=search-dropdown-desktop></div></div><div class="search-dropdown mobile"><div id=search-dropdown-mobile></div></div><main class=main><div class=container><div class=toc id=toc-auto><h2 class=toc-title>目录</h2><div class=toc-content id=toc-content-auto></div></div><article class="page single"><h1 class="single-title animated flipInX">Linux使用clash代理</h1><div class=post-meta><div class=post-meta-line><span class=post-author><a href=https://github.com/waruto210 title=Author target=_blank rel="noopener noreffer author" class=author><i class="fas fa-user-circle fa-fw"></i>waruto210</a></span>&nbsp;<span class=post-category>收录于 <a href=/categories/linux/><i class="far fa-folder fa-fw"></i>Linux</a></span></div><div class=post-meta-line><i class="far fa-calendar-alt fa-fw"></i>&nbsp;<time datetime=2020-08-21>2020-08-21</time>&nbsp;<i class="fas fa-pencil-alt fa-fw"></i>&nbsp;约 874 字&nbsp;
+<i class="far fa-clock fa-fw"></i>&nbsp;预计阅读 2 分钟&nbsp;</div></div><div class="details toc" id=toc-static kept=true><div class="details-summary toc-title"><span>目录</span>
+<span><i class="details-icon fas fa-angle-right"></i></span></div><div class="details-content toc-content" id=toc-content-static><nav id=TableOfContents><ul><li><a href=#起因>起因</a></li><li><a href=#使用clash>使用<code>clash</code></a></li><li><a href=#配置-gui-界面>配置 GUI 界面</a></li><li><a href=#享用代理>享用代理</a></li></ul></nav></div></div><div class=content id=content><h2 id=起因>起因</h2><p>偶然发现百度云的学生服务器挺便宜，2 核心 4g 内存机型一个月只要 18 元，有个随时随地能够访问的 Linux 环境还是挺好的，遂购入。新系统初始化完成，第一件事当然是来一套<a href=https://github.com/ohmyzsh/ohmyzsh target=_blank rel="noopener noreffer"><code>ohmyzsh</code></a>，结果这就出了问题，<code>git clone</code>太慢了。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/ohmyzsh.png data-srcset="/Linux-clash-proxy/ohmyzsh.png, Linux-clash-proxy/ohmyzsh.png 1.5x, /Linux-clash-proxy/ohmyzsh.png 2x" data-sizes=auto alt=/Linux-clash-proxy/ohmyzsh.png title=/Linux-clash-proxy/ohmyzsh.png></p><p>遂想到是不是该给其使用一下代理。不然之后不止<code>git clone</code>，很多资源都无法下载。</p><h2 id=使用clash>使用<code>clash</code></h2><p><a href=https://github.com/Dreamacro/clash target=_blank rel="noopener noreffer"><code>clash</code></a>是一款使用<code>go</code>语言开发的多平台代理工具，支持<code>ss/v2ray</code>等多种协议，在<code>macOS</code>，<code>windows</code>上使用起来很方便，在没有<code>GUI</code>的<code>Linux</code>也只需要稍加配置。</p><p>先从<a href=https://github.com/Dreamacro/clash/releases target=_blank rel="noopener noreffer">这里</a>下载<code>clash</code>的<code>linux-amd64</code>可执行文件。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
 </span><span class=lnt>3
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>naruto@bdy:~$ gzip -d clash-linux-amd64-v1.1.0.gz
-naruto@bdy:~$ chmod +x clash-linux-amd64-v1.1.0
-naruto@bdy:~$ sudo mv clash-linux-amd64-v1.1.0 /usr/local/bin/clash
-</code></pre></td></tr></table>
-</div>
-</div><p>然后下载<a href=https://github.com/Dreamacro/maxmind-geoip/releases target=_blank rel="noopener noreffer"><code>Country.mmdb</code></a>。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>naruto@bdy:~$ gzip -d clash-linux-amd64-v1.1.0.gz
+</span></span><span class=line><span class=cl>naruto@bdy:~$ chmod +x clash-linux-amd64-v1.1.0
+</span></span><span class=line><span class=cl>naruto@bdy:~$ sudo mv clash-linux-amd64-v1.1.0 /usr/local/bin/clash
+</span></span></code></pre></td></tr></table></div></div><p>然后下载<a href=https://github.com/Dreamacro/maxmind-geoip/releases target=_blank rel="noopener noreffer"><code>Country.mmdb</code></a>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>naruto@bdy:~$ mkdir -p .config/clash
-naruto@bdy:~$ mv Country.mmdb .config/clash/
-</code></pre></td></tr></table>
-</div>
-</div><p>之后，需要最关键的<code>clash</code>代理配置文件<code>config.yaml</code>，一般机场都会提供，同样将其放到<code>.config/clash</code>目录下。</p>
-<p>之后先直接启动<code>clash</code>看看效果。</p>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/clash_boot.png data-srcset="/Linux-clash-proxy/clash_boot.png, Linux-clash-proxy/clash_boot.png 1.5x, /Linux-clash-proxy/clash_boot.png 2x" data-sizes=auto alt=/Linux-clash-proxy/clash_boot.png title=/Linux-clash-proxy/clash_boot.png></p>
-<p>启动遇到<code>WARN[0000] Failed to start Redir UDP Listener: operation not permitted</code>，可以使用<code>sudo clash</code>启动。</p>
-<h1 id=配置-gui-界面>配置 GUI 界面</h1>
-<p>从上一段的图中可以看到，<code>clash</code>服务有一个<code>RESTful API</code>的服务，通过其我们可以访问 web 管理页面。在<code>config.yaml</code>中制定即可。比较受欢迎的是<a href=https://github.com/haishanh/yacd target=_blank rel="noopener noreffer"><code>yacd</code></a>，可以直接下载<a href=https://github.com/haishanh/yacd/archive/gh-pages.zip target=_blank rel="noopener noreffer">打包好的版本</a>。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>naruto@bdy:~$ mkdir -p .config/clash
+</span></span><span class=line><span class=cl>naruto@bdy:~$ mv Country.mmdb .config/clash/
+</span></span></code></pre></td></tr></table></div></div><p>之后，需要最关键的<code>clash</code>代理配置文件<code>config.yaml</code>，一般机场都会提供，同样将其放到<code>.config/clash</code>目录下。</p><p>之后先直接启动<code>clash</code>看看效果。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/clash_boot.png data-srcset="/Linux-clash-proxy/clash_boot.png, Linux-clash-proxy/clash_boot.png 1.5x, /Linux-clash-proxy/clash_boot.png 2x" data-sizes=auto alt=/Linux-clash-proxy/clash_boot.png title=/Linux-clash-proxy/clash_boot.png></p><p>启动遇到<code>WARN[0000] Failed to start Redir UDP Listener: operation not permitted</code>，可以使用<code>sudo clash</code>启动。</p><h2 id=配置-gui-界面>配置 GUI 界面</h2><p>从上一段的图中可以看到，<code>clash</code>服务有一个<code>RESTful API</code>的服务，通过其我们可以访问 web 管理页面。在<code>config.yaml</code>中制定即可。比较受欢迎的是<a href=https://github.com/haishanh/yacd target=_blank rel="noopener noreffer"><code>yacd</code></a>，可以直接下载<a href=https://github.com/haishanh/yacd/archive/gh-pages.zip target=_blank rel="noopener noreffer">打包好的版本</a>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>naruto@bdy:~$ unzip yacd-gh-pages.zip
-naruto@bdy:~$ mv yacd-gh-pages .config/clash/dashboard
-</code></pre></td></tr></table>
-</div>
-</div><p>在<code>config.yaml</code>中如下设置：</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>naruto@bdy:~$ unzip yacd-gh-pages.zip
+</span></span><span class=line><span class=cl>naruto@bdy:~$ mv yacd-gh-pages .config/clash/dashboard
+</span></span></code></pre></td></tr></table></div></div><p>在<code>config.yaml</code>中如下设置：</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=nt>external-ui</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;dashboard&#34;</span><span class=w>
-</span><span class=w></span><span class=nt>secret</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;&#34;</span><span class=w>
-</span></code></pre></td></tr></table>
-</div>
-</div><p>启动<code>clash</code>后，浏览器使用<code>ip:port/ui</code>的方式访问，如下所示。</p>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/yacd.png data-srcset="/Linux-clash-proxy/yacd.png, Linux-clash-proxy/yacd.png 1.5x, /Linux-clash-proxy/yacd.png 2x" data-sizes=auto alt=/Linux-clash-proxy/yacd.png title=/Linux-clash-proxy/yacd.png></p>
-<h1 id=享用代理>享用代理</h1>
-<p>在 GUI 界面选择好代理服务器后，就可以使用代理了。打开另一个终端窗口，执行如下命令，设置<code>http(s)</code>代理环境变量。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=nb>export</span> <span class=nv>https_proxy</span><span class=o>=</span>http://127.0.0.1:7890 <span class=nv>http_proxy</span><span class=o>=</span>http://127.0.0.1:7890 <span class=nv>all_proxy</span><span class=o>=</span>socks5://127.0.0.1:7890
-</code></pre></td></tr></table>
-</div>
-</div><p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/wget.png data-srcset="/Linux-clash-proxy/wget.png, Linux-clash-proxy/wget.png 1.5x, /Linux-clash-proxy/wget.png 2x" data-sizes=auto alt=/Linux-clash-proxy/wget.png title=/Linux-clash-proxy/wget.png></p>
-<p>接下来，进行一些完善工作。首先每次都手动启动<code>clash</code>并且占用一个终端窗口是很不方便的，先将<code>clash</code>作为一个<code>daemon</code>进程。参照开发者<a href=https://github.com/Dreamacro/clash/wiki/clash-as-a-daemon target=_blank rel="noopener noreffer">推荐</a>，使用<code>pm2</code>。</p>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-yaml data-lang=yaml><span class=line><span class=cl><span class=nt>external-ui</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;dashboard&#34;</span><span class=w>
+</span></span></span><span class=line><span class=cl><span class=w></span><span class=nt>secret</span><span class=p>:</span><span class=w> </span><span class=s2>&#34;&#34;</span><span class=w>
+</span></span></span></code></pre></td></tr></table></div></div><p>启动<code>clash</code>后，浏览器使用<code>ip:port/ui</code>的方式访问，如下所示。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/yacd.png data-srcset="/Linux-clash-proxy/yacd.png, Linux-clash-proxy/yacd.png 1.5x, /Linux-clash-proxy/yacd.png 2x" data-sizes=auto alt=/Linux-clash-proxy/yacd.png title=/Linux-clash-proxy/yacd.png></p><h2 id=享用代理>享用代理</h2><p>在 GUI 界面选择好代理服务器后，就可以使用代理了。打开另一个终端窗口，执行如下命令，设置<code>http(s)</code>代理环境变量。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nb>export</span> <span class=nv>https_proxy</span><span class=o>=</span>http://127.0.0.1:7890 <span class=nv>http_proxy</span><span class=o>=</span>http://127.0.0.1:7890 <span class=nv>all_proxy</span><span class=o>=</span>socks5://127.0.0.1:7890
+</span></span></code></pre></td></tr></table></div></div><p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/wget.png data-srcset="/Linux-clash-proxy/wget.png, Linux-clash-proxy/wget.png 1.5x, /Linux-clash-proxy/wget.png 2x" data-sizes=auto alt=/Linux-clash-proxy/wget.png title=/Linux-clash-proxy/wget.png></p><p>接下来，进行一些完善工作。首先每次都手动启动<code>clash</code>并且占用一个终端窗口是很不方便的，先将<code>clash</code>作为一个<code>daemon</code>进程。参照开发者<a href=https://github.com/Dreamacro/clash/wiki/clash-as-a-daemon target=_blank rel="noopener noreffer">推荐</a>，使用<code>pm2</code>。</p><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt>1
 </span><span class=lnt>2
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash>$ npm install -g nrm
-$ pm2 start clash
-</code></pre></td></tr></table>
-</div>
-</div><p>然后是将代理命令作为函数写入<code>.zshrc</code>.</p>
-<blockquote>
-<p>注意，下面使用了<code>zsh</code>语法，和<code>bash</code>略有不同。</p>
-</blockquote>
-<div class=highlight><div class=chroma>
-<table class=lntable><tr><td class=lntd>
-<pre tabindex=0 class=chroma><code><span class=lnt> 1
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl>$ npm install -g nrm
+</span></span><span class=line><span class=cl>$ pm2 start clash
+</span></span></code></pre></td></tr></table></div></div><p>然后是将代理命令作为函数写入<code>.zshrc</code>.</p><blockquote><p>注意，下面使用了<code>zsh</code>语法，和<code>bash</code>略有不同。</p></blockquote><div class=highlight><div class=chroma><table class=lntable><tr><td class=lntd><pre tabindex=0 class=chroma><code><span class=lnt> 1
 </span><span class=lnt> 2
 </span><span class=lnt> 3
 </span><span class=lnt> 4
@@ -193,66 +47,20 @@ $ pm2 start clash
 </span><span class=lnt>12
 </span><span class=lnt>13
 </span><span class=lnt>14
-</span></code></pre></td>
-<td class=lntd>
-<pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=nv>PROXY_IP</span><span class=o>=</span>127.0.0.1
-<span class=nv>PROXY_PORT</span><span class=o>=</span><span class=m>7890</span>
-
-<span class=k>function</span> Proxy<span class=o>()</span> <span class=o>{</span>
-    <span class=k>if</span> <span class=o>[</span> <span class=s2>&#34;</span><span class=nv>$1</span><span class=s2>&#34;</span> <span class=o>=</span> <span class=s2>&#34;on&#34;</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
-        <span class=nb>export</span> <span class=nv>https_proxy</span><span class=o>=</span><span class=nv>$PROXY_IP</span>:<span class=nv>$PROXY_PORT</span>
-        <span class=nb>export</span> <span class=nv>http_proxy</span><span class=o>=</span><span class=nv>$PROXY_IP</span>:<span class=nv>$PROXY_PORT</span>
-        <span class=nb>echo</span> Proxy On
-    <span class=k>else</span>
-        <span class=nb>unset</span> https_proxy
-        <span class=nb>unset</span> http_proxy
-        <span class=nb>echo</span> Proxy Off
-    <span class=k>fi</span>
-<span class=o>}</span>
-</code></pre></td></tr></table>
-</div>
-</div><p>然后试试看，非常愉快。</p>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/google.png data-srcset="/Linux-clash-proxy/google.png, Linux-clash-proxy/google.png 1.5x, /Linux-clash-proxy/google.png 2x" data-sizes=auto alt=/Linux-clash-proxy/google.png title=/Linux-clash-proxy/google.png></p>
-<p>最后，我们来装一个<code>rust</code>试试。</p>
-<p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/rust.png data-srcset="/Linux-clash-proxy/rust.png, Linux-clash-proxy/rust.png 1.5x, /Linux-clash-proxy/rust.png 2x" data-sizes=auto alt=/Linux-clash-proxy/rust.png title=/Linux-clash-proxy/rust.png></p>
-</div><div class=post-footer id=post-footer>
-<div class=post-info>
-<div class=post-info-line>
-<div class=post-info-mod>
-<span>更新于 2020-08-21</span>
-</div>
-<div class=post-info-license></div>
-</div>
-<div class=post-info-line>
-<div class=post-info-md><span>
-<a class=link-to-markdown href=/posts/linux-clash-proxy/index.md target=_blank>阅读原始文档</a>
-</span></div>
-<div class=post-info-share>
-<span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/linux-clash-proxy/ data-title=Linux使用clash代理 data-via=Jason210314 data-hashtags=clash,代理><i class="fab fa-twitter fa-fw"></i></a></span>
-</div>
-</div>
-</div>
-<div class=post-info-more>
-<section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/clash/>clash</a>,&nbsp;<a href=/tags/%E4%BB%A3%E7%90%86/>代理</a></section>
-<section>
-<span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span>
-</section>
-</div>
-<div class=post-nav><a href=/posts/github-actions-intro/ class=prev rel=prev title="Github Actions简介"><i class="fas fa-angle-left fa-fw"></i>Github Actions简介</a>
-<a href=/posts/cmake-tutorial/ class=next rel=next title="CMake Tutorial">CMake Tutorial<i class="fas fa-angle-right fa-fw"></i></a></div>
-</div>
-<div id=comments><div id=disqus_thread class=comment></div><noscript>
-Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.
-</noscript></div></article></div>
-</main><footer class=footer>
-<div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.92.1">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a>
-</div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div>
-</div>
-</footer></div>
-<div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部>
-<i class="fas fa-arrow-up fa-fw"></i>
-</a><a href=# id=view-comments class=fixed-button title=查看评论>
-<i class="fas fa-comment fa-fw"></i>
-</a>
-</div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date),gtag('config','UA-164518488-1',{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body>
-</html>
+</span></code></pre></td><td class=lntd><pre tabindex=0 class=chroma><code class=language-bash data-lang=bash><span class=line><span class=cl><span class=nv>PROXY_IP</span><span class=o>=</span>127.0.0.1
+</span></span><span class=line><span class=cl><span class=nv>PROXY_PORT</span><span class=o>=</span><span class=m>7890</span>
+</span></span><span class=line><span class=cl>
+</span></span><span class=line><span class=cl><span class=k>function</span> Proxy<span class=o>()</span> <span class=o>{</span>
+</span></span><span class=line><span class=cl>    <span class=k>if</span> <span class=o>[</span> <span class=s2>&#34;</span><span class=nv>$1</span><span class=s2>&#34;</span> <span class=o>=</span> <span class=s2>&#34;on&#34;</span> <span class=o>]</span><span class=p>;</span> <span class=k>then</span>
+</span></span><span class=line><span class=cl>        <span class=nb>export</span> <span class=nv>https_proxy</span><span class=o>=</span><span class=nv>$PROXY_IP</span>:<span class=nv>$PROXY_PORT</span>
+</span></span><span class=line><span class=cl>        <span class=nb>export</span> <span class=nv>http_proxy</span><span class=o>=</span><span class=nv>$PROXY_IP</span>:<span class=nv>$PROXY_PORT</span>
+</span></span><span class=line><span class=cl>        <span class=nb>echo</span> Proxy On
+</span></span><span class=line><span class=cl>    <span class=k>else</span>
+</span></span><span class=line><span class=cl>        <span class=nb>unset</span> https_proxy
+</span></span><span class=line><span class=cl>        <span class=nb>unset</span> http_proxy
+</span></span><span class=line><span class=cl>        <span class=nb>echo</span> Proxy Off
+</span></span><span class=line><span class=cl>    <span class=k>fi</span>
+</span></span><span class=line><span class=cl><span class=o>}</span>
+</span></span></code></pre></td></tr></table></div></div><p>然后试试看，非常愉快。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/google.png data-srcset="/Linux-clash-proxy/google.png, Linux-clash-proxy/google.png 1.5x, /Linux-clash-proxy/google.png 2x" data-sizes=auto alt=/Linux-clash-proxy/google.png title=/Linux-clash-proxy/google.png></p><p>最后，我们来装一个<code>rust</code>试试。</p><p><img class=lazyload src=/svg/loading.min.svg data-src=Linux-clash-proxy/rust.png data-srcset="/Linux-clash-proxy/rust.png, Linux-clash-proxy/rust.png 1.5x, /Linux-clash-proxy/rust.png 2x" data-sizes=auto alt=/Linux-clash-proxy/rust.png title=/Linux-clash-proxy/rust.png></p></div><div class=post-footer id=post-footer><div class=post-info><div class=post-info-line><div class=post-info-mod><span>更新于 2020-08-21</span></div><div class=post-info-license></div></div><div class=post-info-line><div class=post-info-md><span><a class=link-to-markdown href=/posts/linux-clash-proxy/index.md target=_blank>阅读原始文档</a></span></div><div class=post-info-share><span><a href=javascript:void(0); title="分享到 Twitter" data-sharer=twitter data-url=https://wmc1999.top/posts/linux-clash-proxy/ data-title=Linux使用clash代理 data-via=Jason210314 data-hashtags=clash,代理><i class="fab fa-twitter fa-fw"></i></a></span></div></div></div><div class=post-info-more><section class=post-tags><i class="fas fa-tags fa-fw"></i>&nbsp;<a href=/tags/clash/>clash</a>,&nbsp;<a href=/tags/%E4%BB%A3%E7%90%86/>代理</a></section><section><span><a href=javascript:void(0); onclick=window.history.back()>返回</a></span>&nbsp;|&nbsp;<span><a href=/>主页</a></span></section></div><div class=post-nav><a href=/posts/github-actions-intro/ class=prev rel=prev title="Github Actions简介"><i class="fas fa-angle-left fa-fw"></i>Github Actions简介</a>
+<a href=/posts/cmake-tutorial/ class=next rel=next title="CMake Tutorial">CMake Tutorial<i class="fas fa-angle-right fa-fw"></i></a></div></div><div id=comments><div id=disqus_thread class=comment></div><noscript>Please enable JavaScript to view the comments powered by <a href=https://disqus.com/?ref_noscript>Disqus</a>.</noscript></div></article></div></main><footer class=footer><div class=footer-container><div class=footer-line>由 <a href=https://gohugo.io/ target=_blank rel="noopener noreffer" title="Hugo 0.97.3">Hugo</a> 强力驱动 | 主题 - <a href=https://github.com/dillonzq/LoveIt target=_blank rel="noopener noreffer" title="LoveIt 0.2.10"><i class="far fa-kiss-wink-heart fa-fw"></i> LoveIt</a></div><div class=footer-line><i class="far fa-copyright fa-fw"></i><span itemprop=copyrightYear>2019 - 2022</span><span class=author itemprop=copyrightHolder>&nbsp;<a href=https://github.com/waruto210 target=_blank>waruto210</a></span>&nbsp;|&nbsp;<span class=license><a rel="license external nofollow noopener noreffer" href=https://creativecommons.org/licenses/by-nc/4.0/ target=_blank>CC BY-NC 4.0</a></span></div></div></footer></div><div id=fixed-buttons><a href=# id=back-to-top class=fixed-button title=回到顶部><i class="fas fa-arrow-up fa-fw"></i>
+</a><a href=# id=view-comments class=fixed-button title=查看评论><i class="fas fa-comment fa-fw"></i></a></div><link rel=stylesheet href=/lib/katex/katex.min.css><link rel=stylesheet href=/lib/katex/copy-tex.min.css><script type=text/javascript src=https://wmc1999.disqus.com/embed.js defer></script><script type=text/javascript src=/lib/smooth-scroll/smooth-scroll.min.js></script><script type=text/javascript src=/lib/autocomplete/autocomplete.min.js></script><script type=text/javascript src=/lib/lunr/lunr.min.js></script><script type=text/javascript src=/lib/lunr/lunr.stemmer.support.min.js></script><script type=text/javascript src=/lib/lunr/lunr.zh.min.js></script><script type=text/javascript src=/lib/lazysizes/lazysizes.min.js></script><script type=text/javascript src=/lib/clipboard/clipboard.min.js></script><script type=text/javascript src=/lib/sharer/sharer.min.js></script><script type=text/javascript src=/lib/katex/katex.min.js></script><script type=text/javascript src=/lib/katex/auto-render.min.js></script><script type=text/javascript src=/lib/katex/copy-tex.min.js></script><script type=text/javascript src=/lib/katex/mhchem.min.js></script><script type=text/javascript>window.config={code:{copyTitle:"复制到剪贴板",maxShownLines:10},comment:{},math:{delimiters:[{display:!0,left:"$$",right:"$$"},{display:!0,left:"\\[",right:"\\]"},{display:!1,left:"$",right:"$"},{display:!1,left:"\\(",right:"\\)"}],strict:!1},search:{highlightTag:"em",lunrIndexURL:"/index.json",lunrLanguageCode:"zh",lunrSegmentitURL:"/lib/lunr/lunr.segmentit.js",maxResultLength:10,noResultsFound:"没有找到结果",snippetLength:50,type:"lunr"}}</script><script type=text/javascript src=/js/theme.min.js></script><script type=text/javascript>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag("js",new Date),gtag("config","UA-164518488-1",{anonymize_ip:!0})</script><script type=text/javascript src="https://www.googletagmanager.com/gtag/js?id=UA-164518488-1" async></script></body></html>

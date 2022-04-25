@@ -1,7 +1,7 @@
 # 6.S081 lab5 lazy
 
 
-# Eliminate allocation from sbrk()
+## Eliminate allocation from sbrk()
 
 这次实验的第一关非常简单，就是从`sbrk`调用中取消内存分配，为之后的`lay allocation`做准备。
 
@@ -36,7 +36,7 @@ panic: uvmunmap: not mapped
 
 其实并不一定是`echo`才会导致 crash，其他的执行任意的命令或者输入无意义字符都会导致 crash。在`user/umalloc.c`中，`morecore`调用了`sbrk`，`malloc`调用了`morecore`。在`user/sh.c`中，shell 运行过程中不断地调用`malloc`为 command 申请分配空间，然后运行 command。这个过程中，malloc 并未真正分配空间，运行时访问到对应虚拟地址就会产生 page fault，导致 panic；
 
-# Lazy allocation
+## Lazy allocation
 
 这一关需要我们实现`lazy allocation`，在`usertrap()`中处理`page fault`，为产生`page fault`的虚拟地址分配一个真实的物理页面，并 map 到对应虚拟地址。
 
@@ -92,7 +92,7 @@ if((*pte & PTE_V) == 0)
 
 完成如上代码后，`echo hi`可以正常运行。
 
-# Lazytests and Usertests
+## Lazytests and Usertests
 
 第三关需要处理第二关的一些遗留细节问题，完善`lazy allocation`，使之通过全部测试。
 
