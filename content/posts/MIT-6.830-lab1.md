@@ -29,25 +29,25 @@ lab1中涉及的SimpleDB主要模块如下：
 
 ## Exercises
 
-### Exercise 1 Fields and Tuples
+### 1. Fields and Tuples
 
 TupleDesc是table的schema，描述了Table中所有Tuple的格式，Tuple由一到多个Field构成。
 
 完成TupleDesc，Tuple。
 
-### Exercise 2 Catalog
+### 2. Catalog
 
 全局Catalog是Catalog类的一个单例对象。存储着数据库的元信息。每个table与一个TupleDesc关联，让operator得知table的schema。
 
 修改Catalog类实现添加新表、获取特定表的信息。
 
-### Exercise 3 BufferPool
+### 3. BufferPool
 
 全局BufferPool是Catalog的一个单例对象。负责管理从disk读取的Page，所有operator都要通过BufferPool读写disk上的Page。
 
 BufferPool中最多保存`numPages`个Page。首先需要实现最关键的`BufferPool.getPage()`方法，如果Page已缓存，则直接返回；否则从Catalog中获取对应的数据库文件，读取Page。
 
-### Exercise 4&5 HeapFile access method
+###  4&5. HeapFile access method
 
 access method是从按照特定格式组织的disk文件中读取数据库数据的方法。SimpleDB中包含HeapFile和B+Tree两种。前4个lab仅与HeapFile相关
 
@@ -57,7 +57,7 @@ access method是从按照特定格式组织的disk文件中读取数据库数据
 
 `BufferPool.getPage()`方法需要调用具体的DbFile来读取page，所以要实现HeapFile中读取page的方法。此外，还要实现`HeapFile.iterator()`方法，用来迭代HeapFile中所有page包含的Tuple。注意：iter中需要使用`BufferPool.getPage()`来读取page，这样对数据库的访问才能被纳入管理； `open()` iter时不要把所有page都load到内存，浪费内存。
 
-### Exercise 6 Operators
+### 6. Operators
 
 SimpleDB中的多个operators负责query plan的实际执行，它们实现了关系代数中的运算。在SimpleDB中，operator是基于iterator的，每个iterator都实现了DbIterator接口。
 
