@@ -1,4 +1,4 @@
-# MIT 6.830 Lab5 SimpleDB B+Tree Index
+# MIT 6.830 Lab5 SimpleDB BTree Index
 
 
 ## 简介
