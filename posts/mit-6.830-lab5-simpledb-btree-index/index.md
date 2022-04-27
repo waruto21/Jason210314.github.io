@@ -19,7 +19,7 @@ BTreeFile包含四种不同的page：
 
 > 需要注意的是，如果给出key6，也应该返回左侧page，否则沿着page查找时，会丢掉左侧这个tuple。
 
-![simple_tree](MIT-6.830-lab5-SimpleDB-B+Tree-Index/simple_tree.png)
+![simple_tree](MIT-6.830-lab5-SimpleDB-BTree-Index/simple_tree.png)
 
 在本实验中，读取page都要使用`BTreeFile.getPage()`，其内部也是调用`BufferPool.getPage()`，但是添加了更多对dirty page的追踪。HeapFile执行insertTuple/deleteTuple时，只会返回一个dirty page，但是B+Tree由于涉及到节点的split/merge，可能会有很多dirty page。
 
@@ -33,11 +33,11 @@ SimpleDB十分喂饭，提供的`getParentWithEmptySlots()`帮我们处理了这
 
 如下图所示，split leaf page，是将一个page从中间一分为二，将右侧page第一个key ”copy“到parent中。
 
-![splitting_leaf](MIT-6.830-lab5-SimpleDB-B+Tree-Index/splitting_leaf.png)
+![splitting_leaf](MIT-6.830-lab5-SimpleDB-BTree-Index/splitting_leaf.png)
 
 split internal page是将page中间的key “push”到parent中，然后将其两边的key一分为二。
 
-![splitting_internal](MIT-6.830-lab5-SimpleDB-B+Tree-Index/splitting_internal.png)
+![splitting_internal](MIT-6.830-lab5-SimpleDB-BTree-Index/splitting_internal.png)
 
 注意B+Tree需要时刻保持以下特性：
 
@@ -57,15 +57,15 @@ split internal page是将page中间的key “push”到parent中，然后将其�
 
 如果sibling多于半满，那么可以从sibling steal一定数量的tuple，使得两者平均，steal后，还需要修改parent entry中的key。
 
-![redist_leaf](MIT-6.830-lab5-SimpleDB-B+Tree-Index/redist_leaf.png)
+![redist_leaf](MIT-6.830-lab5-SimpleDB-BTree-Index/redist_leaf.png)
 
 如果sibling也少于等于半满，那么需要和sibling merge，并且删除parent中的entry，而对parent中的entry进行删除，则可能会触发parent的递归steal或者merge。
 
-![redist_internal](MIT-6.830-lab5-SimpleDB-B+Tree-Index/redist_internal.png)
+![redist_internal](MIT-6.830-lab5-SimpleDB-BTree-Index/redist_internal.png)
 
-![merging_leaf](MIT-6.830-lab5-SimpleDB-B+Tree-Index/merging_leaf.png)
+![merging_leaf](MIT-6.830-lab5-SimpleDB-BTree-Index/merging_leaf.png)
 
-![merging_internal](MIT-6.830-lab5-SimpleDB-B+Tree-Index/merging_internal.png)
+![merging_internal](MIT-6.830-lab5-SimpleDB-BTree-Index/merging_internal.png)
 
 ### 4. Transactions
 
