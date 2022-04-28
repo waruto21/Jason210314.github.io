@@ -24,10 +24,10 @@ tx B: abort // cascading abort
 
 ### Recovery and Buffer Management
 
-为了简化工作，建议实现一个NO STEAL/FORCE buffer management policy。即：
+为了简化工作，建议实现一个NO STEAL/FORCE buffer management policy。
 
-- 不应该淘汰被未提交事务lock的diry page （NO STEAL）
-- 当事务提交，强制写回disk（FORCE）
+- STEAL：是否允许未提交的transaction覆盖持久化存储中对象的最新提交值（对应SimpleDB，即是否允许在事务未commit时，将其相关的dirty page写入disk）。
+- FORCE：允许事务提交前，是否要求其作出的修改都反映到持久化存储上（对应SimpleDB，即在事务commit前，是否要强制将其对应的所有dirty page写到disk）。
 
 为了进一步简化工作，假设SimpleDB在执行`transactionComplete`操作时，不会crash。
 
