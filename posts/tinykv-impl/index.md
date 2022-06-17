@@ -125,7 +125,7 @@ func (r *Raft) Step(m pb.Message) error {
 
 此外，考虑到新节点没有数据，为了避免不必要的超时选举（而且由于`Prs`为空，所以选举会直接成功，造成脑裂），当节点的term为0时，不进行tick；收到Leader的心跳后，立即将自己和Leader加入到`r.Prs`中。
 
-解决完以上问题后，跑测试出现超时的概率还是比较大，通过打log发现以下问题：执行完`Raft.addNode`后，Leader向新peer发送snapshot，但是有时会出现发送完snapshot后，新的peer才创建完成，开始接受消息，导致这个snapshot消失了。在我的实现中，发送snapshot后，直接`r.Prs[to].Next = snapshot.Metadata.Index + 1`，因为不这样做，很可能在新peer的response回来之前，又向其发送snapshot，而生成snapshot是极其费时的；但是在前面的问题下，由于snapshot丢了，那么Leader发送后续日志时，新peer会拒绝，Leader将Next -= 1，然后继续，指导Next小于Leader日志的first index，如此来回，耗费了大量时间，自然就超时了。follower会将response message的`m.Index`设置为自己的last index，leader发现其小于自己的first index的话，就立即发送snapshot。
+解决完以上问题后，跑测试出现超时的概率还是比较大，通过打log发现以下问题：执行完`Raft.addNode`后，Leader向新peer发送snapshot，但是有时会出现Leader先发送完snapshot后，新的peer才创建完成，开始接受消息，导致这个snapshot就消失了。在我的实现中，Leader发送snapshot后，直接设置自己的`r.Prs[to].Next = snapshot.Metadata.Index + 1`，因为不这样做，很可能在新peer的response回来之前，又因为触发`sendAppend`向其发送snapshot，而生成snapshot是极其费时的；但是在前面的问题下，由于snapshot丢了，那么Leader发送后续日志时，新peer会拒绝，Leader将Next -= 1，然后继续，直到Next小于Leader日志的first index，如此来回，耗费了大量时间，自然就超时了。所以，最后在我的实现中，follower会将response message的`m.Index`设置为自己的last index，leader发现其小于自己的first index的话，就立即发送snapshot，解决snapshot丢失的问题。
 
 此外，conf change有一个特殊case。考虑：当前Raft group有两个节点Leader A、Follower B，conf change要remove A，那么会出现以下问题，A把conf change的log成功复制给B之后，A apply conf change，把自己删除，没来得及把新的commit index发送给B；此时B的commit index不够新，无法apply这条con change，然后B超时，开启选举，此时B的`Prs`中还有A，B永远无法选举成功。这种问题有一个解决办法，就是remove自己时，计算quorum不要把自己算进去。但是TinyKV的框架不方便实现这个，底层Raft并不知道是remove还是add，更不知道remove谁，要实现的话，需要更改一些代码。所以我选择，在这种情况下，直接return，不予接受。
 
