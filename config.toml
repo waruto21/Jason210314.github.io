@@ -1,4 +1,4 @@
-baseURL = "https://wmc1999.top/"
+baseURL = "https://waruto.top/"
 # [en, zh-cn, fr, ...] 设置默认的语言
 defaultContentLanguage = "zh-cn"
 # 网站语言, 仅在这里 CN 大写
@@ -283,7 +283,7 @@ enable = true
 # LoveIt 新增 | 0.1.1
 enable = true
 # Disqus 的 shortname，用来在文章中启用 Disqus 评论系统
-shortname = "wmc1999"
+shortname = "waruto"
 
 # LoveIt 新增 | 0.2.5 TypeIt 配置
 [params.typeit]
