@@ -182,7 +182,7 @@ Percolator算法源自[Large-scale Incremental Processing Using Distributed Tran
 - Kv Commit
 
     - 时间戳commit_ts
-    - 移除primary lock，同时在write CF写入一个带有start_ts的记录；如果primary lock没有了（超时，被其他事务移除了），事务失败
+    - 移除primary lock，同时在write CF写入一个时间戳为commit_ts，值为start_ts的记录，表明数据的最新版本是 startTs 对应的数据；如果primary lock没有了（超时，被其他事务移除了），事务失败
     - 移除所有secondary lock
 
     只要primary lock被移除，事务就算成功。
