@@ -162,7 +162,7 @@ region分裂一般的实现是 [A, B) -> [A, C) + [C, B)，现有region分配为
 
 TinyKV采用的Percolator算法，提供了snapshot隔离性，客户端从数据库读到的数据就像从它开始执行事务时数据库被frozen了一样（客户端观察到数据库一个一致的view）。
 
-Percolator算法源自[Large-scale Incremental Processing Using Distributed Transactions and Notifications](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36726.pdf)，可以参考PingCAP这篇文章[Deep Dive TiKV - Percolator](https://tikv.org/deep-dive/distributed-transaction/percolator/)。
+Percolator算法源自[Large-scale Incremental Processing Using Distributed Transactions and Notifications](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36726.pdf)，可以参考PingCAP这篇文章[Deep Dive TiKV - Percolator](https://tikv.org/deep-dive/distributed-transaction/percolator/)，还有这个文章[Google Percolator 分布式事务实现原理解读](http://mysql.taobao.org/monthly/2018/11/02/)。
 
 ### Part A
 这部分就是实现对MVCC基础结构的封装，比较简单，但是代码可能写起来有点烦。
@@ -185,7 +185,7 @@ Percolator算法源自[Large-scale Incremental Processing Using Distributed Tran
 - Kv Commit
 
     - 时间戳commit_ts
-    - 移除primary lock，同时在write CF写入一个带有start_ts的记录；如果primary lock没有了（超时，被其他事务移除了），事务失败
+    - 移除primary lock，同时在write CF写入一个时间戳为commit_ts，值为start_ts的记录，表明数据的最新版本是 startTs 对应的数据；如果primary lock没有了（超时，被其他事务移除了），事务失败
     - 移除所有secondary lock
 
     只要primary lock被移除，事务就算成功。
