@@ -199,6 +199,10 @@ Percolator算法源自[Large-scale Incremental Processing Using Distributed Tran
 这部分比较简单，实现四个操作，主要是用于检查事务状态，决定回滚还是提交。
 
 - `KvScan`：用于按 Key 顺序扫描，类似KvGet一样实现即可；
+  思考一个问题，即batch get操作，事务T1要读取A、B，是否会存在T1已经读取了A，在读取B之前，A，B被事务T2修改，导致读到的数据不一致呢？
+  我的理解是不会。考虑两种情况：
+  - T1的ts的比T2的commit_ts小，那么T2的修改对T1是不可见的；
+  - T1的ts的比T2的commit_ts大，那么在T2的commit_ts之前，T2已经完成了prewrite，T1应该看到这个lock，T1直接读取失败；
 - `KvCheckTxnStatus`：用于检查事务锁的状态；
 - `KvBatchRollback`：用于批量回滚数据；
 - `KvResolveLock`：使用`KvCheckTxnStatus`检查锁的状态后，再使用`KvResolveLock`回滚或者提交。
