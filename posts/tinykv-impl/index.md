@@ -1,4 +1,4 @@
-# TinyKV实现总结
+# TinyKV 实现总结
 
 
 
@@ -157,7 +157,7 @@ region分裂一般的实现是 [A, B) -> [A, C) + [C, B)，现有region分配为
 
 ## Project 4: Transactions
 
-TinyKV采用的Percolator算法，提供了snapshot隔离性，客户端从数据库读到的数据就像从它开始执行事务时数据库被frozen了一样（客户端观察到数据库一个一致的view）。
+TinyKV采用的Percolator算法，提供了snapshot隔离性： 快照隔离保证在事务T过程中的所有读取都会看到一个一致的数据库快照（事务看到的所有数据，都是在事务**开始的时间点之前 committed** 的数据），并且只有在T所做的更新与该快照之后的任何并发更新没有冲突时，事务本身才能成功提交。
 
 Percolator算法源自[Large-scale Incremental Processing Using Distributed Transactions and Notifications](https://storage.googleapis.com/pub-tools-public-publication-data/pdf/36726.pdf)，可以参考PingCAP这篇文章[Deep Dive TiKV - Percolator](https://tikv.org/deep-dive/distributed-transaction/percolator/)，还有这个文章[Google Percolator 分布式事务实现原理解读](http://mysql.taobao.org/monthly/2018/11/02/)。
 
@@ -199,11 +199,31 @@ Percolator算法源自[Large-scale Incremental Processing Using Distributed Tran
 这部分比较简单，实现四个操作，主要是用于检查事务状态，决定回滚还是提交。
 
 - `KvScan`：用于按 Key 顺序扫描，类似KvGet一样实现即可；
-  思考一个问题，即batch get操作，事务T1要读取A、B，是否会存在T1已经读取了A，在读取B之前，A，B被事务T2修改，导致读到的数据不一致呢？
-  我的理解是不会。考虑两种情况：
-  - T1的ts的比T2的commit_ts小，那么T2的修改对T1是不可见的；
-  - T1的ts的比T2的commit_ts大，那么在T2的commit_ts之前，T2已经完成了prewrite，T1应该看到这个lock，T1直接读取失败；
 - `KvCheckTxnStatus`：用于检查事务锁的状态；
 - `KvBatchRollback`：用于批量回滚数据；
 - `KvResolveLock`：使用`KvCheckTxnStatus`检查锁的状态后，再使用`KvResolveLock`回滚或者提交。
+
+- 思考一个问题，即batch get操作，事务T1要读取A、B，是否会存在T1已经读取了A，在读取B之前，A，B被事务T2修改，导致读到的数据不一致呢？
+  我的理解是不会。考虑两种情况：
+
+  - T1的ts的比T2的commit_ts小，那么T2的修改对T1是不可见的；
+
+  - T1的ts的比T2的commit_ts大，那么在T2的commit_ts之前，T2已经完成了prewrite，T1应该看到这个lock，T1直接读取失败；
+
+- 另一个问题，事务中的读后写，写入值依赖读入值，与可串行化的不同点
+
+  初始A = 50
+
+  T1: read A , wrie A = A + 10
+
+  T2: write A = 70
+
+  如果是可串行化，那么可能是
+
+  - T1 -> T2: A = 70
+  - T2 -> T1: A = 80
+
+  但是percolator提供的snapshot isolation，可能出现：
+
+  - T1 read A， T2 write A， T1 write A， A = 60
 
