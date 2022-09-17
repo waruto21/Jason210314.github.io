@@ -1,5 +1,5 @@
 ---
-title: "MIT 6.830 Lab6 Rollback and Recovery"
+title: "MIT 6.830 Lab6 Rollback And Recovery"
 date: 2022-04-27T06:48:22+08:00
 draft: false
 ---

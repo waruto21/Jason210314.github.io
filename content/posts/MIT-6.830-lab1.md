@@ -25,7 +25,7 @@ SimpleDB主要包含下列class：
 
 lab1中涉及的SimpleDB主要模块如下：
 
-![simpledb-structure.drawio](MIT-6.830-lab1/simpledb-structure.drawio.svg)
+![simpledb-structure](MIT-6.830-lab1/simpledb-structure.png)
 
 ## Exercises
 
