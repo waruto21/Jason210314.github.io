@@ -1,4 +1,4 @@
-# MIT 6.830 Lab6 Rollback and Recovery
+# MIT 6.830 Lab6 Rollback And Recovery
 
 
 ## 简介
