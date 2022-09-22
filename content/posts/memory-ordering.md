@@ -85,7 +85,7 @@ Acquire 和 Release 是作为一对来使用的。它的名字隐含了适用用
 
 Relaxed是最弱的，对于其他读写，没有同步或者顺序要求，无法形成happen-before关系。Relaxed只保证原子性和修改顺序一致性（其他线程不一定读取到最新值，但读取到的值都是按照写入顺序的）。
 
-relaxed适合那些一定要发生，但并不在意其他线程看到什么值的操作，例如：多线程counter，每次`fetch_add`；智能指针的引用计数counter（但是析构需要acquire-release（两者的组合语义），来读到最新值）。
+relaxed适合那些一定要发生，但并不在意其他线程看到什么值的操作，例如：多线程counter，每次`fetch_add`；智能指针的引用计数counter（但是析构需要以release fetch_sub，然后以acquire load或者直接fence，来读到引用计数的最新值）。
 
 ## 思考
 
@@ -122,3 +122,9 @@ unsafe fn unlock(&self) {
 }
 ```
 
+
+
+## 参考
+
+- https://www.zhihu.com/question/265714945/answer/527790724
+- https://github.com/GHScan/TechNotes/blob/master/2017/Memory_Model.md
