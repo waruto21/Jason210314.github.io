@@ -107,4 +107,5 @@ impl SourceParser for AvroParser {
 }
 ```
 
-
+## 后续
+当天就来了： [async fn can now be used in traits in the nightly compiler](https://blog.rust-lang.org/inside-rust/2022/11/17/async-fn-in-trait-nightly.html) 
