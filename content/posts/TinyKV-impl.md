@@ -148,9 +148,9 @@ if req.ChangePeer.ChangeType == eraftpb.ConfChangeType_RemoveNode && d.IsLeader(
 
 不过在测试中遇到了`no region`问题，在[asktug](https://asktug.com/t/topic/274159)上，发现这个问题挺普遍的。这是因为：向PD请求region信息时，找不到对应的region信息。
 
-region分裂一般的实现是 [A, B) -> [A, C) + [C, B)，现有region分配为[A, C)，新region分配为[C, B)。旧region是正常的，Leader在持续给PD发送心跳，PD能够及时更新region信息，而新region还需要等待多个peer创建完成，超时，然后选出Leader，发送心跳给PD。因为，向PD查新region信息时，有一段时间查不到[C, B)的信息。
+region分裂一般的实现是 [A, B) -> [A, C) + [C, B)，现有region ID分配给[A, C)，新region ID分配给[C, B)。旧region是正常的，Leader在持续给PD发送心跳，PD能够及时更新region信息，而新region还需要等待多个peer创建完成，超时，然后选出Leader，发送心跳给PD。因为，向PD查新region信息时，有一段时间查不到[C, B)的信息。
 
-我的解决方案是：首先，对于Term为5的节点（region分裂，新建的正常节点Term是5），立即开始选举，为了防止多个节点同时开始选举，导致多次选举失败，可以仅让Id为偶数的节点开始选举；此外，由于测试中，请求的key在增大，所以为了可以让旧region负责[C, B)，新region负责[A, C)，这样能够split完成后，能够立即响应新的请求，不过这种改进感觉只算是为了通过测试的tricky。
+我的解决方案是：首先，对于Term为5的节点（region分裂，新建的正常节点Term是5），立即开始选举，为了防止多个节点同时开始选举，导致多次选举失败，可以仅让Id为偶数的节点开始选举；此外，由于测试中，请求的key在增大，所以为了可以让旧region负责[C, B)，新region负责[A, C)，这样能够split完成后，能够立即响应新的请求，不过这种改进感觉只算是为了通过测试的hack。
 
 ### Part C
 
