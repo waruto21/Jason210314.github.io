@@ -64,7 +64,7 @@ SimpleDB定义了`Aggregator`接口，上层operator调用其`mergeTupleIntoGrou
 
 对`deleteTuple`，每个Tuple中都包含RecordId，所以可以确定该Tuple在哪个page，然后删除。
 
-对`insertTuple`，我们需要使用HeapFile中遍历HeapPage，找到有空slot的page，然后插入；如果找不到带有空slot的page，那么就新建一个Page并写入文件。
+对`insertTuple`，我们需要使用HeapFile中遍历HeapPage，找到有空slot的page，然后插入；如果找不到带有空slot的page，那么就新建一个Page，我的实现是在`HeapFile.insertTuple`中，不断递增`pageID`，然后通过`BofferPool.getPage`调用`HeapFile.readPage`，`readPage`发现`pageID`不存在时，就新建一个Page返回（注：一些testcase特别坑，会绕过我们编写的方法，直接写入heapfile，所以计算numPages时要注意）。
 
 跟lab1中相同，获取page，一定要通过`BufferPool.getPage()`，这样对page的访问才能被纳入管理，方便后面实现事务。
 
